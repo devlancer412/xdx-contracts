@@ -18,12 +18,14 @@ const func: DeployFunction = async (hre) => {
   await deploy(XDX__factory);
   await deploy(EsXDX__factory);
   await deploy(MintableBaseToken__factory, {
+    aliasName: "BN_XDX",
     args: ["Bonus XDX", "bnXDX", 0],
   });
   await deploy(USDG__factory, {
     args: [vault.address],
   });
   await deploy(MintableBaseToken__factory, {
+    aliasName: "ES_XDX_IOU",
     args: ["esXDX IOU", "esXDX:IOU", 0],
   });
 };

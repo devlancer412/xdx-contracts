@@ -73,7 +73,7 @@ const config: HardhatUserConfig = {
       goerli: verifyKey("etherscan"),
       polygon: verifyKey("polyscan"),
       avalanche: verifyKey("snowtrace"),
-      avalanche_fuji: verifyKey("snowtrace"),
+      avalancheFujiTestnet: verifyKey("snowtrace"),
     },
   },
   solidity: {

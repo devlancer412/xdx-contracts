@@ -1,0 +1,65 @@
+{
+  "address": "0x30a1635A3AE08BA8714117693Aa0cEb17ED542C6",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "contract IReferralStorage",
+          "name": "_referralStorage",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "_codes",
+          "type": "bytes32[]"
+        }
+      ],
+      "name": "getCodeOwners",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xf6b7b8f9793843446a2aca45b2780a146215b71d2c71a8267026daf75ca9288c",
+  "receipt": {
+    "to": null,
+    "from": "0xf5CA36c9873d61Bc28C117BD470981Ef6647A685",
+    "contractAddress": "0x30a1635A3AE08BA8714117693Aa0cEb17ED542C6",
+    "transactionIndex": 2,
+    "gasUsed": "181393",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x75967fad18d39a79d2853df54aa9331ed4f9c6f3231f74f17b91885d4798e9ea",
+    "transactionHash": "0xf6b7b8f9793843446a2aca45b2780a146215b71d2c71a8267026daf75ca9288c",
+    "logs": [],
+    "blockNumber": 16887992,
+    "cumulativeGasUsed": "440844",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "38f125bf9344c296031e870b443ff3d2",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"contract IReferralStorage\",\"name\":\"_referralStorage\",\"type\":\"address\"},{\"internalType\":\"bytes32[]\",\"name\":\"_codes\",\"type\":\"bytes32[]\"}],\"name\":\"getCodeOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/referrals/ReferralReader.sol\":\"ReferralReader\"},\"evmVersion\":\"istanbul\",\"libraries\":{\"__CACHE_BREAKER__\":\"0x00000000d41867734bbee4c6863d9255b2b06ac1\"},\"metadata\":{\"bytecodeHash\":\"none\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":20},\"remappings\":[]},\"sources\":{\"contracts/referrals/ReferralReader.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\nimport \\\"./interfaces/IReferralStorage.sol\\\";\\n\\ncontract ReferralReader {\\n    function getCodeOwners(IReferralStorage _referralStorage, bytes32[] memory _codes) public view returns (address[] memory) {\\n        address[] memory owners = new address[](_codes.length);\\n\\n        for (uint256 i = 0; i < _codes.length; i++) {\\n            bytes32 code = _codes[i];\\n            owners[i] = _referralStorage.codeOwners(code);\\n        }\\n\\n        return owners;\\n    }\\n}\\n\",\"keccak256\":\"0x9618e677072eec9a55ec75e0d8a3f6f2b444fc6d759c3578231e17a5261e66fe\",\"license\":\"MIT\"},\"contracts/referrals/interfaces/IReferralStorage.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\ninterface IReferralStorage {\\n    function codeOwners(bytes32 _code) external view returns (address);\\n    function getTraderReferralInfo(address _account) external view returns (bytes32, address);\\n    function setTraderReferralCode(address _account, bytes32 _code) external;\\n    function setTier(uint256 _tierId, uint256 _totalRebate, uint256 _discountShare) external;\\n    function setReferrerTier(address _referrer, uint256 _tierId) external;\\n    function govSetCodeOwner(bytes32 _code, address _newAccount) external;\\n}\\n\",\"keccak256\":\"0x78b6037e4acba69d457288250b6ea49969fc4ede8de33f546091649e3aa0a183\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610251806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c80630f6803c014610030575b600080fd5b6100e16004803603604081101561004657600080fd5b6001600160a01b038235169190810190604081016020820135600160201b81111561007057600080fd5b82018360208201111561008257600080fd5b803590602001918460208302840111600160201b831117156100a357600080fd5b919080806020026020016040519081016040528093929190818152602001838360200280828437600092019190915250929550610131945050505050565b60408051602080825283518183015283519192839290830191858101910280838360005b8381101561011d578181015183820152602001610105565b505050509050019250505060405180910390f35b606080825167ffffffffffffffff8111801561014c57600080fd5b50604051908082528060200260200182016040528015610176578160200160208202803683370190505b50905060005b835181101561023c57600084828151811061019357fe5b60200260200101519050856001600160a01b031663c8b3c460826040518263ffffffff1660e01b81526004018082815260200191505060206040518083038186803b1580156101e157600080fd5b505afa1580156101f5573d6000803e3d6000fd5b505050506040513d602081101561020b57600080fd5b5051835184908490811061021b57fe5b6001600160a01b03909216602092830291909101909101525060010161017c565b50939250505056fea164736f6c634300060c000a",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c80630f6803c014610030575b600080fd5b6100e16004803603604081101561004657600080fd5b6001600160a01b038235169190810190604081016020820135600160201b81111561007057600080fd5b82018360208201111561008257600080fd5b803590602001918460208302840111600160201b831117156100a357600080fd5b919080806020026020016040519081016040528093929190818152602001838360200280828437600092019190915250929550610131945050505050565b60408051602080825283518183015283519192839290830191858101910280838360005b8381101561011d578181015183820152602001610105565b505050509050019250505060405180910390f35b606080825167ffffffffffffffff8111801561014c57600080fd5b50604051908082528060200260200182016040528015610176578160200160208202803683370190505b50905060005b835181101561023c57600084828151811061019357fe5b60200260200101519050856001600160a01b031663c8b3c460826040518263ffffffff1660e01b81526004018082815260200191505060206040518083038186803b1580156101e157600080fd5b505afa1580156101f5573d6000803e3d6000fd5b505050506040513d602081101561020b57600080fd5b5051835184908490811061021b57fe5b6001600160a01b03909216602092830291909101909101525060010161017c565b50939250505056fea164736f6c634300060c000a",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}
