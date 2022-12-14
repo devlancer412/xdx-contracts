@@ -38,6 +38,7 @@
     "verify:avalanche": "npx hardhat upload:batch --network avalanche --contracts",
     "verify:avalanche_fuji": "npx hardhat upload:batch --network avalanche_fuji --contracts",
     "verifyAll:avalanche_fuji": "npx hardhat upload:all --network avalanche_fuji",
+    "contracts:avalanche_fuji": "npx hardhat contracts --network avalanche_fuji",
     "test": "npm-run-all test:hh",
     "test:forge": "./forge_test/test.sh",
     "test:hh": "npx hardhat test",

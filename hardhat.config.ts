@@ -17,6 +17,7 @@ import "dotenv/config";
 
 import "./tasks/account";
 import "./tasks/verify";
+import "./tasks/contracts";
 
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
@@ -26,7 +27,7 @@ const config: HardhatUserConfig = {
       forking: {
         enabled: process.env.FORKING_ENABLED === "true",
         blockNumber: Number(process.env.FORKING_BLOCK_NUM) || undefined,
-        url: node_url("mainnet"),
+        url: node_url("avalanche"),
       },
       accounts: accounts("localhost"),
       mining: {

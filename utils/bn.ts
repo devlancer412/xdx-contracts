@@ -33,3 +33,12 @@ export const fromBNArray = (valuesBN: BigNumber[]): number[] => {
   const values = valuesBN.map<number>((valueBN) => fromBN(valueBN));
   return values;
 };
+
+export const toUsd = (value: number) => {
+  const normalizedValue = value * Math.pow(10, 10);
+  return ethers.BigNumber.from(normalizedValue).mul(ethers.BigNumber.from(10).pow(20));
+};
+
+export const toChainlinkPrice = (value: number) => {
+  return value * Math.pow(10, 8);
+};
