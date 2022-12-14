@@ -5,6 +5,7 @@ import {
   PositionManager__factory,
   PositionRouter__factory,
   Router__factory,
+  ShortsTracker__factory,
   Vault__factory,
 } from "../types";
 import { Ship } from "../utils";
@@ -15,21 +16,31 @@ const func: DeployFunction = async (hre) => {
 
   const chainId = await hre.getChainId();
 
+  let wethAddress: string;
+  if (chainId == "1337") {
+    wethAddress = (await connect("WETH")).address;
+  } else {
+    wethAddress = tokens[chainId].weth.address;
+  }
+
   const vault = await connect(Vault__factory);
   const router = await connect(Router__factory);
   const orderbook = await connect(OrderBook__factory);
+  const shortsTracker = await connect(ShortsTracker__factory);
   await deploy(PositionRouter__factory, {
     args: [
       vault.address,
       router.address,
-      tokens[chainId].weth.address,
+      wethAddress,
+      shortsTracker.address,
       30,
       BigNumber.from("17000000000000000"),
     ],
   });
-  await deploy(PositionManager__factory, {
-    args: [vault.address, router.address, tokens[chainId].weth.address, 50, orderbook.address],
+  const positionManager = await deploy(PositionManager__factory, {
+    args: [vault.address, router.address, shortsTracker.address, wethAddress, 50, orderbook.address],
   });
+  await shortsTracker.setHandler(positionManager.address, true);
 };
 
 export default func;

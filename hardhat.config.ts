@@ -155,7 +155,7 @@ const config: HardhatUserConfig = {
     target: "ethers-v5",
   },
   mocha: {
-    timeout: 30000,
+    timeout: 50000,
   },
   gasReporter: {
     coinmarketcap: process.env.COINMARKETCAP_API_KEY,

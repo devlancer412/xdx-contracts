@@ -1,8 +1,9 @@
 import { DeployFunction } from "hardhat-deploy/types";
-import { Vault__factory, USDG__factory, Router__factory, Token, Token__factory } from "../types";
+import { Vault__factory, USDG__factory, Router__factory, Token__factory, PriceFeed__factory } from "../types";
 import { getChainId } from "hardhat";
 import { Ship } from "../utils";
 import tokens from "./../config/tokens";
+import {} from "types";
 
 const func: DeployFunction = async (hre) => {
   const { deploy, connect } = await Ship.init(hre);
@@ -16,6 +17,9 @@ const func: DeployFunction = async (hre) => {
         args: ["WETH", "Wrapped ETH", 18],
       })
     ).address;
+    await deploy(PriceFeed__factory, {
+      aliasName: "EthPriceFeed",
+    });
   } else {
     wethAddress = tokens[chainID].weth.address;
   }

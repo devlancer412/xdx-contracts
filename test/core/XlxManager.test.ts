@@ -5,21 +5,13 @@ import {
   Vault,
   MintableBaseToken,
   USDG,
-  Router,
   VaultPriceFeed,
   Token,
   PriceFeed,
   Vault__factory,
   USDG__factory,
-  Router__factory,
   VaultPriceFeed__factory,
-  TimeDistributor,
-  YieldTracker,
-  Reader,
   ShortsTracker,
-  TimeDistributor__factory,
-  YieldTracker__factory,
-  Reader__factory,
   ShortsTracker__factory,
 } from "../../types";
 import { deployments } from "hardhat";
@@ -36,7 +28,6 @@ let vault: Vault;
 let xlxManager: XlxManager;
 let xlx: MintableBaseToken;
 let usdg: USDG;
-let router: Router;
 let vaultPriceFeed: VaultPriceFeed;
 let bnb: Token;
 let bnbPriceFeed: PriceFeed;
@@ -48,9 +39,6 @@ let dai: Token;
 let daiPriceFeed: PriceFeed;
 let busd: Token;
 let busdPriceFeed: PriceFeed;
-let distributor: TimeDistributor;
-let yieldTracker: YieldTracker;
-let reader: Reader;
 let shortsTracker: ShortsTracker;
 
 let alice: SignerWithAddress;
@@ -70,7 +58,7 @@ const setup = deployments.createFixture(async (hre) => {
   };
 });
 
-describe.only("XlxManager", () => {
+describe("XlxManager", () => {
   before(async () => {
     const scaffold = await setup();
 
@@ -98,15 +86,10 @@ describe.only("XlxManager", () => {
 
     vault = await connect(Vault__factory);
     usdg = await connect(USDG__factory);
-    router = await connect(Router__factory);
     vaultPriceFeed = await connect(VaultPriceFeed__factory);
     xlx = (await connect("XLX")) as MintableBaseToken;
     xlxManager = await connect(XlxManager__factory);
     shortsTracker = await connect(ShortsTracker__factory);
-
-    distributor = await connect(TimeDistributor__factory);
-    yieldTracker = await connect(YieldTracker__factory);
-    reader = await connect(Reader__factory);
 
     await vaultPriceFeed.setTokenConfig(bnb.address, bnbPriceFeed.address, 8, false);
     await vaultPriceFeed.setTokenConfig(btc.address, btcPriceFeed.address, 8, false);
