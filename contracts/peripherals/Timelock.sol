@@ -15,7 +15,7 @@ import "../tokens/interfaces/IBaseToken.sol";
 import "../tokens/interfaces/IMintable.sol";
 import "../tokens/interfaces/IUSDG.sol";
 import "../staking/interfaces/IVester.sol";
-import "../staking/interfaces/IRewardRouter.sol";
+import "../staking/interfaces/IRewardRouterV2.sol";
 
 import "../libraries/math/SafeMath.sol";
 import "../libraries/token/IERC20.sol";
@@ -146,7 +146,7 @@ contract Timelock is ITimelock {
   }
 
   function initRewardRouter() external onlyAdmin {
-    IRewardRouter _rewardRouter = IRewardRouter(rewardRouter);
+    IRewardRouterV2 _rewardRouter = IRewardRouterV2(rewardRouter);
 
     IHandlerTarget(_rewardRouter.feeXlxTracker()).setHandler(rewardRouter, true);
     IHandlerTarget(_rewardRouter.stakedXlxTracker()).setHandler(rewardRouter, true);
@@ -365,7 +365,7 @@ contract Timelock is ITimelock {
     IXlxManager(xlxManager).setShortsTrackerAveragePriceWeight(_shortsTrackerAveragePriceWeight);
   }
 
-  function setGlpCooldownDuration(uint256 _cooldownDuration) external onlyAdmin {
+  function setXlxCooldownDuration(uint256 _cooldownDuration) external onlyAdmin {
     require(_cooldownDuration < 2 hours, "Timelock: invalid _cooldownDuration");
     IXlxManager(xlxManager).setCooldownDuration(_cooldownDuration);
   }

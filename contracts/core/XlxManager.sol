@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.6.12;
 
 import "../libraries/math/SafeMath.sol";
 import "../libraries/token/IERC20.sol";
@@ -12,6 +11,8 @@ import "./interfaces/IShortsTracker.sol";
 import "../tokens/interfaces/IUSDG.sol";
 import "../tokens/interfaces/IMintable.sol";
 import "../access/Governable.sol";
+
+pragma solidity 0.6.12;
 
 contract XlxManager is ReentrancyGuard, Governable, IXlxManager {
   using SafeMath for uint256;

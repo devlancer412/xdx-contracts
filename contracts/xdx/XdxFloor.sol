@@ -11,106 +11,116 @@ import "../tokens/interfaces/IMintable.sol";
 import "../access/TokenManager.sol";
 
 contract XdxFloor is ReentrancyGuard, TokenManager {
-    using SafeMath for uint256;
-    using SafeERC20 for IERC20;
+  using SafeMath for uint256;
+  using SafeERC20 for IERC20;
 
-    uint256 public constant BASIS_POINTS_DIVISOR = 10000;
-    uint256 public constant PRICE_PRECISION = 10 ** 30;
-    uint256 public constant BURN_BASIS_POINTS = 9000;
+  uint256 public constant BASIS_POINTS_DIVISOR = 10000;
+  uint256 public constant PRICE_PRECISION = 10**30;
+  uint256 public constant BURN_BASIS_POINTS = 9000;
 
-    address public xdx;
-    address public reserveToken;
-    uint256 public backedSupply;
-    uint256 public baseMintPrice;
-    uint256 public mintMultiplier;
-    uint256 public mintedSupply;
-    uint256 public multiplierPrecision;
+  address public xdx;
+  address public reserveToken;
+  uint256 public backedSupply;
+  uint256 public baseMintPrice;
+  uint256 public mintMultiplier;
+  uint256 public mintedSupply;
+  uint256 public multiplierPrecision;
 
-    mapping (address => bool) public isHandler;
+  mapping(address => bool) public isHandler;
 
-    modifier onlyHandler() {
-        require(isHandler[msg.sender], "XdxFloor: forbidden");
-        _;
-    }
+  modifier onlyHandler() {
+    require(isHandler[msg.sender], "XdxFloor: forbidden");
+    _;
+  }
 
-    constructor(
-        address _xdx,
-        address _reserveToken,
-        uint256 _backedSupply,
-        uint256 _baseMintPrice,
-        uint256 _mintMultiplier,
-        uint256 _multiplierPrecision,
-        uint256 _minAuthorizations
-    ) public TokenManager(_minAuthorizations) {
-        xdx = _xdx;
+  constructor(
+    address _xdx,
+    address _reserveToken,
+    uint256 _backedSupply,
+    uint256 _baseMintPrice,
+    uint256 _mintMultiplier,
+    uint256 _multiplierPrecision,
+    uint256 _minAuthorizations
+  ) public TokenManager(_minAuthorizations) {
+    xdx = _xdx;
 
-        reserveToken = _reserveToken;
-        backedSupply = _backedSupply;
+    reserveToken = _reserveToken;
+    backedSupply = _backedSupply;
 
-        baseMintPrice = _baseMintPrice;
-        mintMultiplier = _mintMultiplier;
-        multiplierPrecision = _multiplierPrecision;
-    }
+    baseMintPrice = _baseMintPrice;
+    mintMultiplier = _mintMultiplier;
+    multiplierPrecision = _multiplierPrecision;
+  }
 
-    function initialize(address[] memory _signers) public override onlyAdmin {
-        TokenManager.initialize(_signers);
-    }
+  function initialize(address[] memory _signers) public override onlyAdmin {
+    TokenManager.initialize(_signers);
+  }
 
-    function setHandler(address _handler, bool _isHandler) public onlyAdmin {
-        isHandler[_handler] = _isHandler;
-    }
+  function setHandler(address _handler, bool _isHandler) public onlyAdmin {
+    isHandler[_handler] = _isHandler;
+  }
 
-    function setBackedSupply(uint256 _backedSupply) public onlyAdmin {
-        require(_backedSupply > backedSupply, "XdxFloor: invalid _backedSupply");
-        backedSupply = _backedSupply;
-    }
+  function setBackedSupply(uint256 _backedSupply) public onlyAdmin {
+    require(_backedSupply > backedSupply, "XdxFloor: invalid _backedSupply");
+    backedSupply = _backedSupply;
+  }
 
-    function setMintMultiplier(uint256 _mintMultiplier) public onlyAdmin {
-        require(_mintMultiplier > mintMultiplier, "XdxFloor: invalid _mintMultiplier");
-        mintMultiplier = _mintMultiplier;
-    }
+  function setMintMultiplier(uint256 _mintMultiplier) public onlyAdmin {
+    require(_mintMultiplier > mintMultiplier, "XdxFloor: invalid _mintMultiplier");
+    mintMultiplier = _mintMultiplier;
+  }
 
-    // mint refers to increasing the circulating supply
-    // the XDX tokens to be transferred out must be pre-transferred into this contract
-    function mint(uint256 _amount, uint256 _maxCost, address _receiver) public onlyHandler nonReentrant returns (uint256) {
-        require(_amount > 0, "XdxFloor: invalid _amount");
+  // mint refers to increasing the circulating supply
+  // the XDX tokens to be transferred out must be pre-transferred into this contract
+  function mint(
+    uint256 _amount,
+    uint256 _maxCost,
+    address _receiver
+  ) public onlyHandler nonReentrant returns (uint256) {
+    require(_amount > 0, "XdxFloor: invalid _amount");
 
-        uint256 currentMintPrice = getMintPrice();
-        uint256 nextMintPrice = currentMintPrice.add(_amount.mul(mintMultiplier).div(multiplierPrecision));
-        uint256 averageMintPrice = currentMintPrice.add(nextMintPrice).div(2);
+    uint256 currentMintPrice = getMintPrice();
+    uint256 nextMintPrice = currentMintPrice.add(
+      _amount.mul(mintMultiplier).div(multiplierPrecision)
+    );
+    uint256 averageMintPrice = currentMintPrice.add(nextMintPrice).div(2);
 
-        uint256 cost = _amount.mul(averageMintPrice).div(PRICE_PRECISION);
-        require(cost <= _maxCost, "XdxFloor: _maxCost exceeded");
+    uint256 cost = _amount.mul(averageMintPrice).div(PRICE_PRECISION);
+    require(cost <= _maxCost, "XdxFloor: _maxCost exceeded");
 
-        mintedSupply = mintedSupply.add(_amount);
-        backedSupply = backedSupply.add(_amount);
+    mintedSupply = mintedSupply.add(_amount);
+    backedSupply = backedSupply.add(_amount);
 
-        IERC20(reserveToken).safeTransferFrom(msg.sender, address(this), cost);
-        IERC20(xdx).transfer(_receiver, _amount);
+    IERC20(reserveToken).safeTransferFrom(msg.sender, address(this), cost);
+    IERC20(xdx).transfer(_receiver, _amount);
 
-        return cost;
-    }
+    return cost;
+  }
 
-    function burn(uint256 _amount, uint256 _minOut, address _receiver) public onlyHandler nonReentrant returns (uint256) {
-        require(_amount > 0, "XdxFloor: invalid _amount");
+  function burn(
+    uint256 _amount,
+    uint256 _minOut,
+    address _receiver
+  ) public onlyHandler nonReentrant returns (uint256) {
+    require(_amount > 0, "XdxFloor: invalid _amount");
 
-        uint256 amountOut = getBurnAmountOut(_amount);
-        require(amountOut >= _minOut, "XdxFloor: insufficient amountOut");
+    uint256 amountOut = getBurnAmountOut(_amount);
+    require(amountOut >= _minOut, "XdxFloor: insufficient amountOut");
 
-        backedSupply = backedSupply.sub(_amount);
+    backedSupply = backedSupply.sub(_amount);
 
-        IMintable(xdx).burn(msg.sender, _amount);
-        IERC20(reserveToken).safeTransfer(_receiver, amountOut);
+    IMintable(xdx).burn(msg.sender, _amount);
+    IERC20(reserveToken).safeTransfer(_receiver, amountOut);
 
-        return amountOut;
-    }
+    return amountOut;
+  }
 
-    function getMintPrice() public view returns (uint256) {
-        return baseMintPrice.add(mintedSupply.mul(mintMultiplier).div(multiplierPrecision));
-    }
+  function getMintPrice() public view returns (uint256) {
+    return baseMintPrice.add(mintedSupply.mul(mintMultiplier).div(multiplierPrecision));
+  }
 
-    function getBurnAmountOut(uint256 _amount) public view returns (uint256) {
-        uint256 balance = IERC20(reserveToken).balanceOf(address(this));
-        return _amount.mul(balance).div(backedSupply).mul(BURN_BASIS_POINTS).div(BASIS_POINTS_DIVISOR);
-    }
+  function getBurnAmountOut(uint256 _amount) public view returns (uint256) {
+    uint256 balance = IERC20(reserveToken).balanceOf(address(this));
+    return _amount.mul(balance).div(backedSupply).mul(BURN_BASIS_POINTS).div(BASIS_POINTS_DIVISOR);
+  }
 }

@@ -5,10 +5,9 @@ pragma solidity 0.6.12;
 import "../tokens/MintableBaseToken.sol";
 
 contract EsXDX is MintableBaseToken {
-    constructor() public MintableBaseToken("Escrowed XDX", "esXDX", 0) {
-    }
+  constructor() public MintableBaseToken("Escrowed XDX", "esXDX", 0) {}
 
-    function id() external pure returns (string memory _name) {
-        return "esXDX";
-    }
+  function id() external pure returns (string memory _name) {
+    return "esXDX";
+  }
 }
