@@ -30,15 +30,12 @@ const func: DeployFunction = async (hre) => {
   const vaultUtils = await deploy(VaultUtils__factory, {
     args: [vault.address],
   });
-  const tx1 = await vault.setVaultUtils(vaultUtils.address);
-  await tx1.wait();
+  await vault.setVaultUtils(vaultUtils.address);
 
   const vaultErrorController = await deploy(VaultErrorController__factory);
 
-  const tx2 = await vault.setErrorController(vaultErrorController.address);
-  await tx2.wait();
-  const tx3 = await vaultErrorController.contract.setErrors(vault.address, errors);
-  await tx3.wait();
+  await vault.setErrorController(vaultErrorController.address);
+  await vaultErrorController.contract.setErrors(vault.address, errors);
 };
 
 export default func;

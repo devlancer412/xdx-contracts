@@ -1,9 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
-  XlxManager,
-  XlxManager__factory,
   Vault,
-  MintableBaseToken,
   USDG,
   VaultPriceFeed,
   Token,
@@ -22,16 +19,13 @@ import {
   TimeDistributor__factory,
   YieldTracker__factory,
   OrderBook__factory,
-  Timelock__factory,
   PositionManager__factory,
-  Timelock,
 } from "../../../types";
 import { deployments } from "hardhat";
 import chai from "chai";
 import { solidity } from "ethereum-waffle";
 import { Ship, toChainlinkPrice, toWei } from "../../../utils";
 import { getBtcConfig, getDaiConfig, getEthConfig } from "../Vault/helper";
-import { constants } from "ethers";
 
 chai.use(solidity);
 const { expect } = chai;
@@ -52,9 +46,6 @@ let daiPriceFeed: PriceFeed;
 let distributor: TimeDistributor;
 let yieldTracker: YieldTracker;
 let orderbook: OrderBook;
-
-let xlxManager: XlxManager;
-let xlx: MintableBaseToken;
 
 let alice: SignerWithAddress;
 let bob: SignerWithAddress;
@@ -121,8 +112,6 @@ describe("PositionManager - access", () => {
     await router.addPlugin(orderbook.address);
     await router.connect(deployer).approvePlugin(orderbook.address);
 
-    xlx = (await connect("XLX")) as MintableBaseToken;
-    xlxManager = await connect(XlxManager__factory);
     positionManager = await connect(PositionManager__factory);
 
     await daiPriceFeed.setLatestAnswer(toChainlinkPrice(1));

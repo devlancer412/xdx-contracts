@@ -18,8 +18,7 @@ const func: DeployFunction = async (hre) => {
   const shortsTracker = await deploy(ShortsTracker__factory, {
     args: [vault.address],
   });
-  const tx = await shortsTracker.contract.setIsGlobalShortDataReady(true);
-  await tx.wait();
+  await shortsTracker.contract.setIsGlobalShortDataReady(false);
 
   const xlxManager = await deploy(XlxManager__factory, {
     args: [vault.address, usdg.address, xlx.address, shortsTracker.address, 24 * 60 * 60],

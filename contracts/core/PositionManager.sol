@@ -323,13 +323,11 @@ contract PositionManager is BasePositionManager {
       address collateralToken,
       address indexToken,
       uint256 sizeDelta,
-      bool isLong, /*uint256 triggerPrice*/
+      bool isLong, /*uint256 triggerPrice*/ /*bool triggerAboveThreshold*/ /*uint256 executionFee*/
       ,
       ,
 
-    ) = /*bool triggerAboveThreshold*/
-      /*uint256 executionFee*/
-      IOrderBook(orderBook).getIncreaseOrder(_account, _orderIndex);
+    ) = IOrderBook(orderBook).getIncreaseOrder(_account, _orderIndex);
 
     uint256 markPrice = isLong
       ? IVault(_vault).getMaxPrice(indexToken)
@@ -366,13 +364,11 @@ contract PositionManager is BasePositionManager {
       /*uint256 collateralDelta*/
       address indexToken,
       uint256 sizeDelta,
-      bool isLong, /*uint256 triggerPrice*/
+      bool isLong, /*uint256 triggerPrice*/ /*bool triggerAboveThreshold*/ /*uint256 executionFee*/
       ,
       ,
 
-    ) = /*bool triggerAboveThreshold*/
-      /*uint256 executionFee*/
-      IOrderBook(orderBook).getDecreaseOrder(_account, _orderIndex);
+    ) = IOrderBook(orderBook).getDecreaseOrder(_account, _orderIndex);
 
     uint256 markPrice = isLong
       ? IVault(_vault).getMinPrice(indexToken)

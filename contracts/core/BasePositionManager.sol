@@ -245,6 +245,7 @@ contract BasePositionManager is IBasePositionManager, ReentrancyGuard, Governabl
     uint256 markPrice = _isLong
       ? IVault(_vault).getMinPrice(_indexToken)
       : IVault(_vault).getMaxPrice(_indexToken);
+
     if (_isLong) {
       require(markPrice >= _price, "BasePositionManager: mark price lower than limit");
     } else {
@@ -356,7 +357,7 @@ contract BasePositionManager is IBasePositionManager, ReentrancyGuard, Governabl
     // use `send` instead of `transfer` to not revert whole transaction in case ETH transfer was failed
     // it has limit of 2300 gas
     // this is to avoid front-running
-    _receiver.send(_amountOut);
+    _receiver.transfer(_amountOut);
   }
 
   function _collectFees(

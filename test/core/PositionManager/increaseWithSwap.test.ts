@@ -1,9 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
-  XlxManager,
-  XlxManager__factory,
   Vault,
-  MintableBaseToken,
   USDG,
   VaultPriceFeed,
   Token,
