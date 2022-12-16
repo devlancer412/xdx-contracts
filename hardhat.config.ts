@@ -40,28 +40,13 @@ const config: HardhatUserConfig = {
       accounts: accounts("localhost"),
       tags: ["local", "test"],
     },
-    polygon: {
-      url: node_url("polygon"),
-      accounts: accounts("polygon"),
-      tags: ["prod", "live"],
-    },
-    mainnet: {
-      url: node_url("mainnet"),
-      accounts: accounts("mainnet"),
-      tags: ["prod", "live"],
-    },
-    goerli: {
-      url: node_url("goerli"),
-      accounts: accounts("goerli"),
-      tags: ["test", "live"],
-    },
-    avalanche: {
+    avax: {
       accounts: accounts("avalanche"),
       chainId: 43114,
       url: node_url("avalanche"),
       tags: ["prod", "live"],
     },
-    avalanche_fuji: {
+    avax_test: {
       accounts: accounts("avalanche_fuji"),
       chainId: 43113,
       url: node_url("avalanche_fuji"),
@@ -132,9 +117,15 @@ const config: HardhatUserConfig = {
   namedAccounts: {
     deployer: 0,
     signer: 1,
-    vault: 2,
-    alice: 3,
-    bob: 4,
+    alice: 2,
+    bob: 3,
+    keeper1: 4,
+    keeper2: 5,
+    updater1: 6,
+    updater2: 7,
+    handler1: 8,
+    handler2: 9,
+    liquidator: 10,
   },
   abiExporter: {
     path: "./abis",

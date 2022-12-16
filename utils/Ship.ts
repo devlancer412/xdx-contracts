@@ -35,7 +35,6 @@ class Ship {
     for (const [name, address] of Object.entries(namedAccounts)) {
       const signer = await ethers.getSigner(address);
       accounts[name] = signer;
-      users.push(signer);
     }
     const unnammedAccounts = await hre.getUnnamedAccounts();
     for (const address of unnammedAccounts) {

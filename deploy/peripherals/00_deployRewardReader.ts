@@ -1,6 +1,6 @@
 import { DeployFunction } from "hardhat-deploy/types";
-import { RewardReader__factory } from "../types";
-import { Ship } from "../utils";
+import { RewardReader__factory } from "../../types";
+import { Ship } from "../../utils";
 
 const func: DeployFunction = async (hre) => {
   const { deploy } = await Ship.init(hre);
@@ -10,4 +10,3 @@ const func: DeployFunction = async (hre) => {
 
 export default func;
 func.tags = ["rewardReader"];
-func.dependencies = ["tokens"];

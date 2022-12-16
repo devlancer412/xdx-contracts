@@ -1,12 +1,12 @@
 import { DeployFunction } from "hardhat-deploy/types";
-import { Reader__factory } from "../types";
-import { Ship } from "../utils";
+import { BalanceUpdater__factory } from "../../types";
+import { Ship } from "../../utils";
 
 const func: DeployFunction = async (hre) => {
   const { deploy } = await Ship.init(hre);
 
-  await deploy(Reader__factory);
+  await deploy(BalanceUpdater__factory);
 };
 
 export default func;
-func.tags = ["reader"];
+func.tags = ["balanceUpdater"];
