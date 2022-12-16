@@ -1,18 +1,28 @@
 import { DeployFunction } from "hardhat-deploy/types";
-import { Token__factory } from "../../types";
+import { PriceFeed__factory, Token__factory } from "../../types";
 import { Ship } from "../../utils";
 import { TokenData, tokens } from "../../config";
+import { toChainlinkPrice } from "../../utils";
 
 const func: DeployFunction = async (hre) => {
   const { deploy } = await Ship.init(hre);
 
   if (!hre.network.tags.prod) {
     for (const index in tokens.avax) {
+      if (index == "nativeToken") continue;
+
       const token = (tokens.avax as never)[index] as TokenData;
       await deploy(Token__factory, {
         aliasName: token.name,
-        args: [token.name, token.name, 18],
+        args: [token.name, token.name, token.decimals],
       });
+      if (!hre.network.tags.live) {
+        const priceFeed = await deploy(PriceFeed__factory, {
+          aliasName: token.name + "PriceFeed",
+        });
+        await priceFeed.contract.setLatestAnswer(toChainlinkPrice(token.testPrice ?? 0));
+        console.log(token.name, ": set price to ", token.testPrice);
+      }
     }
   }
 };

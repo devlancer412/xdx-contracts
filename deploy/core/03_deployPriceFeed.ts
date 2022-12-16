@@ -9,18 +9,15 @@ import {
   Vault__factory,
   USDG__factory,
   Router__factory,
+  PriceFeed,
 } from "../../types";
-import { Ship, toUsd, toWei } from "../../utils";
-import { TokenData, tokens } from "../../config";
-import { TokenManager } from "types";
-
-const depositFee = 30; // 0.3%
-const minExecutionFee = "100000000000000"; // 0.0001 ETH
+import { fromWei, Ship, toUsd, toWei } from "../../utils";
+import { TokenData, tokens, signers as configSigners, updaters as configUpdaters } from "../../config";
 
 const func: DeployFunction = async (hre) => {
   const { deploy, connect, accounts } = await Ship.init(hre);
 
-  const { signer, deployer, updater1, updater2, tokenKeeper1, tokenKeeper2 } = accounts;
+  const { signer1, signer2, deployer, updater1, updater2 } = accounts;
 
   const { avax, btc, btcb, eth, mim, usdce, usdc } = tokens.avax;
   const tokenArr = [avax, btc, btcb, eth, mim, usdce, usdc];
@@ -30,15 +27,18 @@ const func: DeployFunction = async (hre) => {
   let updaters: string[];
 
   if (hre.network.tags.prod) {
-    signers = [];
-    updaters = [];
+    signers = configSigners;
+    updaters = configUpdaters;
   } else {
-    signers = [signer.address];
+    signers = [signer1.address, signer2.address];
     updaters = [updater1.address, updater2.address];
 
     for (const token of tokenArr) {
-      const nativeTokenContract = await connect(token.name);
-      token.address = nativeTokenContract.address;
+      const tokenContract = await connect(token.name);
+      const priceFeedContract = (await connect(token.name + "PriceFeed")) as PriceFeed;
+      token.address = tokenContract.address;
+      token.priceFeed = priceFeedContract.address;
+      console.log(token.name, fromWei(await priceFeedContract.latestAnswer(), 8));
     }
   }
 
@@ -70,7 +70,18 @@ const func: DeployFunction = async (hre) => {
       positionRouter.address,
     ],
   });
+  console.log("FastPriceFeed deployed");
+  const vaultPriceFeed = await deploy(VaultPriceFeed__factory);
+  console.log("VaultPriceFeed deployed");
 
+  if (fastPriceFeed.newlyDeployed || vaultPriceFeed.newlyDeployed) {
+    await vaultPriceFeed.contract.setSecondaryPriceFeed(fastPriceFeed.address);
+    await fastPriceFeed.contract.setVaultPriceFeed(vaultPriceFeed.address);
+  }
+
+  if (fastPriceEvents.newlyDeployed || fastPriceFeed.newlyDeployed) {
+    await fastPriceEvents.contract.setIsPriceFeed(fastPriceFeed.address, true);
+  }
   if (fastPriceFeed.newlyDeployed) {
     await fastPriceFeed.contract.initialize(1, signers, updaters);
     await fastPriceFeed.contract.setTokens(
@@ -87,19 +98,24 @@ const func: DeployFunction = async (hre) => {
     await fastPriceFeed.contract.setPriceDataInterval(1 * 60);
 
     await positionRouter.setPositionKeeper(fastPriceFeed.address, true);
-  }
-  if (fastPriceEvents.newlyDeployed || fastPriceFeed.newlyDeployed) {
-    await fastPriceEvents.contract.setIsPriceFeed(fastPriceFeed.address, true);
+    await fastPriceFeed.contract.setTokenManager(tokenManager.address);
+
+    await fastPriceFeed.contract.setGov(priceFeedTimelock.address);
+    console.log("FastPriceFeeed: initialized");
   }
 
-  const vaultPriceFeed = await deploy(VaultPriceFeed__factory);
   if (vaultPriceFeed.newlyDeployed) {
     await vaultPriceFeed.contract.setMaxStrictPriceDeviation(toWei(1, 28));
-    await vaultPriceFeed.contract.setPriceSampleSpace(1);
+    await vaultPriceFeed.contract.setPriceSampleSpace(3);
     await vaultPriceFeed.contract.setIsAmmEnabled(false);
-    await vaultPriceFeed.contract.setGov(priceFeedTimelock.address);
-    await fastPriceFeed.contract.setGov(priceFeedTimelock.address);
-    await fastPriceFeed.contract.setTokenManager(tokenManager.address);
+    await vault.initialize(
+      router.address, // router
+      usdg.address, // usdg
+      vaultPriceFeed.address, // priceFeed
+      toUsd(2), // liquidationFeeUsd
+      100, // fundingRateFactor
+      100, // stableFundingRateFactor
+    );
 
     for (const tokenItem of tokenArr) {
       const token = tokenItem as TokenData;
@@ -118,23 +134,22 @@ const func: DeployFunction = async (hre) => {
         token.priceDecimals, // _priceDecimals
         token.isStrictStable, // _isStrictStable
       );
-    }
 
-    if (fastPriceFeed.newlyDeployed) {
-      await vault.initialize(
-        router.address, // router
-        usdg.address, // usdg
-        vaultPriceFeed.address, // priceFeed
-        toUsd(2), // liquidationFeeUsd
-        100, // fundingRateFactor
-        100, // stableFundingRateFactor
+      await vault.setTokenConfig(
+        token.address, // _token
+        token.decimals, // _tokenDecimals
+        token.tokenWeight, // _tokenWeight
+        token.minProfitBps, // _minProfitBps
+        toWei(token.maxUsdgAmount, 30), // _maxUsdgAmount
+        token.isStable, // _isStable
+        token.isShortable, // _isShortable
       );
     }
-  }
 
-  if (fastPriceFeed.newlyDeployed || vaultPriceFeed.newlyDeployed) {
-    await vaultPriceFeed.contract.setSecondaryPriceFeed(fastPriceFeed.address);
-    await fastPriceFeed.contract.setVaultPriceFeed(vaultPriceFeed.address);
+    if (hre.network.tags.live) {
+      await vaultPriceFeed.contract.setGov(priceFeedTimelock.address);
+    }
+    console.log("VaultPriceFeeed: initialized");
   }
 };
 

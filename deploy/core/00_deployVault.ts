@@ -2,28 +2,24 @@ import { DeployFunction } from "hardhat-deploy/types";
 import {
   Router__factory,
   ShortsTracker__factory,
-  Token__factory,
   USDG__factory,
   VaultErrorController__factory,
-  VaultPriceFeed__factory,
   VaultUtils__factory,
   Vault__factory,
   XlxManager__factory,
   XLX__factory,
 } from "../../types";
-import { Ship, toUsd, toWei } from "../../utils";
+import { Ship, toUsd } from "../../utils";
 import { tokens, errors, NativeToken } from "../../config";
 
 const func: DeployFunction = async (hre) => {
   const { deploy, connect, accounts } = await Ship.init(hre);
 
   const { deployer } = accounts;
-
   const nativeToken = tokens.avax.nativeToken as NativeToken;
 
   if (!hre.network.tags.prod) {
     const nativeTokenContract = await connect(nativeToken.name);
-
     nativeToken.address = nativeTokenContract.address;
   }
 

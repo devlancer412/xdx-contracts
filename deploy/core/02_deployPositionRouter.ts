@@ -14,7 +14,7 @@ const depositFee = 30; // 0.3%
 const minExecutionFee = "100000000000000"; // 0.0001 ETH
 
 const func: DeployFunction = async (hre) => {
-  const { deploy, connect, accounts } = await Ship.init(hre);
+  const { deploy, connect } = await Ship.init(hre);
 
   const nativeToken = tokens.avax.nativeToken as NativeToken;
 

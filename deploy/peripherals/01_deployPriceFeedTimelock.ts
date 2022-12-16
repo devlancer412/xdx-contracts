@@ -1,22 +1,22 @@
 import { DeployFunction } from "hardhat-deploy/types";
 import { PriceFeedTimelock__factory, TokenManager__factory } from "../../types";
 import { Ship } from "../../utils";
-import { signers as configSigners, keepers as configKeepers } from "../../config/accounts";
+import { signers as configSigners, orderKeepers as configOrderKeepers } from "../../config/accounts";
 
 const func: DeployFunction = async (hre) => {
   const { deploy, connect, accounts } = await Ship.init(hre);
 
-  const { deployer, signer, keeper1, keeper2 } = accounts;
+  const { deployer, signer1, signer2, orderKeeper1, orderKeeper2 } = accounts;
   const buffer = 24 * 60 * 60;
   let signers: string[];
   let keepers: string[];
 
   if (hre.network.tags.prod) {
     signers = configSigners;
-    keepers = configKeepers;
+    keepers = configOrderKeepers;
   } else {
-    signers = [signer.address];
-    keepers = [keeper1.address, keeper2.address];
+    signers = [signer1.address, signer2.address];
+    keepers = [orderKeeper1.address, orderKeeper2.address];
   }
 
   const tokenManager = await connect(TokenManager__factory);
