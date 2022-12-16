@@ -1,7 +1,7 @@
 import { DeployFunction } from "hardhat-deploy/types";
 import { ShortsTrackerTimelock__factory } from "../../types";
 import { Ship } from "../../utils";
-import { handlers as configHandlers } from "config";
+import { handlers as configHandlers } from "../../config";
 
 const func: DeployFunction = async (hre) => {
   const { deploy, accounts } = await Ship.init(hre);

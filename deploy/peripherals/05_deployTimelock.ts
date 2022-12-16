@@ -3,7 +3,7 @@ import {
   PositionManager__factory,
   PositionRouter__factory,
   ReferralStorage__factory,
-  RewardRouter__factory,
+  RewardRouterV2__factory,
   Timelock__factory,
   TokenManager__factory,
   VaultUtils__factory,
@@ -12,10 +12,11 @@ import {
   XlxManager__factory,
 } from "../../types";
 import { Ship, toWei } from "../../utils";
+import { handlers as configHandlers, orderKeepers as configOrderKeepers } from "./../../config/accounts";
 
 const func: DeployFunction = async (hre) => {
   const { deploy, connect, accounts } = await Ship.init(hre);
-  const { deployer, alice, bob, keeper1, keeper2 } = accounts;
+  const { deployer, handler1, handler2, orderKeeper1, orderKeeper2 } = accounts;
 
   const buffer = 24 * 60 * 60;
   const maxTokenSupply = toWei(13250000, 18);
@@ -24,18 +25,18 @@ const func: DeployFunction = async (hre) => {
   let keepers: string[];
 
   if (hre.network.tags.prod) {
-    handlers = [];
-    keepers = [];
+    handlers = configHandlers;
+    keepers = configOrderKeepers;
   } else {
-    handlers = [alice.address, bob.address];
-    keepers = [keeper1.address, keeper2.address];
+    handlers = [handler1.address, handler2.address];
+    keepers = [orderKeeper1.address, orderKeeper2.address];
   }
 
   const vault = await connect(Vault__factory);
   const vaultUtils = await connect(VaultUtils__factory);
   const tokenManager = await connect(TokenManager__factory);
   const xlxManager = await connect(XlxManager__factory);
-  const rewardRouter = await connect(RewardRouter__factory);
+  const rewardRouter = await connect(RewardRouterV2__factory);
   const positionRouter = await connect(PositionRouter__factory);
   const positionManager = await connect(PositionManager__factory);
   const referralStorage = await connect(ReferralStorage__factory);
@@ -59,7 +60,10 @@ const func: DeployFunction = async (hre) => {
     await timelock.contract.setShouldToggleIsLeverageEnabled(true);
     await timelock.contract.setContractHandler(positionRouter.address, true);
     await timelock.contract.setContractHandler(positionManager.address, true);
+
+    await vault.setGov(timelock.address);
     await timelock.contract.setVaultUtils(vault.address, vaultUtils.address);
+
     await timelock.contract.setContractHandler(positionManager.address, true);
     await timelock.contract.signalSetHandler(referralStorage.address, positionRouter.address, true);
     await timelock.contract.signalApprove(xdx.address, deployer.address, "1000000000000000000");

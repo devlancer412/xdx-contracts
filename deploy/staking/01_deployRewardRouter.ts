@@ -40,6 +40,9 @@ const func: DeployFunction = async (hre) => {
     aliasName: "StakedXdxDistributor",
     args: [esXdx.address, stakedXdxTracker.address],
   });
+  if (stakedXdxTracker.newlyDeployed || stakedXdxDistributor.newlyDeployed) {
+    await stakedXdxTracker.contract.initialize([xdx.address, esXdx.address], stakedXdxDistributor.address);
+  }
   if (stakedXdxTracker.newlyDeployed) {
     await stakedXdxTracker.contract.setInPrivateTransferMode(true);
     await stakedXdxTracker.contract.setInPrivateStakingMode(true);
@@ -47,11 +50,8 @@ const func: DeployFunction = async (hre) => {
     await esXdx.setHandler(stakedXdxTracker.address, true);
   }
   if (stakedXdxDistributor.newlyDeployed) {
-    await esXdx.setHandler(stakedXdxDistributor.address, true);
-  }
-  if (stakedXdxTracker.newlyDeployed || stakedXdxDistributor.newlyDeployed) {
-    await stakedXdxTracker.contract.initialize([xdx.address, esXdx.address], stakedXdxDistributor.address);
     await stakedXdxDistributor.contract.updateLastDistributionTime();
+    await esXdx.setHandler(stakedXdxDistributor.address, true);
   }
 
   const bonusXdxTracker = await deploy(RewardTracker__factory, {
@@ -62,16 +62,16 @@ const func: DeployFunction = async (hre) => {
     aliasName: "BonusXdxDistributor",
     args: [bnXdx.address, bonusXdxTracker.address],
   });
+  if (bonusXdxTracker.newlyDeployed || bonusXdxDistributor.newlyDeployed) {
+    await bonusXdxTracker.contract.initialize([stakedXdxTracker.address], bonusXdxDistributor.address);
+  }
   if (bonusXdxTracker.newlyDeployed) {
     await bonusXdxTracker.contract.setInPrivateTransferMode(true);
     await bonusXdxTracker.contract.setInPrivateStakingMode(true);
   }
   if (bonusXdxDistributor.newlyDeployed) {
-    await bonusXdxDistributor.contract.setBonusMultiplier(10000);
-  }
-  if (bonusXdxTracker.newlyDeployed || bonusXdxDistributor.newlyDeployed) {
-    await bonusXdxTracker.contract.initialize([stakedXdxTracker.address], bonusXdxDistributor.address);
     await bonusXdxDistributor.contract.updateLastDistributionTime();
+    await bonusXdxDistributor.contract.setBonusMultiplier(10000);
   }
 
   const feeXdxTracker = await deploy(RewardTracker__factory, {
@@ -82,17 +82,19 @@ const func: DeployFunction = async (hre) => {
     aliasName: "FeeXdxDistributor",
     args: [nativeToken.address, feeXdxTracker.address],
   });
+  if (feeXdxTracker.newlyDeployed || feeXdxDistributor.newlyDeployed) {
+    await feeXdxTracker.contract.initialize(
+      [bonusXdxTracker.address, bnXdx.address],
+      feeXdxDistributor.address,
+    );
+  }
   if (feeXdxTracker.newlyDeployed) {
     await feeXdxTracker.contract.setInPrivateTransferMode(true);
     await feeXdxTracker.contract.setInPrivateStakingMode(true);
     // allow feeXdxTracker to stake bnXdx
     await bnXdx.setHandler(feeXdxTracker.address, true);
   }
-  if (feeXdxTracker.newlyDeployed || feeXdxDistributor.newlyDeployed) {
-    await feeXdxTracker.contract.initialize(
-      [bonusXdxTracker.address, bnXdx.address],
-      feeXdxDistributor.address,
-    );
+  if (feeXdxDistributor.newlyDeployed) {
     await feeXdxDistributor.contract.updateLastDistributionTime();
   }
 
@@ -104,14 +106,16 @@ const func: DeployFunction = async (hre) => {
     aliasName: "FeeXlxDistributor",
     args: [nativeToken.address, feeXlxTracker.address],
   });
+  if (feeXlxTracker.newlyDeployed || feeXlxDistributor.newlyDeployed) {
+    await feeXlxTracker.contract.initialize([xlx.address], feeXlxDistributor.address);
+  }
   if (feeXlxTracker.newlyDeployed) {
     await feeXlxTracker.contract.setInPrivateTransferMode(true);
     await feeXlxTracker.contract.setInPrivateStakingMode(true);
     // allow feeXlxTracker to stake xlx
     await xlx.setHandler(feeXlxTracker.address, true);
   }
-  if (feeXlxTracker.newlyDeployed || feeXlxDistributor.newlyDeployed) {
-    await feeXlxTracker.contract.initialize([xlx.address], feeXlxDistributor.address);
+  if (feeXlxDistributor.newlyDeployed) {
     await feeXlxDistributor.contract.updateLastDistributionTime();
   }
 
@@ -123,17 +127,17 @@ const func: DeployFunction = async (hre) => {
     aliasName: "StakedXlxDistributor",
     args: [esXdx.address, stakedXlxTracker.address],
   });
+  if (stakedXlxTracker.newlyDeployed || stakedXlxDistributor.newlyDeployed) {
+    await stakedXlxTracker.contract.initialize([feeXlxTracker.address], stakedXlxDistributor.address);
+  }
   if (stakedXlxTracker.newlyDeployed) {
     await stakedXlxTracker.contract.setInPrivateTransferMode(true);
     await stakedXlxTracker.contract.setInPrivateStakingMode(true);
     esXdx.setHandler(stakedXlxTracker.address, true);
   }
   if (stakedXlxDistributor.newlyDeployed) {
-    await esXdx.setHandler(stakedXlxDistributor.address, true);
-  }
-  if (stakedXlxTracker.newlyDeployed || stakedXlxDistributor.newlyDeployed) {
-    await stakedXlxTracker.contract.initialize([feeXlxTracker.address], stakedXlxDistributor.address);
     await stakedXlxDistributor.contract.updateLastDistributionTime();
+    await esXdx.setHandler(stakedXlxDistributor.address, true);
   }
 
   const xdxVester = await deploy(Vester__factory, {

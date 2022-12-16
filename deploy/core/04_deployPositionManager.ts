@@ -6,27 +6,31 @@ import {
   ShortsTracker__factory,
   PositionManager__factory,
   ReferralStorage__factory,
-  Timelock__factory,
 } from "../../types";
 import { Ship } from "../../utils";
-import { NativeToken, tokens } from "../../config";
+import {
+  NativeToken,
+  tokens,
+  orderKeepers as configOrderKeepers,
+  liquidators as configLiquidators,
+} from "../../config";
 
 const depositFee = 30; // 0.3%
 
 const func: DeployFunction = async (hre) => {
   const { deploy, connect, accounts } = await Ship.init(hre);
 
-  const { orderKeeper0, orderKeeper1, liquidator } = accounts;
+  const { orderKeeper1, orderKeeper2, liquidator } = accounts;
   let orderKeepers: string[];
   let liquidators: string[];
 
   const nativeToken = tokens.avax.nativeToken as NativeToken;
 
   if (hre.network.tags.prod) {
-    orderKeepers = [];
-    liquidators = [];
+    orderKeepers = configOrderKeepers;
+    liquidators = configLiquidators;
   } else {
-    orderKeepers = [orderKeeper0.address, orderKeeper1.address];
+    orderKeepers = [orderKeeper1.address, orderKeeper2.address];
     liquidators = [liquidator.address];
 
     const nativeTokenContract = await connect(nativeToken.name);
