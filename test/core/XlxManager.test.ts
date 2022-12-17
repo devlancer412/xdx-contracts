@@ -1,22 +1,12 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
-  Timelock,
-  Timelock__factory,
   Token,
-  TokenManager,
-  TokenManager__factory,
-  XDX,
-  XdxTimelock,
-  XdxTimelock__factory,
-  XDX__factory,
   Vault,
   XlxManager,
   XLX,
   USDG,
   Router,
   VaultPriceFeed,
-  TimeDistributor,
-  YieldTracker,
   Reader,
   ShortsTracker,
   Vault__factory,
@@ -25,8 +15,6 @@ import {
   USDG__factory,
   Router__factory,
   VaultPriceFeed__factory,
-  TimeDistributor__factory,
-  YieldTracker__factory,
   Reader__factory,
   ShortsTracker__factory,
 } from "../../types";
@@ -35,7 +23,6 @@ import chai from "chai";
 import { solidity } from "ethereum-waffle";
 import {
   advanceTimeAndBlock,
-  fromWei,
   getTime,
   reportGasUsed,
   Ship,
@@ -49,7 +36,6 @@ chai.use(solidity);
 const { expect } = chai;
 
 let ship: Ship;
-let xdx: XDX;
 let vault: Vault;
 let xlxManager: XlxManager;
 let xlx: XLX;
@@ -96,7 +82,7 @@ const setup = deployments.createFixture(async (hre) => {
   };
 });
 
-describe.only("TokenManager", () => {
+describe("XlxManager", () => {
   beforeEach(async () => {
     const { accounts } = await setup();
 
@@ -106,7 +92,6 @@ describe.only("TokenManager", () => {
     signer1 = accounts.signer1;
     signer2 = accounts.signer2;
 
-    xdx = await ship.connect(XDX__factory);
     vault = await ship.connect(Vault__factory);
     xlxManager = await ship.connect(XlxManager__factory);
     xlx = await ship.connect(XLX__factory);

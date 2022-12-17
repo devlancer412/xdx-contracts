@@ -112,9 +112,9 @@ const func: DeployFunction = async (hre) => {
       router.address, // router
       usdg.address, // usdg
       vaultPriceFeed.address, // priceFeed
-      toUsd(2), // liquidationFeeUsd
-      100, // fundingRateFactor
-      100, // stableFundingRateFactor
+      hre.network.tags.live ? toUsd(2) : toUsd(5), // liquidationFeeUsd
+      hre.network.tags.live ? 100 : 500, // fundingRateFactor
+      hre.network.tags.live ? 100 : 500, // stableFundingRateFactor
     );
 
     for (const tokenItem of tokenArr) {
@@ -139,7 +139,7 @@ const func: DeployFunction = async (hre) => {
         token.address, // _token
         token.decimals, // _tokenDecimals
         token.tokenWeight, // _tokenWeight
-        token.minProfitBps, // _minProfitBps
+        hre.network.tags.live ? token.minProfitBps : 75, // _minProfitBps
         toWei(token.maxUsdgAmount, 30), // _maxUsdgAmount
         token.isStable, // _isStable
         token.isShortable, // _isShortable

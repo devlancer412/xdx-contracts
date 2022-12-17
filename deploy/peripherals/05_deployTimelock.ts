@@ -61,10 +61,15 @@ const func: DeployFunction = async (hre) => {
     await timelock.contract.setContractHandler(positionRouter.address, true);
     await timelock.contract.setContractHandler(positionManager.address, true);
 
-    await vault.setGov(timelock.address);
-    await timelock.contract.setVaultUtils(vault.address, vaultUtils.address);
+    if (hre.network.tags.live) {
+      await vault.setGov(timelock.address);
+      await timelock.contract.setVaultUtils(vault.address, vaultUtils.address);
 
-    await timelock.contract.setContractHandler(positionManager.address, true);
+      if (!(await vault.isLiquidator(positionManager.address))) {
+        await timelock.contract.setLiquidator(vault.address, positionManager.address, true);
+      }
+    }
+
     await timelock.contract.signalSetHandler(referralStorage.address, positionRouter.address, true);
     await timelock.contract.signalApprove(xdx.address, deployer.address, "1000000000000000000");
 
@@ -75,10 +80,6 @@ const func: DeployFunction = async (hre) => {
     for (const keeper of keepers) {
       await timelock.contract.setKeeper(keeper, true);
     }
-  }
-
-  if (!(await vault.isLiquidator(positionManager.address))) {
-    await timelock.contract.setLiquidator(vault.address, positionManager.address, true);
   }
 };
 
