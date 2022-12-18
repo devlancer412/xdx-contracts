@@ -1002,7 +1002,7 @@ function expectAumsAreEqual(aum0: BigNumber, aum1: BigNumber, label: string) {
 
   const diff = aum0.sub(aum1).abs();
   label = `${label || ""} aum0: ${aum0.toString()} aum1: ${aum1.toString()} diff: ${diff.toString()}`;
-  expect(diff, label).to.be.lt(aum0.div(10000)); // 0.01%
+  expect(diff, label).to.be.lt(aum0.div(100000)); // 0.001%
 }
 
 describe("PositionManager next short data calculations", function () {
@@ -1071,6 +1071,7 @@ describe("PositionManager next short data calculations", function () {
     await usdc.mint(signer1.address, toWei(500000, 6));
     await usdc.connect(signer1).approve(router.address, toWei(3000000, 6));
     await router.connect(signer1).approvePlugin(positionManager.address);
+    await vault.setFundingRate(60 * 60, 600, 600);
 
     await vault.setGov(timelock.address);
     await orderBook.setMinExecutionFee(500000);

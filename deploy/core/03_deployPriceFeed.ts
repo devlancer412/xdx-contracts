@@ -115,8 +115,8 @@ const func: DeployFunction = async (hre) => {
       usdg.address, // usdg
       vaultPriceFeed.address, // priceFeed
       hre.network.tags.live ? toUsd(2) : toUsd(5), // liquidationFeeUsd
-      hre.network.tags.live ? 100 : 500, // fundingRateFactor
-      hre.network.tags.live ? 100 : 500, // stableFundingRateFactor
+      100, // fundingRateFactor
+      100, // stableFundingRateFactor
     );
 
     for (const tokenItem of tokenArr) {
