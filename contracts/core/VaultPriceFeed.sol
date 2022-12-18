@@ -8,8 +8,6 @@ import "../oracle/interfaces/ISecondaryPriceFeed.sol";
 import "../oracle/interfaces/IChainlinkFlags.sol";
 import "../amm/interfaces/IPancakePair.sol";
 
-import "hardhat/console.sol";
-
 pragma solidity 0.6.12;
 
 contract VaultPriceFeed is IVaultPriceFeed {

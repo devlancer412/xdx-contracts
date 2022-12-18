@@ -12,8 +12,6 @@ import "../tokens/interfaces/IUSDG.sol";
 import "../tokens/interfaces/IMintable.sol";
 import "../access/Governable.sol";
 
-import "hardhat/console.sol";
-
 pragma solidity 0.6.12;
 
 contract XlxManager is ReentrancyGuard, Governable, IXlxManager {

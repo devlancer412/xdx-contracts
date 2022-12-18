@@ -83,7 +83,7 @@ const func: DeployFunction = async (hre) => {
     await fastPriceEvents.contract.setIsPriceFeed(fastPriceFeed.address, true);
   }
   if (fastPriceFeed.newlyDeployed) {
-    await fastPriceFeed.contract.initialize(1, signers, updaters);
+    await fastPriceFeed.contract.initialize(signers.length, signers, updaters);
     await fastPriceFeed.contract.setTokens(
       fastPriceTokens.map((t) => t.address),
       fastPriceTokens.map((t) => t.fastPricePrecision),
@@ -100,7 +100,9 @@ const func: DeployFunction = async (hre) => {
     await positionRouter.setPositionKeeper(fastPriceFeed.address, true);
     await fastPriceFeed.contract.setTokenManager(tokenManager.address);
 
-    await fastPriceFeed.contract.setGov(priceFeedTimelock.address);
+    if (hre.network.tags.live) {
+      await fastPriceFeed.contract.setGov(priceFeedTimelock.address);
+    }
     console.log("FastPriceFeeed: initialized");
   }
 

@@ -3,7 +3,6 @@ import {
   Timelock,
   Timelock__factory,
   Token,
-  XDX__factory,
   Vault,
   XlxManager,
   USDG,
@@ -12,15 +11,12 @@ import {
   ShortsTracker,
   Vault__factory,
   XlxManager__factory,
-  XLX__factory,
   USDG__factory,
   Router__factory,
   VaultPriceFeed__factory,
-  Reader__factory,
   ShortsTracker__factory,
   PositionManager,
   OrderBook,
-  VaultUtils__factory,
   PositionManager__factory,
   OrderBook__factory,
 } from "../../types";
@@ -60,19 +56,15 @@ const setup = deployments.createFixture(async (hre) => {
   ship = await Ship.init(hre);
   const { accounts, users } = ship;
   await deployments.fixture([
-    "xdx",
     "vault",
     "xlxManager",
-    "xlx",
     "usdg",
     "router",
     "vaultPriceFeed",
     "tokens",
-    "reader",
     "shortsTracker",
     "positionManager",
     "timelock",
-    "vaultUtils",
   ]);
 
   return {
