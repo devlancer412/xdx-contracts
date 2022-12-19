@@ -44,7 +44,7 @@ const setup = deployments.createFixture(async (hre) => {
   };
 });
 
-describe.only("Vault.directPoolDeposit", function () {
+describe("Vault.directPoolDeposit", function () {
   beforeEach(async function () {
     const { accounts, users } = await setup();
 
@@ -79,15 +79,11 @@ describe.only("Vault.directPoolDeposit", function () {
     await xlxManager.setInPrivateMode(false);
     await vaultPriceFeed.setIsSecondaryPriceEnabled(false);
 
-    await vault.setInManagerMode(false);
+    // await vault.setInManagerMode(false);
   });
 
   it("directPoolDeposit", async () => {
     await avaxPriceFeed.setLatestAnswer(toChainlinkPrice(300));
-
-    await expect(vault.connect(alice).directPoolDeposit(avax.address)).to.be.revertedWith(
-      "Vault: _token not whitelisted",
-    );
 
     await expect(vault.connect(alice).directPoolDeposit(avax.address)).to.be.revertedWith(
       "Vault: invalid tokenAmount",
