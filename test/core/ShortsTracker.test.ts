@@ -1,24 +1,9 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import {
-  Token,
-  Vault,
-  Router,
-  Vault__factory,
-  Router__factory,
-  VaultPriceFeed__factory,
-  USDG,
-  VaultPriceFeed,
-  USDG__factory,
-  PancakePair__factory,
-  ShortsTracker,
-  ShortsTracker__factory,
-} from "../../types";
+import { Token, Vault, Vault__factory, ShortsTracker, ShortsTracker__factory } from "../../types";
 import { deployments } from "hardhat";
 import chai from "chai";
 import { solidity } from "ethereum-waffle";
-import { reportGasUsed, Ship, toChainlinkPrice, toUsd, toWei } from "../../utils";
-import { PriceFeed } from "types";
-import { Wallet } from "ethers";
+import { Ship } from "../../utils";
 
 chai.use(solidity);
 const { expect } = chai;
@@ -45,7 +30,7 @@ const setup = deployments.createFixture(async (hre) => {
   };
 });
 
-describe.only("ShortsTracker", function () {
+describe("ShortsTracker", function () {
   beforeEach(async function () {
     const { accounts, users } = await setup();
 

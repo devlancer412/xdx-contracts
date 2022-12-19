@@ -38,7 +38,6 @@ const func: DeployFunction = async (hre) => {
       const priceFeedContract = (await connect(token.name + "PriceFeed")) as PriceFeed;
       token.address = tokenContract.address;
       token.priceFeed = priceFeedContract.address;
-      console.log(token.name, fromWei(await priceFeedContract.latestAnswer(), 8));
     }
   }
 

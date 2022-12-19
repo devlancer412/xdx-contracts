@@ -5,3 +5,9 @@ export const reportGasUsed = async (tx: ContractTransaction, label: string) => {
   console.info(label, gasUsed.toString());
   return gasUsed;
 };
+
+export const getTxFees = async (tx: ContractTransaction) => {
+  const receipt = await tx.wait();
+  // use receipt.effectiveGasPrice for newer versions of hardhat
+  return receipt.effectiveGasPrice.mul(receipt.gasUsed);
+};
