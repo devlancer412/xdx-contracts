@@ -13,7 +13,6 @@ import { deployments } from "hardhat";
 import chai from "chai";
 import { solidity } from "ethereum-waffle";
 import { advanceTimeAndBlock, reportGasUsed, Ship, toChainlinkPrice, toUsd, toWei } from "../../../utils";
-import { validateVaultBalance } from "./shared";
 
 chai.use(solidity);
 const { expect } = chai;
@@ -45,7 +44,7 @@ const setup = deployments.createFixture(async (hre) => {
   };
 });
 
-describe.only("Vault.decreaseShortPosition", function () {
+describe("Vault.decreaseShortPosition", function () {
   beforeEach(async function () {
     const { accounts, users } = await setup();
 
