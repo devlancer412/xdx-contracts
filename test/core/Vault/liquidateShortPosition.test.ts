@@ -23,7 +23,6 @@ let vault: Vault;
 let vaultPriceFeed: VaultPriceFeed;
 let btc: Token;
 let btcPriceFeed: PriceFeed;
-let avax: Token;
 let usdc: Token;
 let usdcPriceFeed: PriceFeed;
 let avaxPriceFeed: PriceFeed;
@@ -47,7 +46,7 @@ const setup = deployments.createFixture(async (hre) => {
   };
 });
 
-describe.only("Vault.liquidateShortPosition", function () {
+describe("Vault.liquidateShortPosition", function () {
   beforeEach(async function () {
     const { accounts, users } = await setup();
 
@@ -62,7 +61,6 @@ describe.only("Vault.liquidateShortPosition", function () {
 
     btc = (await ship.connect("btc")) as Token;
     btcPriceFeed = (await ship.connect("btcPriceFeed")) as PriceFeed;
-    avax = (await ship.connect("avax")) as Token;
     avaxPriceFeed = (await ship.connect("avaxPriceFeed")) as PriceFeed;
     usdc = (await ship.connect("usdc")) as Token;
     usdcPriceFeed = (await ship.connect("usdcPriceFeed")) as PriceFeed;
