@@ -107,10 +107,6 @@ describe("Vault.getPrice", function () {
       true, // _isShortable
     );
 
-    console.log(
-      (await vaultPriceFeed.getPrice(usdc.address, true, true, true)).toString(),
-      toWei(1.1, 30).toString(),
-    );
     expect(await vaultPriceFeed.getPrice(usdc.address, true, true, true)).eq(toWei(1.1, 30));
     await usdcPriceFeed.setLatestAnswer(toChainlinkPrice(1.1));
     expect(await vaultPriceFeed.getPrice(usdc.address, true, true, true)).eq(toWei(11, 29));

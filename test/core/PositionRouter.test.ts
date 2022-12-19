@@ -21,6 +21,7 @@ import {
   MaliciousTraderTest__factory,
   PositionRouterCallbackReceiverTest__factory,
   XLX__factory,
+  PriceFeed,
 } from "../../types";
 import { deployments } from "hardhat";
 import chai from "chai";
@@ -35,7 +36,6 @@ import {
   toUsd,
   toWei,
 } from "../../utils";
-import { PriceFeed } from "types";
 import { BigNumberish, constants, Wallet } from "ethers";
 
 chai.use(solidity);
