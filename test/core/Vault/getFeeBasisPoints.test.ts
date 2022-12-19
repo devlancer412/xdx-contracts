@@ -12,8 +12,7 @@ import {
 import { deployments } from "hardhat";
 import chai from "chai";
 import { solidity } from "ethereum-waffle";
-import { advanceTimeAndBlock, reportGasUsed, Ship, toChainlinkPrice, toUsd, toWei } from "../../../utils";
-import { validateVaultBalance } from "./shared";
+import { Ship, toChainlinkPrice, toUsd } from "../../../utils";
 
 chai.use(solidity);
 const { expect } = chai;
@@ -21,15 +20,15 @@ const { expect } = chai;
 let ship: Ship;
 let vault: Vault;
 let vaultPriceFeed: VaultPriceFeed;
-let btc: Token;
-let btcPriceFeed: PriceFeed;
+let avax: Token;
+let avaxPriceFeed: PriceFeed;
+let usdc: Token;
 let usdcPriceFeed: PriceFeed;
 
 let xlxManager: XlxManager;
 
+let deployer: SignerWithAddress;
 let alice: SignerWithAddress;
-let bob: SignerWithAddress;
-let user: SignerWithAddress;
 
 const setup = deployments.createFixture(async (hre) => {
   ship = await Ship.init(hre);
@@ -43,32 +42,32 @@ const setup = deployments.createFixture(async (hre) => {
   };
 });
 
-describe("Vault.fundingRate", function () {
+describe("Vault.getFeeBasisPoints", function () {
   beforeEach(async function () {
-    const { accounts, users } = await setup();
+    const { accounts } = await setup();
 
+    deployer = accounts.deployer;
     alice = accounts.alice;
-    bob = accounts.bob;
-    user = users[0];
 
     vault = await ship.connect(Vault__factory);
     vaultPriceFeed = await ship.connect(VaultPriceFeed__factory);
     xlxManager = await ship.connect(XlxManager__factory);
 
-    btc = (await ship.connect("btc")) as Token;
-    btcPriceFeed = (await ship.connect("btcPriceFeed")) as PriceFeed;
+    avax = (await ship.connect("avax")) as Token;
+    avaxPriceFeed = (await ship.connect("avaxPriceFeed")) as PriceFeed;
+    usdc = (await ship.connect("usdc")) as Token;
     usdcPriceFeed = (await ship.connect("usdcPriceFeed")) as PriceFeed;
 
     await vault.setFees(
       50, // _taxBasisPoints
-      20, // _stableTaxBasisPoints
-      30, // _mintBurnFeeBasisPoints
+      10, // _stableTaxBasisPoints
+      20, // _mintBurnFeeBasisPoints
       30, // _swapFeeBasisPoints
       4, // _stableSwapFeeBasisPoints
       10, // _marginFeeBasisPoints
       toUsd(5), // _liquidationFeeUsd
-      60 * 60, // _minProfitTime
-      false, // _hasDynamicFees
+      0, // _minProfitTime
+      true, // _hasDynamicFees
     );
     await vault.setFundingRate(60 * 60, 600, 600);
 
@@ -80,105 +79,103 @@ describe("Vault.fundingRate", function () {
     await vault.setInManagerMode(false);
   });
 
-  it("funding rate", async () => {
+  it("getFeeBasisPoints", async () => {
+    await avaxPriceFeed.setLatestAnswer(toChainlinkPrice(300));
+    expect(await vault.getTargetUsdgAmount(avax.address)).eq(0);
+
+    await avax.mint(vault.address, 100);
+    await vault.connect(alice).buyUSDG(avax.address, deployer.address);
+
+    expect(await vault.usdgAmounts(avax.address)).eq(29700);
+    expect(await vault.getTargetUsdgAmount(avax.address)).eq(2078); // 2078 = 1970 * avaxWeight / totalWeight
+
+    // usdgAmount(avax) is 29700, targetAmount(avax) is 29700
+    expect(await vault.getFeeBasisPoints(avax.address, 1000, 100, 50, true)).eq(150);
+    expect(await vault.getFeeBasisPoints(avax.address, 5000, 100, 50, true)).eq(150);
+    expect(await vault.getFeeBasisPoints(avax.address, 1000, 100, 50, false)).eq(0);
+    expect(await vault.getFeeBasisPoints(avax.address, 5000, 100, 50, false)).eq(0);
+
+    expect(await vault.getFeeBasisPoints(avax.address, 1000, 50, 100, true)).eq(150);
+    expect(await vault.getFeeBasisPoints(avax.address, 5000, 50, 100, true)).eq(150);
+    expect(await vault.getFeeBasisPoints(avax.address, 1000, 50, 100, false)).eq(0);
+    expect(await vault.getFeeBasisPoints(avax.address, 5000, 50, 100, false)).eq(0);
+
     await usdcPriceFeed.setLatestAnswer(toChainlinkPrice(1));
 
-    await btcPriceFeed.setLatestAnswer(toChainlinkPrice(40000));
-    await btcPriceFeed.setLatestAnswer(toChainlinkPrice(41000));
-    await btcPriceFeed.setLatestAnswer(toChainlinkPrice(40000));
+    expect(await vault.getTargetUsdgAmount(avax.address)).eq(2078);
+    expect(await vault.getTargetUsdgAmount(usdc.address)).eq(13958);
 
-    await btc.mint(bob.address, toWei(1, 8));
-    await btc.connect(bob).transfer(vault.address, 250000); // 0.0025 BTC => 100 USD
-    await vault.buyUSDG(btc.address, bob.address);
+    // usdgAmount(avax) is 29700, targetAmount(avax) is 14850
+    // incrementing avax has an increased fee, while reducing avax has a decreased fee
+    expect(await vault.getFeeBasisPoints(avax.address, 1000, 100, 50, true)).eq(150);
+    expect(await vault.getFeeBasisPoints(avax.address, 5000, 100, 50, true)).eq(150);
+    expect(await vault.getFeeBasisPoints(avax.address, 10000, 100, 50, true)).eq(150);
+    expect(await vault.getFeeBasisPoints(avax.address, 20000, 100, 50, true)).eq(150);
+    expect(await vault.getFeeBasisPoints(avax.address, 1000, 100, 50, false)).eq(0);
+    expect(await vault.getFeeBasisPoints(avax.address, 5000, 100, 50, false)).eq(0);
+    expect(await vault.getFeeBasisPoints(avax.address, 10000, 100, 50, false)).eq(0);
+    expect(await vault.getFeeBasisPoints(avax.address, 20000, 100, 50, false)).eq(0);
+    expect(await vault.getFeeBasisPoints(avax.address, 25000, 100, 50, false)).eq(0);
+    expect(await vault.getFeeBasisPoints(avax.address, 100000, 100, 50, false)).eq(0);
 
-    await btc.mint(alice.address, toWei(1, 8));
-    await btc.connect(bob).transfer(vault.address, 25000); // 0.00025 BTC => 10 USD
-    await expect(
-      vault.connect(alice).increasePosition(alice.address, btc.address, btc.address, toUsd(110), true),
-    ).to.be.revertedWith("Vault: reserve exceeds pool");
+    await usdc.mint(vault.address, 20000);
+    await vault.connect(alice).buyUSDG(usdc.address, deployer.address);
 
-    await vault.connect(alice).increasePosition(alice.address, btc.address, btc.address, toUsd(90), true);
+    expect(await vault.getTargetUsdgAmount(avax.address)).eq("1390186098141097");
+    expect(await vault.getTargetUsdgAmount(usdc.address)).eq("9334106658947369");
 
-    let position = await vault.getPosition(alice.address, btc.address, btc.address, true);
-    expect(position[0]).eq(toUsd(90)); // size
-    expect(position[1]).eq(toUsd(9.91)); // collateral, 10 - 90 * 0.1%
-    expect(position[2]).eq(toUsd(41000)); // averagePrice
-    expect(position[3]).eq(0); // entryFundingRate
-    expect(position[4]).eq(225000); // reserveAmount, 0.00225 * 40,000 => 90
+    const avaxConfig: [string, number, number, number, number, boolean, boolean] = [
+      avax.address, // _token
+      18, // _tokenDecimals
+      30000, // _tokenWeight
+      75, // _minProfitBps,
+      0, // _maxUsdgAmount
+      false, // _isStable
+      true, // _isShortable
+    ];
+    await vault.setTokenConfig(...avaxConfig);
 
-    await btcPriceFeed.setLatestAnswer(toChainlinkPrice(45100));
-    await btcPriceFeed.setLatestAnswer(toChainlinkPrice(46100));
-    await btcPriceFeed.setLatestAnswer(toChainlinkPrice(47100));
+    expect(await vault.getTargetUsdgAmount(avax.address)).eq("4843863058031162"); // increased by token weight
+    expect(await vault.getTargetUsdgAmount(usdc.address)).eq("7588718790915487"); // decreased
 
-    let leverage = await vault.getPositionLeverage(alice.address, btc.address, btc.address, true);
-    expect(leverage).eq(90817); // ~9X leverage
+    expect(await vault.usdgAmounts(avax.address)).eq(29700);
 
-    expect(await vault.feeReserves(btc.address)).eq(969);
-    expect(await vault.reservedAmounts(btc.address)).eq(225000);
-    expect(await vault.guaranteedUsd(btc.address)).eq(toUsd(80.09));
-    expect(await vault.poolAmounts(btc.address)).eq(274250 - 219);
-    expect(await btc.balanceOf(user.address)).eq(0);
+    // usdgAmount(avax) is 29700, targetAmount(avax) is 37270
+    // incrementing avax has a decreased fee, while reducing avax has an increased fee
+    expect(await vault.getFeeBasisPoints(avax.address, 1000, 100, 50, true)).eq(51);
+    expect(await vault.getFeeBasisPoints(avax.address, 5000, 100, 50, true)).eq(51);
+    expect(await vault.getFeeBasisPoints(avax.address, 10000, 100, 50, true)).eq(51);
+    expect(await vault.getFeeBasisPoints(avax.address, 1000, 100, 50, false)).eq(149);
+    expect(await vault.getFeeBasisPoints(avax.address, 5000, 100, 50, false)).eq(149);
+    expect(await vault.getFeeBasisPoints(avax.address, 10000, 100, 50, false)).eq(149);
 
-    const tx0 = await vault
-      .connect(alice)
-      .decreasePosition(alice.address, btc.address, btc.address, toUsd(3), toUsd(50), true, user.address);
-    await reportGasUsed(tx0, "decreasePosition gas used");
+    avaxConfig[2] = 5000;
+    await vault.setTokenConfig(...avaxConfig);
 
-    leverage = await vault.getPositionLeverage(alice.address, btc.address, btc.address, true);
-    expect(leverage).eq(57887); // ~5.8X leverage
+    await avax.mint(vault.address, 200);
+    await vault.connect(alice).buyUSDG(avax.address, deployer.address);
 
-    position = await vault.getPosition(alice.address, btc.address, btc.address, true);
-    expect(position[0]).eq(toUsd(40)); // size
-    expect(position[1]).eq(toUsd(9.91 - 3)); // collateral
-    expect(position[2]).eq(toUsd(41000)); // averagePrice
-    expect(position[3]).eq(0); // entryFundingRate
-    expect(position[4]).eq((225000 / 90) * 40); // reserveAmount, 0.00225 * 40,000 => 90
-    expect(position[5]).eq(toUsd(5)); // pnl
-    expect(position[6]).eq(true);
+    expect(await vault.usdgAmounts(avax.address)).eq(89700);
+    expect(await vault.getTargetUsdgAmount(avax.address)).eq("1013254966790629"); // decreased
+    expect(await vault.getTargetUsdgAmount(usdc.address)).eq("9524596687831919"); // increased
 
-    expect(await vault.feeReserves(btc.address)).eq(969 + 106); // 0.00000106 * 45100 => ~0.05 USD
-    expect(await vault.reservedAmounts(btc.address)).eq((225000 / 90) * 40);
-    expect(await vault.guaranteedUsd(btc.address)).eq(toUsd(33.09));
-    expect(await vault.poolAmounts(btc.address)).eq(274250 - 16878 - 106 - 1 - 219); // 257046
-    expect(await btc.balanceOf(user.address)).eq(16878); // 0.00016878 * 47100 => 7.949538 USD
+    // usdgAmount(avax) is 88800, targetAmount(avax) is 36266
+    // incrementing avax has an increased fee, while reducing avax has a decreased fee
+    expect(await vault.getFeeBasisPoints(avax.address, 1000, 100, 50, true)).eq(51);
+    expect(await vault.getFeeBasisPoints(avax.address, 5000, 100, 50, true)).eq(51);
+    expect(await vault.getFeeBasisPoints(avax.address, 10000, 100, 50, true)).eq(51);
+    expect(await vault.getFeeBasisPoints(avax.address, 1000, 100, 50, false)).eq(149);
+    expect(await vault.getFeeBasisPoints(avax.address, 5000, 100, 50, false)).eq(149);
+    expect(await vault.getFeeBasisPoints(avax.address, 20000, 100, 50, false)).eq(149);
+    expect(await vault.getFeeBasisPoints(avax.address, 50000, 100, 50, false)).eq(149);
+    expect(await vault.getFeeBasisPoints(avax.address, 80000, 100, 50, false)).eq(149);
 
-    await advanceTimeAndBlock(8 * 60 * 60 + 10);
-
-    await expect(
-      vault
-        .connect(alice)
-        .decreasePosition(alice.address, btc.address, btc.address, toUsd(3), 0, true, user.address),
-    ).to.be.revertedWith("Vault: liquidation fees exceed collateral");
-
-    const tx1 = await vault
-      .connect(alice)
-      .decreasePosition(alice.address, btc.address, btc.address, toUsd(1), 0, true, user.address);
-    await reportGasUsed(tx1, "withdraw collateral gas used");
-
-    position = await vault.getPosition(alice.address, btc.address, btc.address, true);
-    expect(position[0]).eq(toUsd(40)); // size
-    expect(position[1]).eq(toUsd(9.91 - 3 - 1)); // collateral
-    expect(position[2]).eq(toUsd(41000)); // averagePrice
-    expect(position[3]).eq(1867); // entryFundingRate
-    expect(position[4]).eq((225000 / 90) * 40); // reserveAmount, 0.00225 * 40,000 => 90
-    expect(position[5]).eq(toUsd(5)); // pnl
-    expect(position[6]).eq(true);
-
-    expect(await vault.getUtilisation(btc.address)).eq(392275); // 100000 / 254923 => ~39.2%
-
-    // funding rate factor => 600 / 1000000 (0.06%)
-    // utilisation => ~39.1%
-    // funding fee % => 0.02351628%
-    // position size => 40 USD
-    // funding fee  => 0.0094 USD
-    // 0.00000019 BTC => 0.00000019 * 47100 => ~0.009 USD
-
-    expect(await vault.feeReserves(btc.address)).eq(1233);
-    expect(await vault.reservedAmounts(btc.address)).eq((225000 / 90) * 40);
-    expect(await vault.guaranteedUsd(btc.address)).eq(toUsd(34.09));
-    expect(await vault.poolAmounts(btc.address)).eq(274250 - 16878 - 106 - 1 - 2123 - 219); // 0.00002123* 47100 => 1 USD
-    expect(await btc.balanceOf(user.address)).eq(18842);
-
-    await validateVaultBalance(vault, btc, 2);
+    expect(await vault.getFeeBasisPoints(avax.address, 1000, 50, 100, true)).eq(0);
+    expect(await vault.getFeeBasisPoints(avax.address, 5000, 50, 100, true)).eq(0);
+    expect(await vault.getFeeBasisPoints(avax.address, 10000, 50, 100, true)).eq(0);
+    expect(await vault.getFeeBasisPoints(avax.address, 1000, 50, 100, false)).eq(149);
+    expect(await vault.getFeeBasisPoints(avax.address, 5000, 50, 100, false)).eq(149);
+    expect(await vault.getFeeBasisPoints(avax.address, 20000, 50, 100, false)).eq(149);
+    expect(await vault.getFeeBasisPoints(avax.address, 50000, 50, 100, false)).eq(149);
   });
 });

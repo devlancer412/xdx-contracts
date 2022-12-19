@@ -43,7 +43,7 @@ const setup = deployments.createFixture(async (hre) => {
   };
 });
 
-describe.only("Vault.fundingRate", function () {
+describe("Vault.fundingRate", function () {
   beforeEach(async function () {
     const { accounts, users } = await setup();
 
