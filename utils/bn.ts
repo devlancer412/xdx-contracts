@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, utils } from "ethers";
 
 export const toBN = (value: number): BigNumber => {
   const valueString = value.toString();
@@ -8,7 +8,7 @@ export const toBN = (value: number): BigNumber => {
 
 export const toWei = (value: number, decimals = 18): BigNumber => {
   const valueString = value.toFixed(decimals);
-  const valueWeiBN = ethers.utils.parseUnits(valueString, decimals);
+  const valueWeiBN = utils.parseUnits(valueString, decimals);
   return valueWeiBN;
 };
 
@@ -19,7 +19,7 @@ export const fromBN = (valueBN: BigNumber): number => {
 };
 
 export const fromWei = (valueWeiBN: BigNumber, decimals = 18): number => {
-  const valueString = ethers.utils.formatUnits(valueWeiBN, decimals);
+  const valueString = utils.formatUnits(valueWeiBN, decimals);
   const valueNumber = Number(valueString);
   return valueNumber;
 };
@@ -35,8 +35,8 @@ export const fromBNArray = (valuesBN: BigNumber[]): number[] => {
 };
 
 export const toUsd = (value: number) => {
-  const normalizedValue = value * Math.pow(10, 10);
-  return ethers.BigNumber.from(normalizedValue).mul(ethers.BigNumber.from(10).pow(20));
+  const normalizedValue = Math.floor(value * Math.pow(10, 10));
+  return BigNumber.from(normalizedValue).mul(BigNumber.from(10).pow(20));
 };
 
 export const toChainlinkPrice = (value: number) => {

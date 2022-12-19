@@ -1,8 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
-  OrderBook__factory,
-  OrderBook,
-  Router__factory,
   VaultPriceFeed__factory,
   Token,
   Vault__factory,
@@ -10,20 +7,15 @@ import {
   USDG__factory,
   Vault,
   VaultPriceFeed,
-  Router,
   PriceFeed,
   XlxManager,
-  XLX,
-  XLX__factory,
   XlxManager__factory,
 } from "../../../types";
 import { deployments } from "hardhat";
 import chai from "chai";
 import { solidity } from "ethereum-waffle";
 import { advanceTimeAndBlock, getTime, Ship, toChainlinkPrice, toUsd, toWei } from "../../../utils";
-import { constants } from "ethers";
 import { validateVaultBalance } from "./shared";
-import { SetAveragePriceUpdateDelayEventObject } from "./../../../types/peripherals/ShortsTrackerTimelock";
 
 chai.use(solidity);
 const { expect } = chai;
@@ -39,7 +31,6 @@ let eth: Token;
 let ethPriceFeed: PriceFeed;
 
 let xlxManager: XlxManager;
-let xlx: XLX;
 
 let deployer: SignerWithAddress;
 let user0: SignerWithAddress;
@@ -49,7 +40,7 @@ let user2: SignerWithAddress;
 const setup = deployments.createFixture(async (hre) => {
   ship = await Ship.init(hre);
   const { accounts, users } = ship;
-  await deployments.fixture(["orderbook", "tokens", "vaultPriceFeed"]);
+  await deployments.fixture(["vault", "vaultPriceFeed", "usdg", "tokens", "xlxManager"]);
 
   return {
     ship,
@@ -71,7 +62,6 @@ describe("Vault.averagePrice", function () {
     vaultPriceFeed = await ship.connect(VaultPriceFeed__factory);
     usdg = await ship.connect(USDG__factory);
     xlxManager = await ship.connect(XlxManager__factory);
-    xlx = await ship.connect(XLX__factory);
 
     btc = (await ship.connect("btc")) as Token;
     btcPriceFeed = (await ship.connect("btcPriceFeed")) as PriceFeed;
