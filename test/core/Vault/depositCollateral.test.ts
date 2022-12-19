@@ -43,7 +43,7 @@ const setup = deployments.createFixture(async (hre) => {
 
 describe("Vault.depositCollateral", function () {
   beforeEach(async function () {
-    const { accounts, users } = await setup();
+    const { accounts } = await setup();
 
     alice = accounts.alice;
     bob = accounts.bob;

@@ -11,7 +11,7 @@ import {
   Router__factory,
   PriceFeed,
 } from "../../types";
-import { fromWei, Ship, toUsd, toWei } from "../../utils";
+import { Ship, toUsd, toWei } from "../../utils";
 import { TokenData, tokens, signers as configSigners, updaters as configUpdaters } from "../../config";
 
 const func: DeployFunction = async (hre) => {
@@ -54,7 +54,6 @@ const func: DeployFunction = async (hre) => {
   const router = await connect(Router__factory);
   const positionRouter = await connect(PositionRouter__factory);
   const priceFeedTimelock = await connect(PriceFeedTimelock__factory);
-  const tokenManager = await connect(TokenManager__factory);
 
   const fastPriceEvents = await deploy(FastPriceEvents__factory);
 
@@ -97,7 +96,7 @@ const func: DeployFunction = async (hre) => {
     await fastPriceFeed.contract.setPriceDataInterval(1 * 60);
 
     await positionRouter.setPositionKeeper(fastPriceFeed.address, true);
-    await fastPriceFeed.contract.setTokenManager(tokenManager.address);
+    // await fastPriceFeed.contract.setTokenManager(tokenManager.address);
 
     if (hre.network.tags.live) {
       await fastPriceFeed.contract.setGov(priceFeedTimelock.address);
@@ -156,12 +155,4 @@ const func: DeployFunction = async (hre) => {
 
 export default func;
 func.tags = ["fastPriceFeed", "vaultPriceFeed", "fastPriceEvents"];
-func.dependencies = [
-  "positionRouter",
-  "priceFeedTimelock",
-  "tokenManager",
-  "tokens",
-  "vault",
-  "usdg",
-  "router",
-];
+func.dependencies = ["positionRouter", "priceFeedTimelock", "tokens", "vault", "usdg", "router"];

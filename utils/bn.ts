@@ -1,4 +1,4 @@
-import { BigNumber, utils } from "ethers";
+import { BigNumber, BigNumberish, utils } from "ethers";
 
 export const toBN = (value: number): BigNumber => {
   const valueString = value.toString();
@@ -42,4 +42,60 @@ export const toUsd = (value: number) => {
 
 export const toChainlinkPrice = (value: number) => {
   return BigNumber.from(Math.floor(value * Math.pow(10, 8)));
+};
+
+export const getPriceBitArray = (prices: BigNumberish[]) => {
+  const priceBitArray = [];
+  let shouldExit = false;
+
+  for (let i = 0; i < Math.floor((prices.length - 1) / 8) + 1; i++) {
+    let priceBits = BigNumber.from("0");
+    for (let j = 0; j < 8; j++) {
+      const index = i * 8 + j;
+      if (index >= prices.length) {
+        shouldExit = true;
+        break;
+      }
+
+      const price = BigNumber.from(prices[index]);
+      if (price.gt(BigNumber.from("2147483648"))) {
+        // 2^31
+        throw new Error(`price exceeds bit limit ${price.toString()}`);
+      }
+      priceBits = priceBits.or(price.shl(j * 32));
+    }
+
+    priceBitArray.push(priceBits.toString());
+
+    if (shouldExit) {
+      break;
+    }
+  }
+
+  return priceBitArray;
+};
+
+export const getPriceBits = (prices: BigNumberish[]) => {
+  if (prices.length > 8) {
+    throw new Error("max prices.length exceeded");
+  }
+
+  let priceBits = BigNumber.from("0");
+
+  for (let j = 0; j < 8; j++) {
+    const index = j;
+    if (index >= prices.length) {
+      break;
+    }
+
+    const price = BigNumber.from(prices[index]);
+    if (price.gt(BigNumber.from("2147483648"))) {
+      // 2^31
+      throw new Error(`price exceeds bit limit ${price.toString()}`);
+    }
+
+    priceBits = priceBits.or(price.shl(j * 32));
+  }
+
+  return priceBits.toString();
 };

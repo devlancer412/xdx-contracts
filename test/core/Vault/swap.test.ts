@@ -51,7 +51,7 @@ const setup = deployments.createFixture(async (hre) => {
   };
 });
 
-describe.only("Vault.swap", function () {
+describe("Vault.swap", function () {
   beforeEach(async function () {
     const { accounts, users } = await setup();
 
