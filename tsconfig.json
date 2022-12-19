@@ -7,7 +7,6 @@
     "resolveJsonModule": true,
     "strictPropertyInitialization": false,
     "outDir": "dist",
-    "baseUrl": "./"
   },
   "include": [
     "hardhat.config.ts",

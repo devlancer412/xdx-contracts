@@ -7,7 +7,8 @@ export const toBN = (value: number): BigNumber => {
 };
 
 export const toWei = (value: number, decimals = 18): BigNumber => {
-  const valueString = value.toFixed(decimals);
+  const mainDecimal = value.toString().split(".")?.at(0)?.length ?? 0;
+  const valueString = value.toFixed(decimals > mainDecimal ? mainDecimal : decimals);
   const valueWeiBN = utils.parseUnits(valueString, decimals);
   return valueWeiBN;
 };
@@ -40,5 +41,5 @@ export const toUsd = (value: number) => {
 };
 
 export const toChainlinkPrice = (value: number) => {
-  return value * Math.pow(10, 8);
+  return BigNumber.from(Math.floor(value * Math.pow(10, 8)));
 };
