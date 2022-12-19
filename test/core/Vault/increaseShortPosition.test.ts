@@ -45,7 +45,7 @@ const setup = deployments.createFixture(async (hre) => {
   };
 });
 
-describe.only("Vault.increaseShortPosition", function () {
+describe("Vault.increaseShortPosition", function () {
   beforeEach(async function () {
     const { accounts, users } = await setup();
 
