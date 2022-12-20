@@ -48,7 +48,7 @@ const func: DeployFunction = async (hre) => {
       buffer, // buffer
       tokenManager.address, // tokenManager
       tokenManager.address, // mintReceiver
-      xlxManager.address, // glpManager
+      xlxManager.address, // xlxManager
       rewardRouter.address, // rewardRouter
       hre.network.tags.live ? maxTokenSupply : toWei(1000, 18), // maxTokenSupply
       10, // marginFeeBasisPoints 0.1%
