@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import { BigNumber, BigNumberish } from "ethers";
-import { OrderBook } from "../../../types";
 import { toUsd, toWei } from "../../../utils";
 
 export const PRICE_PRECISION = BigNumber.from(10).pow(30);

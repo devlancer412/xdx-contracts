@@ -310,7 +310,7 @@ describe("TokenManager", () => {
       tokenManager.connect(deployer).setGov(xdxTimelock.address, xdx.address, bob.address, 1),
     ).to.be.revertedWith("TokenManager: insufficient authorization");
 
-    await expect(xdxTimelock.connect(deployer).signalSetGov(xdx.address, bob.address)).to.be.revertedWith(
+    await expect(xdxTimelock.connect(alice).signalSetGov(xdx.address, bob.address)).to.be.revertedWith(
       "XdxTimelock: forbidden",
     );
 

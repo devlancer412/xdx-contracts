@@ -17,6 +17,7 @@ import {
   VaultPriceFeed__factory,
   Reader__factory,
   ShortsTracker__factory,
+  PriceFeed,
 } from "../../types";
 import { deployments } from "hardhat";
 import chai from "chai";
@@ -30,7 +31,6 @@ import {
   toUsd,
   toWei,
 } from "../../utils";
-import { PriceFeed } from "types";
 
 chai.use(solidity);
 const { expect } = chai;

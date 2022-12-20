@@ -33,7 +33,7 @@ chai.use(solidity);
 const { expect } = chai;
 
 let ship: Ship;
-let orderBook: OrderBook;
+let orderbook: OrderBook;
 let router: Router;
 let vault: Vault;
 let vaultPriceFeed: VaultPriceFeed;
@@ -64,7 +64,7 @@ const setup = deployments.createFixture(async (hre) => {
 });
 
 async function getCreatedSwapOrder(address: string, orderIndex = 0) {
-  const order = await orderBook.swapOrders(address, orderIndex);
+  const order = await orderbook.swapOrders(address, orderIndex);
   return order;
 }
 
@@ -98,7 +98,7 @@ describe("OrderBook, swap orders", function () {
     user1 = users[1];
     user2 = users[2];
 
-    orderBook = await ship.connect(OrderBook__factory);
+    orderbook = await ship.connect(OrderBook__factory);
     router = await ship.connect(Router__factory);
     vault = await ship.connect(Vault__factory);
     vaultPriceFeed = await ship.connect(VaultPriceFeed__factory);
@@ -110,10 +110,10 @@ describe("OrderBook, swap orders", function () {
     avax = (await ship.connect("avax")) as Token;
     avaxPriceFeed = (await ship.connect("avaxPriceFeed")) as PriceFeed;
 
-    await orderBook.setMinExecutionFee(500000);
-    await orderBook.setMinPurchaseTokenAmountUsd(toWei(5, 30));
-    await router.addPlugin(orderBook.address);
-    await router.connect(user0).approvePlugin(orderBook.address);
+    await orderbook.setMinExecutionFee(500000);
+    await orderbook.setMinPurchaseTokenAmountUsd(toWei(5, 30));
+    await router.addPlugin(orderbook.address);
+    await router.connect(user0).approvePlugin(orderbook.address);
 
     await vaultPriceFeed.setPriceSampleSpace(1);
     await vaultPriceFeed.setIsSecondaryPriceEnabled(false);
@@ -141,7 +141,7 @@ describe("OrderBook, swap orders", function () {
 
     // it's impossible to just mint usdg (?)
     await vault.setManager(router.address, true);
-    await vault.setManager(orderBook.address, true);
+    await vault.setManager(orderbook.address, true);
 
     await router
       .connect(user0)
@@ -198,7 +198,7 @@ describe("OrderBook, swap orders", function () {
 
   it("createSwapOrder, bad input", async () => {
     await expect(
-      orderBook
+      orderbook
         .connect(user0)
         .createSwapOrder([btc.address], toWei(1000, 6), 0, 1, true, defaultExecutionFee, false, true, {
           value: defaultExecutionFee,
@@ -207,7 +207,7 @@ describe("OrderBook, swap orders", function () {
     ).to.be.revertedWith("OrderBook: invalid _path.length");
 
     await expect(
-      orderBook
+      orderbook
         .connect(user0)
         .createSwapOrder(
           [btc.address, btc.address, usdc.address, usdc.address],
@@ -224,7 +224,7 @@ describe("OrderBook, swap orders", function () {
     ).to.be.revertedWith("OrderBook: invalid _path.length");
 
     await expect(
-      orderBook
+      orderbook
         .connect(user0)
         .createSwapOrder(
           [btc.address, avax.address],
@@ -240,7 +240,7 @@ describe("OrderBook, swap orders", function () {
     ).to.be.revertedWith("OrderBook: only weth could be wrapped");
 
     await expect(
-      orderBook
+      orderbook
         .connect(user0)
         .createSwapOrder(
           [btc.address, btc.address],
@@ -257,7 +257,7 @@ describe("OrderBook, swap orders", function () {
     ).to.be.revertedWith("OrderBook: invalid _path");
 
     await expect(
-      orderBook
+      orderbook
         .connect(user0)
         .createSwapOrder([usdc.address, btc.address], toWei(1000, 6), 0, 1, true, 100, false, true, {
           value: 100,
@@ -266,7 +266,7 @@ describe("OrderBook, swap orders", function () {
     ).to.be.revertedWith("OrderBook: insufficient execution fee");
 
     await expect(
-      orderBook
+      orderbook
         .connect(user0)
         .createSwapOrder(
           [usdc.address, btc.address],
@@ -288,7 +288,7 @@ describe("OrderBook, swap orders", function () {
   it("createSwapOrder, USDC -> BTC", async () => {
     const triggerRatio = toUsd(1).mul(PRICE_PRECISION).div(toUsd(58000));
     const userusdcBalanceBefore = await usdc.balanceOf(user0.address);
-    const tx = await orderBook
+    const tx = await orderbook
       .connect(user0)
       .createSwapOrder(
         [usdc.address, btc.address],
@@ -305,9 +305,9 @@ describe("OrderBook, swap orders", function () {
     const userusdcBalanceAfter = await usdc.balanceOf(user0.address);
     expect(userusdcBalanceAfter).to.be.equal(userusdcBalanceBefore.sub(toWei(1000, 6)));
 
-    const usdcBalance = await usdc.balanceOf(orderBook.address);
+    const usdcBalance = await usdc.balanceOf(orderbook.address);
     expect(usdcBalance).to.be.equal(toWei(1000, 6));
-    const avaxBalance = await avax.balanceOf(orderBook.address);
+    const avaxBalance = await avax.balanceOf(orderbook.address);
     expect(avaxBalance).to.be.equal(defaultExecutionFee);
 
     const order = await getCreatedSwapOrder(user0.address);
@@ -326,7 +326,7 @@ describe("OrderBook, swap orders", function () {
     const triggerRatio = getTriggerRatio(toUsd(550), toUsd(1));
 
     await expect(
-      orderBook
+      orderbook
         .connect(user0)
         .createSwapOrder(
           [avax.address, usdc.address],
@@ -342,7 +342,7 @@ describe("OrderBook, swap orders", function () {
     ).to.be.revertedWith("OrderBook: incorrect execution fee transferred");
 
     await expect(
-      orderBook
+      orderbook
         .connect(user0)
         .createSwapOrder(
           [avax.address, usdc.address],
@@ -357,7 +357,7 @@ describe("OrderBook, swap orders", function () {
         ),
     ).to.be.revertedWith("OrderBook: incorrect execution fee transferred");
 
-    const tx = await orderBook
+    const tx = await orderbook
       .connect(user0)
       .createSwapOrder(
         [avax.address, usdc.address],
@@ -371,7 +371,7 @@ describe("OrderBook, swap orders", function () {
         { value: defaultExecutionFee },
       );
     reportGasUsed(tx, "createSwapOrder");
-    const avaxBalance = await avax.balanceOf(orderBook.address);
+    const avaxBalance = await avax.balanceOf(orderbook.address);
     expect(avaxBalance).to.be.equal(defaultExecutionFee.add(toWei(10, 18)));
 
     const order = await getCreatedSwapOrder(user0.address);
@@ -392,7 +392,7 @@ describe("OrderBook, swap orders", function () {
     const value = defaultExecutionFee.add(amountIn);
 
     await expect(
-      orderBook
+      orderbook
         .connect(user0)
         .createSwapOrder(
           [avax.address, usdc.address],
@@ -408,7 +408,7 @@ describe("OrderBook, swap orders", function () {
     ).to.be.revertedWith("OrderBook: incorrect value transferred");
 
     await expect(
-      orderBook
+      orderbook
         .connect(user0)
         .createSwapOrder(
           [avax.address, usdc.address],
@@ -423,7 +423,7 @@ describe("OrderBook, swap orders", function () {
         ),
     ).to.be.revertedWith("OrderBook: incorrect value transferred");
 
-    const tx = await orderBook
+    const tx = await orderbook
       .connect(user0)
       .createSwapOrder(
         [avax.address, usdc.address],
@@ -437,7 +437,7 @@ describe("OrderBook, swap orders", function () {
         { value: value },
       );
     reportGasUsed(tx, "createSwapOrder");
-    const avaxBalance = await avax.balanceOf(orderBook.address);
+    const avaxBalance = await avax.balanceOf(orderbook.address);
     expect(avaxBalance).to.be.equal(value);
 
     const order = await getCreatedSwapOrder(user0.address);
@@ -456,7 +456,7 @@ describe("OrderBook, swap orders", function () {
     const triggerRatio = getTriggerRatio(toUsd(1), toUsd(310));
     const amountIn = toWei(100, 6);
 
-    const tx = await orderBook
+    const tx = await orderbook
       .connect(user0)
       .createSwapOrder(
         [usdc.address, avax.address],
@@ -486,7 +486,7 @@ describe("OrderBook, swap orders", function () {
 
   it("createSwapOrder, two orders", async () => {
     const triggerRatio1 = getTriggerRatio(toUsd(58000), toUsd(1));
-    const tx1 = await orderBook
+    const tx1 = await orderbook
       .connect(user0)
       .createSwapOrder(
         [usdc.address, btc.address],
@@ -502,7 +502,7 @@ describe("OrderBook, swap orders", function () {
     reportGasUsed(tx1, "createSwapOrder");
 
     const triggerRatio2 = getTriggerRatio(toUsd(59000), toUsd(1));
-    const tx2 = await orderBook
+    const tx2 = await orderbook
       .connect(user0)
       .createSwapOrder(
         [usdc.address, btc.address],
@@ -529,7 +529,7 @@ describe("OrderBook, swap orders", function () {
 
   it("cancelSwapOrder, tokenA != AVAX", async () => {
     const triggerRatio = toUsd(58000).mul(PRICE_PRECISION).div(toUsd(1));
-    await orderBook
+    await orderbook
       .connect(user0)
       .createSwapOrder(
         [usdc.address, btc.address],
@@ -546,7 +546,7 @@ describe("OrderBook, swap orders", function () {
     const balanceBefore = await user0.getBalance();
     const usdcBalanceBefore = await usdc.balanceOf(user0.address);
 
-    const tx = await orderBook.connect(user0).cancelSwapOrder(0);
+    const tx = await orderbook.connect(user0).cancelSwapOrder(0);
     reportGasUsed(tx, "canceSwapOrder");
     const txFees = await getTxFees(tx);
 
@@ -564,7 +564,7 @@ describe("OrderBook, swap orders", function () {
     const triggerRatio = toUsd(1).mul(PRICE_PRECISION).div(toUsd(550));
     const amountIn = toWei(10, 18);
     const value = defaultExecutionFee.add(amountIn);
-    await orderBook
+    await orderbook
       .connect(user0)
       .createSwapOrder(
         [avax.address, usdc.address],
@@ -580,7 +580,7 @@ describe("OrderBook, swap orders", function () {
 
     const balanceBefore = await user0.getBalance();
 
-    const tx = await orderBook.connect(user0).cancelSwapOrder(0);
+    const tx = await orderbook.connect(user0).cancelSwapOrder(0);
     reportGasUsed(tx, "canceSwapOrder");
     const txFees = await getTxFees(tx);
 
@@ -594,7 +594,7 @@ describe("OrderBook, swap orders", function () {
 
   it("updateSwapOrder", async () => {
     const triggerRatio = toUsd(58000).mul(PRICE_PRECISION).div(toUsd(1));
-    await orderBook
+    await orderbook
       .connect(user0)
       .createSwapOrder(
         [usdc.address, btc.address],
@@ -621,14 +621,14 @@ describe("OrderBook, swap orders", function () {
     const newMinOut = toWei(1, 8).div(1000);
 
     await expect(
-      orderBook.connect(user1).updateSwapOrder(0, newMinOut, triggerRatio, newTriggerAboveThreshold),
+      orderbook.connect(user1).updateSwapOrder(0, newMinOut, triggerRatio, newTriggerAboveThreshold),
     ).to.be.revertedWith("OrderBook: non-existent order");
 
     await expect(
-      orderBook.connect(user0).updateSwapOrder(1, newMinOut, triggerRatio, newTriggerAboveThreshold),
+      orderbook.connect(user0).updateSwapOrder(1, newMinOut, triggerRatio, newTriggerAboveThreshold),
     ).to.be.revertedWith("OrderBook: non-existent order");
 
-    const tx = await orderBook
+    const tx = await orderbook
       .connect(user0)
       .updateSwapOrder(0, newMinOut, triggerRatio, newTriggerAboveThreshold);
     reportGasUsed(tx, "updateSwapOrder");
@@ -651,20 +651,20 @@ describe("OrderBook, swap orders", function () {
     const path = [btc.address, avax.address];
     const minOut = await getMinOut(getTriggerRatio(toUsd(BTC_PRICE), toUsd(AVAX_PRICE - 50)), path, amountIn);
 
-    await orderBook
+    await orderbook
       .connect(user0)
       .createSwapOrder(path, amountIn, minOut, defaultTriggerRatio, false, defaultExecutionFee, false, true, {
         value: value,
       });
 
     await expect(
-      orderBook.executeSwapOrder(user0.address, 2, user1.address),
+      orderbook.executeSwapOrder(user0.address, 2, user1.address),
       "non-existent order",
     ).to.be.revertedWith("OrderBook: non-existent order");
 
     avaxPriceFeed.setLatestAnswer(toChainlinkPrice(AVAX_PRICE - 30));
     await expect(
-      orderBook.executeSwapOrder(user0.address, 0, user1.address),
+      orderbook.executeSwapOrder(user0.address, 0, user1.address),
       "insufficient amountOut",
     ).to.be.revertedWith("OrderBook: insufficient amountOut");
 
@@ -674,7 +674,7 @@ describe("OrderBook, swap orders", function () {
     const executorBalanceBefore = await executor.getBalance();
     const userBalanceBefore = await user0.getBalance();
 
-    const tx = await orderBook.executeSwapOrder(user0.address, 0, executor.address);
+    const tx = await orderbook.executeSwapOrder(user0.address, 0, executor.address);
     reportGasUsed(tx, "executeSwapOrder");
 
     const executorBalanceAfter = await executor.getBalance();
@@ -695,7 +695,7 @@ describe("OrderBook, swap orders", function () {
     const path = [usdc.address, avax.address];
     const minOut = await getMinOut(getTriggerRatio(toUsd(1), toUsd(AVAX_PRICE + 50)), path, amountIn);
 
-    await orderBook
+    await orderbook
       .connect(user0)
       .createSwapOrder(
         path,
@@ -713,7 +713,7 @@ describe("OrderBook, swap orders", function () {
     const executorBalanceBefore = await executor.getBalance();
     const userWavaxBalanceBefore = await avax.balanceOf(user0.address);
 
-    const tx = await orderBook.executeSwapOrder(user0.address, 0, executor.address);
+    const tx = await orderbook.executeSwapOrder(user0.address, 0, executor.address);
     reportGasUsed(tx, "executeSwapOrder");
 
     const executorBalanceAfter = await executor.getBalance();
@@ -738,7 +738,7 @@ describe("OrderBook, swap orders", function () {
     // e.g. user would not be happy if he sets order "buy if BTC > $65000" and order executes with $75000
     const minOut = await getMinOut(getTriggerRatio(toUsd(AVAX_PRICE), toUsd(63000)), path, amountIn);
 
-    await orderBook
+    await orderbook
       .connect(user0)
       .createSwapOrder(path, amountIn, minOut, triggerRatio, true, defaultExecutionFee, true, true, {
         value: value,
@@ -746,12 +746,12 @@ describe("OrderBook, swap orders", function () {
 
     const executor = user1;
 
-    await expect(orderBook.executeSwapOrder(user0.address, 2, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 2, executor.address)).to.be.revertedWith(
       "OrderBook: non-existent order",
     );
 
     btcPriceFeed.setLatestAnswer(toChainlinkPrice(60500));
-    await expect(orderBook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
       "OrderBook: invalid price for execution",
     );
 
@@ -760,7 +760,7 @@ describe("OrderBook, swap orders", function () {
     const executorBalanceBefore = await executor.getBalance();
     const userBtcBalanceBefore = await btc.balanceOf(user0.address);
 
-    const tx = await orderBook.executeSwapOrder(user0.address, 0, executor.address);
+    const tx = await orderbook.executeSwapOrder(user0.address, 0, executor.address);
     reportGasUsed(tx, "executeSwapOrder");
 
     const executorBalanceAfter = await user1.getBalance();
@@ -785,7 +785,7 @@ describe("OrderBook, swap orders", function () {
     // e.g. user would not be happy if he sets order "buy if BTC > $65000" and order executes with $75000
     const minOut = await getMinOut(getTriggerRatio(toUsd(AVAX_PRICE), toUsd(63000)), path, amountIn);
 
-    await orderBook
+    await orderbook
       .connect(user0)
       .createSwapOrder(path, amountIn, minOut, triggerRatio, true, defaultExecutionFee, true, true, {
         value: value,
@@ -793,12 +793,12 @@ describe("OrderBook, swap orders", function () {
 
     const executor = user1;
 
-    await expect(orderBook.executeSwapOrder(user0.address, 2, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 2, executor.address)).to.be.revertedWith(
       "OrderBook: non-existent order",
     );
 
     btcPriceFeed.setLatestAnswer(toChainlinkPrice(60500));
-    await expect(orderBook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
       "OrderBook: invalid price for execution",
     );
 
@@ -807,7 +807,7 @@ describe("OrderBook, swap orders", function () {
     const executorBalanceBefore = await executor.getBalance();
     const userBtcBalanceBefore = await btc.balanceOf(user0.address);
 
-    const tx = await orderBook.executeSwapOrder(user0.address, 0, executor.address);
+    const tx = await orderbook.executeSwapOrder(user0.address, 0, executor.address);
     reportGasUsed(tx, "executeSwapOrder");
 
     const executorBalanceAfter = await user1.getBalance();
@@ -832,24 +832,24 @@ describe("OrderBook, swap orders", function () {
     // e.g. user would not be happy if he sets order "buy if BTC > $65000" and order executes with $75000
     const minOut = await getMinOut(getTriggerRatio(toUsd(1), toUsd(63000)), path, amountIn);
 
-    await orderBook
+    await orderbook
       .connect(user0)
       .createSwapOrder(path, amountIn, minOut, triggerRatio, true, defaultExecutionFee, false, true, {
         value: value,
       });
     const executor = user1;
 
-    await expect(orderBook.executeSwapOrder(user0.address, 2, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 2, executor.address)).to.be.revertedWith(
       "OrderBook: non-existent order",
     );
 
     btcPriceFeed.setLatestAnswer(toChainlinkPrice(60500));
-    await expect(orderBook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
       "OrderBook: invalid price for execution",
     );
 
     btcPriceFeed.setLatestAnswer(toChainlinkPrice(70000));
-    await expect(orderBook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
       "OrderBook: insufficient amountOut",
     );
 
@@ -858,7 +858,7 @@ describe("OrderBook, swap orders", function () {
     const executorBalanceBefore = await executor.getBalance();
     const userBtcBalanceBefore = await btc.balanceOf(user0.address);
 
-    const tx = await orderBook.executeSwapOrder(user0.address, 0, executor.address);
+    const tx = await orderbook.executeSwapOrder(user0.address, 0, executor.address);
     reportGasUsed(tx, "executeSwapOrder");
 
     const executorBalanceAfter = await user1.getBalance();
@@ -883,7 +883,7 @@ describe("OrderBook, swap orders", function () {
     // e.g. user would not be happy if he sets order "buy if BTC > $65000" and order executes with $75000
     const minOut = await getMinOut(getTriggerRatio(toUsd(1), toUsd(63000)), path, amountIn);
 
-    await orderBook
+    await orderbook
       .connect(user0)
       .createSwapOrder(path, amountIn, minOut, triggerRatio, true, defaultExecutionFee, false, true, {
         value: value,
@@ -891,17 +891,17 @@ describe("OrderBook, swap orders", function () {
 
     const executor = user1;
 
-    await expect(orderBook.executeSwapOrder(user0.address, 2, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 2, executor.address)).to.be.revertedWith(
       "OrderBook: non-existent order",
     );
 
     btcPriceFeed.setLatestAnswer(toChainlinkPrice(60500));
-    await expect(orderBook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
       "OrderBook: invalid price for execution",
     );
 
     btcPriceFeed.setLatestAnswer(toChainlinkPrice(70000));
-    await expect(orderBook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
       "OrderBook: insufficient amountOut",
     );
 
@@ -910,7 +910,7 @@ describe("OrderBook, swap orders", function () {
     const executorBalanceBefore = await executor.getBalance();
     const userBtcBalanceBefore = await btc.balanceOf(user0.address);
 
-    const tx = await orderBook.executeSwapOrder(user0.address, 0, executor.address);
+    const tx = await orderbook.executeSwapOrder(user0.address, 0, executor.address);
     reportGasUsed(tx, "executeSwapOrder");
 
     const executorBalanceAfter = await user1.getBalance();
@@ -935,7 +935,7 @@ describe("OrderBook, swap orders", function () {
     // e.g. user would not be happy if he sets order "buy if BTC > $65000" and order executes with $75000
     const minOut = await getMinOut(getTriggerRatio(toUsd(1), toUsd(63000)), path, amountIn);
 
-    await orderBook
+    await orderbook
       .connect(user0)
       .createSwapOrder(path, amountIn, minOut, triggerRatio, true, defaultExecutionFee, false, true, {
         value: value,
@@ -943,17 +943,17 @@ describe("OrderBook, swap orders", function () {
 
     const executor = user1;
 
-    await expect(orderBook.executeSwapOrder(user0.address, 2, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 2, executor.address)).to.be.revertedWith(
       "OrderBook: non-existent order",
     );
 
     btcPriceFeed.setLatestAnswer(toChainlinkPrice(60500));
-    await expect(orderBook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
       "OrderBook: invalid price for execution",
     );
 
     btcPriceFeed.setLatestAnswer(toChainlinkPrice(70000));
-    await expect(orderBook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
       "OrderBook: insufficient amountOut",
     );
 
@@ -962,7 +962,7 @@ describe("OrderBook, swap orders", function () {
     const executorBalanceBefore = await executor.getBalance();
     const userBtcBalanceBefore = await btc.balanceOf(user0.address);
 
-    const tx = await orderBook.executeSwapOrder(user0.address, 0, executor.address);
+    const tx = await orderbook.executeSwapOrder(user0.address, 0, executor.address);
     reportGasUsed(tx, "executeSwapOrder");
 
     const executorBalanceAfter = await user1.getBalance();
@@ -987,7 +987,7 @@ describe("OrderBook, swap orders", function () {
     // e.g. user would not be happy if he sets order "buy if BTC > $65000" and order executes with $75000
     const minOut = await getMinOut(getTriggerRatio(toUsd(60000), toUsd(1)), path, amountIn);
 
-    await orderBook
+    await orderbook
       .connect(user0)
       .createSwapOrder(path, amountIn, minOut, triggerRatio, true, defaultExecutionFee, false, true, {
         value: value,
@@ -995,17 +995,17 @@ describe("OrderBook, swap orders", function () {
 
     const executor = user1;
 
-    await expect(orderBook.executeSwapOrder(user0.address, 2, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 2, executor.address)).to.be.revertedWith(
       "OrderBook: non-existent order",
     );
 
     btcPriceFeed.setLatestAnswer(toChainlinkPrice(63000));
-    await expect(orderBook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
       "OrderBook: invalid price for execution",
     );
 
     btcPriceFeed.setLatestAnswer(toChainlinkPrice(50000));
-    await expect(orderBook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
+    await expect(orderbook.executeSwapOrder(user0.address, 0, executor.address)).to.be.revertedWith(
       "OrderBook: insufficient amountOut",
     );
 
@@ -1014,7 +1014,7 @@ describe("OrderBook, swap orders", function () {
     const executorBalanceBefore = await executor.getBalance();
     const userUsdgBalanceBefore = await usdg.balanceOf(user0.address);
 
-    const tx = await orderBook.executeSwapOrder(user0.address, 0, executor.address);
+    const tx = await orderbook.executeSwapOrder(user0.address, 0, executor.address);
     reportGasUsed(tx, "executeSwapOrder");
 
     const executorBalanceAfter = await user1.getBalance();
@@ -1035,7 +1035,7 @@ describe("OrderBook, swap orders", function () {
       .div(toUsd(1));
     const order1Index = 0;
     // buy BTC with USDC when BTC price goes up
-    await orderBook
+    await orderbook
       .connect(user0)
       .createSwapOrder(
         [usdc.address, btc.address],
@@ -1057,7 +1057,7 @@ describe("OrderBook, swap orders", function () {
     const amountIn = toWei(5, 18);
     const value = defaultExecutionFee.add(amountIn);
     const minOut = await getMinOut(triggerRatio2, [avax.address, btc.address], amountIn);
-    await orderBook
+    await orderbook
       .connect(user0)
       .createSwapOrder(
         [avax.address, btc.address],
@@ -1076,7 +1076,7 @@ describe("OrderBook, swap orders", function () {
       .mul(PRICE_PRECISION)
       .div(toUsd(AVAX_PRICE));
     const order3Index = 2;
-    await orderBook
+    await orderbook
       .connect(user0)
       .createSwapOrder(
         [usdc.address, btc.address],
@@ -1093,7 +1093,7 @@ describe("OrderBook, swap orders", function () {
     // try to execute order 1
     await btcPriceFeed.setLatestAnswer(toChainlinkPrice(BTC_PRICE + 1500));
     await expect(
-      orderBook.executeSwapOrder(user0.address, order1Index, user1.address),
+      orderbook.executeSwapOrder(user0.address, order1Index, user1.address),
       "order1 revert",
     ).to.be.revertedWith("OrderBook: invalid price for execution");
 
@@ -1101,18 +1101,18 @@ describe("OrderBook, swap orders", function () {
     const newTriggerRatio1 = toUsd(BTC_PRICE + 1000)
       .mul(PRICE_PRECISION)
       .div(toUsd(1));
-    await orderBook.connect(user0).updateSwapOrder(order1Index, 0, newTriggerRatio1, true);
+    await orderbook.connect(user0).updateSwapOrder(order1Index, 0, newTriggerRatio1, true);
     let order1 = await getCreatedSwapOrder(user0.address, order1Index);
     expect(order1.triggerRatio, "order1 triggerRatio").to.be.equal(newTriggerRatio1);
 
     //  execute order 1
-    await orderBook.executeSwapOrder(user0.address, order1Index, user1.address);
+    await orderbook.executeSwapOrder(user0.address, order1Index, user1.address);
     order1 = await getCreatedSwapOrder(user0.address, order1Index);
     expect(order1.account, "order1 account").to.be.equal(constants.AddressZero);
 
     // cancel order 3
     const btcBalanceBefore = await btc.balanceOf(user0.address);
-    await orderBook.connect(user0).cancelSwapOrder(order3Index);
+    await orderbook.connect(user0).cancelSwapOrder(order3Index);
     const order3 = await getCreatedSwapOrder(user0.address, order3Index);
     expect(order3.account, "order3 account").to.be.equal(constants.AddressZero);
 
@@ -1121,13 +1121,13 @@ describe("OrderBook, swap orders", function () {
 
     // try to execute order 2
     await expect(
-      orderBook.executeSwapOrder(user0.address, order2Index, user1.address),
+      orderbook.executeSwapOrder(user0.address, order2Index, user1.address),
       "order2 revert",
     ).to.be.revertedWith("OrderBook: insufficient amountOut");
 
     // execute order 2
     await avaxPriceFeed.setLatestAnswer(toChainlinkPrice(AVAX_PRICE + 100)); // BTC price decreased relative to AVAX
-    await orderBook.executeSwapOrder(user0.address, order2Index, user1.address);
+    await orderbook.executeSwapOrder(user0.address, order2Index, user1.address);
     const order2 = await getCreatedSwapOrder(user0.address, order2Index);
     expect(order2.account, "order2 account").to.be.equal(constants.AddressZero);
   });

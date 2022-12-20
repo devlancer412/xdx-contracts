@@ -20,7 +20,7 @@ chai.use(solidity);
 const { expect } = chai;
 
 let ship: Ship;
-let orderBook: OrderBook;
+let orderbook: OrderBook;
 let usdg: USDG;
 let usdc: Token;
 let btc: Token;
@@ -45,7 +45,7 @@ describe("OrderBook, cancelMultiple", function () {
 
     alice = accounts.alice;
 
-    orderBook = await ship.connect(OrderBook__factory);
+    orderbook = await ship.connect(OrderBook__factory);
     btc = (await ship.connect("btc")) as Token;
     usdc = (await ship.connect("usdc")) as Token;
     usdg = await ship.connect(USDG__factory);
@@ -55,10 +55,10 @@ describe("OrderBook, cancelMultiple", function () {
     const vaultPriceFeed = await ship.connect(VaultPriceFeed__factory);
     const avax = (await ship.connect("avax")) as Token;
 
-    await orderBook.setMinExecutionFee(500000);
-    await orderBook.setMinPurchaseTokenAmountUsd(toWei(5, 30));
-    await router.addPlugin(orderBook.address);
-    await router.connect(alice).approvePlugin(orderBook.address);
+    await orderbook.setMinExecutionFee(500000);
+    await orderbook.setMinPurchaseTokenAmountUsd(toWei(5, 30));
+    await router.addPlugin(orderbook.address);
+    await router.connect(alice).approvePlugin(orderbook.address);
 
     await vaultPriceFeed.setPriceSampleSpace(1);
     await vaultPriceFeed.setIsSecondaryPriceEnabled(false);
@@ -88,7 +88,7 @@ describe("OrderBook, cancelMultiple", function () {
   it("cancelMultiple", async () => {
     const triggerRatio = toUsd(1).mul(PRICE_PRECISION).div(toUsd(58000));
 
-    await orderBook
+    await orderbook
       .connect(alice)
       .createSwapOrder(
         [usdc.address, btc.address],
@@ -101,10 +101,10 @@ describe("OrderBook, cancelMultiple", function () {
         true,
         { value: defaultExecutionFee },
       );
-    let swapOrder = await orderBook.swapOrders(alice.address, 0);
+    let swapOrder = await orderbook.swapOrders(alice.address, 0);
     expect(swapOrder.account).to.be.equal(alice.address);
 
-    await orderBook.connect(alice).createIncreaseOrder(
+    await orderbook.connect(alice).createIncreaseOrder(
       [btc.address],
       toWei(1, 8),
       btc.address,
@@ -118,10 +118,10 @@ describe("OrderBook, cancelMultiple", function () {
       false,
       { value: defaultExecutionFee },
     );
-    let increaseOrder = await orderBook.increaseOrders(alice.address, 0);
+    let increaseOrder = await orderbook.increaseOrders(alice.address, 0);
     expect(increaseOrder.account).to.be.equal(alice.address);
 
-    await orderBook
+    await orderbook
       .connect(alice)
       .createDecreaseOrder(
         btc.address,
@@ -135,7 +135,7 @@ describe("OrderBook, cancelMultiple", function () {
           value: defaultExecutionFee,
         },
       );
-    await orderBook
+    await orderbook
       .connect(alice)
       .createDecreaseOrder(
         btc.address,
@@ -149,28 +149,28 @@ describe("OrderBook, cancelMultiple", function () {
           value: defaultExecutionFee,
         },
       );
-    let decreaseOrder = await orderBook.decreaseOrders(alice.address, 1);
+    let decreaseOrder = await orderbook.decreaseOrders(alice.address, 1);
     expect(decreaseOrder.account).to.be.equal(alice.address);
 
-    await orderBook.connect(alice).cancelMultiple([0], [], []); // delete swap order
-    swapOrder = await orderBook.swapOrders(alice.address, 0);
+    await orderbook.connect(alice).cancelMultiple([0], [], []); // delete swap order
+    swapOrder = await orderbook.swapOrders(alice.address, 0);
     expect(swapOrder.account).to.be.equal(constants.AddressZero);
-    increaseOrder = await orderBook.increaseOrders(alice.address, 0);
+    increaseOrder = await orderbook.increaseOrders(alice.address, 0);
     expect(increaseOrder.account).to.be.equal(alice.address);
-    decreaseOrder = await orderBook.decreaseOrders(alice.address, 1);
+    decreaseOrder = await orderbook.decreaseOrders(alice.address, 1);
     expect(decreaseOrder.account).to.be.equal(alice.address);
 
-    await orderBook.connect(alice).cancelMultiple([], [0], [1]); // delete increase and decrease
-    swapOrder = await orderBook.swapOrders(alice.address, 0);
+    await orderbook.connect(alice).cancelMultiple([], [0], [1]); // delete increase and decrease
+    swapOrder = await orderbook.swapOrders(alice.address, 0);
     expect(swapOrder.account).to.be.equal(constants.AddressZero);
-    increaseOrder = await orderBook.increaseOrders(alice.address, 0);
+    increaseOrder = await orderbook.increaseOrders(alice.address, 0);
     expect(increaseOrder.account).to.be.equal(constants.AddressZero);
-    decreaseOrder = await orderBook.decreaseOrders(alice.address, 1);
+    decreaseOrder = await orderbook.decreaseOrders(alice.address, 1);
     expect(decreaseOrder.account).to.be.equal(constants.AddressZero);
-    decreaseOrder = await orderBook.decreaseOrders(alice.address, 0);
+    decreaseOrder = await orderbook.decreaseOrders(alice.address, 0);
     expect(decreaseOrder.account).to.be.equal(alice.address);
 
-    await expect(orderBook.connect(alice).cancelMultiple([0], [], [])).to.be.revertedWith(
+    await expect(orderbook.connect(alice).cancelMultiple([0], [], [])).to.be.revertedWith(
       "OrderBook: non-existent order",
     );
   });

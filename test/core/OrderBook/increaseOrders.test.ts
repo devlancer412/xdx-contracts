@@ -9,6 +9,7 @@ import {
   Router,
   VaultPriceFeed,
   Vault,
+  PriceFeed,
 } from "../../../types";
 import { deployments } from "hardhat";
 import chai from "chai";
@@ -24,13 +25,12 @@ import {
   validateOrderFields,
 } from "./shared";
 import { BigNumber, constants } from "ethers";
-import { PriceFeed } from "types";
 
 chai.use(solidity);
 const { expect } = chai;
 
 let ship: Ship;
-let orderBook: OrderBook;
+let orderbook: OrderBook;
 let router: Router;
 let vault: Vault;
 let vaultPriceFeed: VaultPriceFeed;
@@ -57,7 +57,7 @@ const setup = deployments.createFixture(async (hre) => {
 });
 
 async function getCreatedIncreaseOrder(address: string, orderIndex = 0) {
-  const order = await orderBook.increaseOrders(address, orderIndex);
+  const order = await orderbook.increaseOrders(address, orderIndex);
   return order;
 }
 
@@ -70,7 +70,7 @@ describe("OrderBook, increase position orders", function () {
     user1 = users[1];
     user2 = users[2];
 
-    orderBook = await ship.connect(OrderBook__factory);
+    orderbook = await ship.connect(OrderBook__factory);
     router = await ship.connect(Router__factory);
     vault = await ship.connect(Vault__factory);
     vaultPriceFeed = await ship.connect(VaultPriceFeed__factory);
@@ -79,10 +79,10 @@ describe("OrderBook, increase position orders", function () {
     usdc = (await ship.connect("usdc")) as Token;
     avax = (await ship.connect("avax")) as Token;
 
-    await orderBook.setMinExecutionFee(500000);
-    await orderBook.setMinPurchaseTokenAmountUsd(toWei(5, 30));
-    await router.addPlugin(orderBook.address);
-    await router.connect(user0).approvePlugin(orderBook.address);
+    await orderbook.setMinExecutionFee(500000);
+    await orderbook.setMinPurchaseTokenAmountUsd(toWei(5, 30));
+    await router.addPlugin(orderbook.address);
+    await router.connect(user0).approvePlugin(orderbook.address);
 
     await vaultPriceFeed.setPriceSampleSpace(1);
     await vaultPriceFeed.setIsSecondaryPriceEnabled(false);
@@ -147,7 +147,7 @@ describe("OrderBook, increase position orders", function () {
     const lowExecutionFee = 100;
     let counter = 0;
     await expect(
-      orderBook.connect(user0).createIncreaseOrder(
+      orderbook.connect(user0).createIncreaseOrder(
         [btc.address],
         toWei(1, 8),
         btc.address,
@@ -166,7 +166,7 @@ describe("OrderBook, increase position orders", function () {
 
     const goodExecutionFee = toWei(1, 8);
     await expect(
-      orderBook.connect(user0).createIncreaseOrder(
+      orderbook.connect(user0).createIncreaseOrder(
         [btc.address],
         toWei(1, 8),
         btc.address,
@@ -184,7 +184,7 @@ describe("OrderBook, increase position orders", function () {
     ).to.be.revertedWith("OrderBook: incorrect execution fee transferred");
 
     await expect(
-      orderBook.connect(user0).createIncreaseOrder(
+      orderbook.connect(user0).createIncreaseOrder(
         [btc.address],
         toWei(1, 8),
         btc.address,
@@ -202,7 +202,7 @@ describe("OrderBook, increase position orders", function () {
     ).to.be.revertedWith("OrderBook: incorrect execution fee transferred");
 
     await expect(
-      orderBook.connect(user0).createIncreaseOrder(
+      orderbook.connect(user0).createIncreaseOrder(
         [avax.address],
         toWei(1, 8),
         avax.address,
@@ -220,7 +220,7 @@ describe("OrderBook, increase position orders", function () {
     ).to.be.revertedWith("OrderBook: incorrect value transferred");
 
     await expect(
-      orderBook.connect(user0).createIncreaseOrder(
+      orderbook.connect(user0).createIncreaseOrder(
         [btc.address],
         toWei(1, 8),
         btc.address,
@@ -238,7 +238,7 @@ describe("OrderBook, increase position orders", function () {
     ).to.be.revertedWith("OrderBook: only weth could be wrapped");
 
     await expect(
-      orderBook.connect(user0).createIncreaseOrder(
+      orderbook.connect(user0).createIncreaseOrder(
         [avax.address],
         toWei(10, 8),
         avax.address,
@@ -256,7 +256,7 @@ describe("OrderBook, increase position orders", function () {
     ).to.be.revertedWith("OrderBook: incorrect execution fee transferred");
 
     await expect(
-      orderBook.connect(user0).createIncreaseOrder(
+      orderbook.connect(user0).createIncreaseOrder(
         [usdc.address],
         toWei(4, 6),
         usdc.address,
@@ -274,7 +274,7 @@ describe("OrderBook, increase position orders", function () {
     ).to.be.revertedWith("OrderBook: insufficient collateral");
 
     await expect(
-      orderBook.connect(user0).createIncreaseOrder(
+      orderbook.connect(user0).createIncreaseOrder(
         [usdc.address, btc.address, avax.address, btc.address],
         toWei(4, 6),
         btc.address,
@@ -294,7 +294,7 @@ describe("OrderBook, increase position orders", function () {
 
   it("createIncreaseOrder, two orders", async () => {
     const sizeDelta1 = toUsd(40000);
-    await orderBook.connect(user0).createIncreaseOrder(
+    await orderbook.connect(user0).createIncreaseOrder(
       [btc.address],
       toWei(1, 8).div(10),
       btc.address,
@@ -310,7 +310,7 @@ describe("OrderBook, increase position orders", function () {
     );
 
     const sizeDelta2 = toUsd(50000);
-    orderBook.connect(user0).createIncreaseOrder(
+    orderbook.connect(user0).createIncreaseOrder(
       [btc.address],
       toWei(1, 8).div(10),
       btc.address,
@@ -333,10 +333,10 @@ describe("OrderBook, increase position orders", function () {
   });
 
   it("createIncreaseOrder, pay WETH", async () => {
-    const avaxBalanceBefore = await avax.balanceOf(orderBook.address);
+    const avaxBalanceBefore = await avax.balanceOf(orderbook.address);
     const amountIn = toWei(30, 18);
     const value = defaultExecutionFee;
-    const tx = await orderBook.connect(user0).createIncreaseOrder(
+    const tx = await orderbook.connect(user0).createIncreaseOrder(
       [avax.address],
       amountIn,
       avax.address,
@@ -354,7 +354,7 @@ describe("OrderBook, increase position orders", function () {
     reportGasUsed(tx, "createIncreaseOrder gas used");
 
     const order = await getCreatedIncreaseOrder(user0.address);
-    const avaxBalanceAfter = await avax.balanceOf(orderBook.address);
+    const avaxBalanceAfter = await avax.balanceOf(orderbook.address);
 
     const avaxBalanceDiff = avaxBalanceAfter.sub(avaxBalanceBefore);
     expect(avaxBalanceDiff, "AVAX balance").to.be.equal(amountIn.add(defaultExecutionFee));
@@ -373,10 +373,10 @@ describe("OrderBook, increase position orders", function () {
   });
 
   it("createIncreaseOrder, pay AVAX", async () => {
-    const avaxBalanceBefore = await avax.balanceOf(orderBook.address);
+    const avaxBalanceBefore = await avax.balanceOf(orderbook.address);
     const amountIn = toWei(30, 18);
     const value = defaultExecutionFee.add(amountIn);
-    const tx = await orderBook.connect(user0).createIncreaseOrder(
+    const tx = await orderbook.connect(user0).createIncreaseOrder(
       [avax.address],
       amountIn,
       btc.address,
@@ -394,7 +394,7 @@ describe("OrderBook, increase position orders", function () {
     reportGasUsed(tx, "createIncreaseOrder gas used");
 
     const order = await getCreatedIncreaseOrder(user0.address);
-    const avaxBalanceAfter = await avax.balanceOf(orderBook.address);
+    const avaxBalanceAfter = await avax.balanceOf(orderbook.address);
 
     const avaxBalanceDiff = avaxBalanceAfter.sub(avaxBalanceBefore);
     expect(avaxBalanceDiff, "AVAX balance").to.be.equal(amountIn.add(defaultExecutionFee));
@@ -413,8 +413,8 @@ describe("OrderBook, increase position orders", function () {
   });
 
   it("createIncreaseOrder, long A, transfer and purchase A", async () => {
-    const btcBalanceBefore = await btc.balanceOf(orderBook.address);
-    const tx = await orderBook.connect(user0).createIncreaseOrder(
+    const btcBalanceBefore = await btc.balanceOf(orderbook.address);
+    const tx = await orderbook.connect(user0).createIncreaseOrder(
       [btc.address],
       toWei(1, 8),
       btc.address,
@@ -431,9 +431,9 @@ describe("OrderBook, increase position orders", function () {
     reportGasUsed(tx, "createIncreaseOrder gas used");
 
     const order = await getCreatedIncreaseOrder(user0.address);
-    const btcBalanceAfter = await btc.balanceOf(orderBook.address);
+    const btcBalanceAfter = await btc.balanceOf(orderbook.address);
 
-    expect(await avax.balanceOf(orderBook.address), "AVAX balance").to.be.equal(defaultExecutionFee);
+    expect(await avax.balanceOf(orderbook.address), "AVAX balance").to.be.equal(defaultExecutionFee);
     expect(btcBalanceAfter.sub(btcBalanceBefore), "BTC balance").to.be.equal(toWei(1, 8));
 
     validateOrderFields(order, {
@@ -450,8 +450,8 @@ describe("OrderBook, increase position orders", function () {
   });
 
   it("createIncreaseOrder, long A, transfer A, purchase B", async () => {
-    const usdcBalanceBefore = await usdc.balanceOf(orderBook.address);
-    const tx = await orderBook.connect(user0).createIncreaseOrder(
+    const usdcBalanceBefore = await usdc.balanceOf(orderbook.address);
+    const tx = await orderbook.connect(user0).createIncreaseOrder(
       [btc.address, usdc.address],
       toWei(1, 8),
       btc.address,
@@ -466,10 +466,10 @@ describe("OrderBook, increase position orders", function () {
       { value: defaultExecutionFee },
     );
     reportGasUsed(tx, "createIncreaseOrder gas used");
-    const usdcBalanceAfter = await usdc.balanceOf(orderBook.address);
+    const usdcBalanceAfter = await usdc.balanceOf(orderbook.address);
     const order = await getCreatedIncreaseOrder(user0.address);
 
-    expect(await avax.balanceOf(orderBook.address), "AVAX balance").to.be.equal(defaultExecutionFee);
+    expect(await avax.balanceOf(orderbook.address), "AVAX balance").to.be.equal(defaultExecutionFee);
     expect(usdcBalanceAfter, "usdcBalanceAfter").to.be.equal(usdcBalanceBefore.add("59880000000"));
 
     validateOrderFields(order, {
@@ -486,9 +486,9 @@ describe("OrderBook, increase position orders", function () {
   });
 
   it("createIncreaseOrder, short A, transfer B, purchase B", async () => {
-    const usdcBalanceBefore = await usdc.balanceOf(orderBook.address);
+    const usdcBalanceBefore = await usdc.balanceOf(orderbook.address);
     const amountIn = toWei(30000, 6);
-    const tx = await orderBook.connect(user0).createIncreaseOrder(
+    const tx = await orderbook.connect(user0).createIncreaseOrder(
       [usdc.address],
       amountIn,
       btc.address,
@@ -503,10 +503,10 @@ describe("OrderBook, increase position orders", function () {
       { value: defaultExecutionFee },
     );
     reportGasUsed(tx, "createIncreaseOrder gas used");
-    const usdcBalanceAfter = await usdc.balanceOf(orderBook.address);
+    const usdcBalanceAfter = await usdc.balanceOf(orderbook.address);
 
     const order = await getCreatedIncreaseOrder(user0.address);
-    expect(await avax.balanceOf(orderBook.address)).to.be.equal(defaultExecutionFee);
+    expect(await avax.balanceOf(orderbook.address)).to.be.equal(defaultExecutionFee);
     expect(usdcBalanceAfter.sub(usdcBalanceBefore), "usdcBalanceAfter").to.be.equal(amountIn);
 
     validateOrderFields(order, {
@@ -522,8 +522,8 @@ describe("OrderBook, increase position orders", function () {
   });
 
   it("createIncreaseOrder, short A, transfer A, purchase B", async () => {
-    const usdcBalanceBefore = await usdc.balanceOf(orderBook.address);
-    const tx = await orderBook.connect(user0).createIncreaseOrder(
+    const usdcBalanceBefore = await usdc.balanceOf(orderbook.address);
+    const tx = await orderbook.connect(user0).createIncreaseOrder(
       [btc.address, usdc.address],
       toWei(1, 8),
       btc.address,
@@ -538,11 +538,11 @@ describe("OrderBook, increase position orders", function () {
       { value: defaultExecutionFee },
     );
     reportGasUsed(tx, "createIncreaseOrder gas used");
-    const usdcBalanceAfter = await usdc.balanceOf(orderBook.address);
+    const usdcBalanceAfter = await usdc.balanceOf(orderbook.address);
 
     const order = await getCreatedIncreaseOrder(user0.address);
 
-    expect(await avax.balanceOf(orderBook.address)).to.be.equal(defaultExecutionFee);
+    expect(await avax.balanceOf(orderbook.address)).to.be.equal(defaultExecutionFee);
     expect(usdcBalanceAfter).to.be.equal(usdcBalanceBefore.add("59880000000"));
 
     validateOrderFields(order, {
@@ -559,7 +559,7 @@ describe("OrderBook, increase position orders", function () {
   });
 
   it("updateIncreaseOrder", async () => {
-    orderBook.connect(user0).createIncreaseOrder(
+    orderbook.connect(user0).createIncreaseOrder(
       [btc.address],
       toWei(1, 8),
       btc.address,
@@ -579,12 +579,12 @@ describe("OrderBook, increase position orders", function () {
     const newTriggerAboveThreshold = false;
 
     await expect(
-      orderBook
+      orderbook
         .connect(user1)
         .updateIncreaseOrder(0, newSizeDelta, newTriggerPrice, newTriggerAboveThreshold),
     ).to.be.revertedWith("OrderBook: non-existent order");
 
-    const tx = await orderBook
+    const tx = await orderbook
       .connect(user0)
       .updateIncreaseOrder(0, newSizeDelta, newTriggerPrice, newTriggerAboveThreshold);
     reportGasUsed(tx, "updateIncreaseOrder gas used");
@@ -601,7 +601,7 @@ describe("OrderBook, increase position orders", function () {
   it("cancelOrder", async () => {
     const avaxBalanceBefore = await user0.getBalance();
     const tokenBalanceBefore = await btc.balanceOf(user0.address);
-    const tx = await orderBook.connect(user0).createIncreaseOrder(
+    const tx = await orderbook.connect(user0).createIncreaseOrder(
       [btc.address],
       toWei(1, 8),
       btc.address,
@@ -617,11 +617,11 @@ describe("OrderBook, increase position orders", function () {
     );
     let txFees = await getTxFees(tx);
 
-    await expect(orderBook.connect(user1).cancelIncreaseOrder(0)).to.be.revertedWith(
+    await expect(orderbook.connect(user1).cancelIncreaseOrder(0)).to.be.revertedWith(
       "OrderBook: non-existent order",
     );
 
-    const tx2 = await orderBook.connect(user0).cancelIncreaseOrder(0);
+    const tx2 = await orderbook.connect(user0).cancelIncreaseOrder(0);
     reportGasUsed(tx2, "cancelIncreaseOrder gas used");
 
     txFees = txFees.add(await getTxFees(tx2));
@@ -637,10 +637,10 @@ describe("OrderBook, increase position orders", function () {
 
   it("cancelOrder, pay AVAX", async () => {
     const balanceBefore = await user0.getBalance();
-    const avaxBalanceBefore = await avax.balanceOf(orderBook.address);
+    const avaxBalanceBefore = await avax.balanceOf(orderbook.address);
     const amountIn = toWei(30, 18);
     const value = defaultExecutionFee.add(amountIn);
-    const tx = await orderBook.connect(user0).createIncreaseOrder(
+    const tx = await orderbook.connect(user0).createIncreaseOrder(
       [avax.address],
       amountIn,
       btc.address,
@@ -656,11 +656,11 @@ describe("OrderBook, increase position orders", function () {
     );
     let txFees = await getTxFees(tx);
 
-    await expect(orderBook.connect(user1).cancelIncreaseOrder(0)).to.be.revertedWith(
+    await expect(orderbook.connect(user1).cancelIncreaseOrder(0)).to.be.revertedWith(
       "OrderBook: non-existent order",
     );
 
-    const tx2 = await orderBook.connect(user0).cancelIncreaseOrder(0);
+    const tx2 = await orderbook.connect(user0).cancelIncreaseOrder(0);
     reportGasUsed(tx2, "cancelIncreaseOrder gas used");
     txFees = txFees.add(await getTxFees(tx2));
 
@@ -672,7 +672,7 @@ describe("OrderBook, increase position orders", function () {
   });
 
   it("executeOrder, non-existent order", async () => {
-    await expect(orderBook.executeIncreaseOrder(user2.address, 0, user1.address)).to.be.revertedWith(
+    await expect(orderbook.executeIncreaseOrder(user2.address, 0, user1.address)).to.be.revertedWith(
       "OrderBook: non-existent order",
     );
   });
@@ -695,7 +695,7 @@ describe("OrderBook, increase position orders", function () {
       await btcPriceFeed.setLatestAnswer(toChainlinkPrice(BTC_PRICE));
       await btcPriceFeed.setLatestAnswer(toChainlinkPrice(BTC_PRICE));
 
-      await orderBook.connect(user0).createIncreaseOrder(
+      await orderbook.connect(user0).createIncreaseOrder(
         [btc.address],
         toWei(1, 8),
         btc.address,
@@ -709,29 +709,29 @@ describe("OrderBook, increase position orders", function () {
         false,
         { value: defaultExecutionFee },
       );
-      const order = await orderBook.increaseOrders(user0.address, orderIndex);
+      const order = await orderbook.increaseOrders(user0.address, orderIndex);
       await expect(
-        orderBook.executeIncreaseOrder(order.account, orderIndex, user1.address),
+        orderbook.executeIncreaseOrder(order.account, orderIndex, user1.address),
       ).to.be.revertedWith("OrderBook: invalid price for execution");
 
       if (setPriceTwice) {
         // in this case on first price order is still non-executable because of current price
         btcPriceFeed.setLatestAnswer(toChainlinkPrice(newBtcPrice as number));
         await expect(
-          orderBook.executeIncreaseOrder(order.account, orderIndex, user1.address),
+          orderbook.executeIncreaseOrder(order.account, orderIndex, user1.address),
         ).to.be.revertedWith("OrderBook: invalid price for execution");
       }
 
       // now both min and max prices satisfies requirement
       btcPriceFeed.setLatestAnswer(toChainlinkPrice(newBtcPrice as number));
-      await orderBook.executeIncreaseOrder(order.account, orderIndex, user1.address);
+      await orderbook.executeIncreaseOrder(order.account, orderIndex, user1.address);
 
       orderIndex++;
     }
   });
 
   it("executeOrder, long, purchase token same as collateral", async () => {
-    await orderBook.connect(user0).createIncreaseOrder(
+    await orderbook.connect(user0).createIncreaseOrder(
       [btc.address],
       toWei(1, 8),
       btc.address,
@@ -746,10 +746,10 @@ describe("OrderBook, increase position orders", function () {
       { value: defaultExecutionFee },
     );
 
-    const order = await orderBook.increaseOrders(user0.address, 0);
+    const order = await orderbook.increaseOrders(user0.address, 0);
 
     const executorBalanceBefore = await user1.getBalance();
-    const tx = await orderBook.executeIncreaseOrder(user0.address, 0, user1.address);
+    const tx = await orderbook.executeIncreaseOrder(user0.address, 0, user1.address);
     reportGasUsed(tx, "executeIncreaseOrder gas used");
 
     const executorBalanceAfter = await user1.getBalance();
@@ -759,12 +759,12 @@ describe("OrderBook, increase position orders", function () {
     expect(position.collateral).to.be.equal("59900000000000000000000000000000000");
     expect(position.size).to.be.equal(order.sizeDelta);
 
-    const orderAfter = await orderBook.increaseOrders(user0.address, 0);
+    const orderAfter = await orderbook.increaseOrders(user0.address, 0);
     expect(orderAfter.account).to.be.equal(constants.AddressZero);
   });
 
   it("executOrder, 2 orders with the same position", async () => {
-    await orderBook.connect(user0).createIncreaseOrder(
+    await orderbook.connect(user0).createIncreaseOrder(
       [btc.address],
       toWei(1, 8),
       btc.address,
@@ -779,12 +779,12 @@ describe("OrderBook, increase position orders", function () {
       { value: defaultExecutionFee },
     );
 
-    await orderBook.executeIncreaseOrder(user0.address, 0, user1.address);
+    await orderbook.executeIncreaseOrder(user0.address, 0, user1.address);
     let position = positionWrapper(await vault.getPosition(user0.address, btc.address, btc.address, true));
     expect(position.collateral).to.be.equal("59900000000000000000000000000000000");
     expect(position.size).to.be.equal(defaultSizeDelta);
 
-    await orderBook.connect(user0).createIncreaseOrder(
+    await orderbook.connect(user0).createIncreaseOrder(
       [btc.address],
       toWei(1, 8),
       btc.address,
@@ -799,14 +799,14 @@ describe("OrderBook, increase position orders", function () {
       { value: defaultExecutionFee },
     );
 
-    await orderBook.executeIncreaseOrder(user0.address, 1, user1.address);
+    await orderbook.executeIncreaseOrder(user0.address, 1, user1.address);
     position = positionWrapper(await vault.getPosition(user0.address, btc.address, btc.address, true));
     expect(position.collateral).to.be.equal("119800000000000000000000000000000000");
     expect(position.size).to.be.equal(defaultSizeDelta.mul(2));
   });
 
   it("executeOrder, long, swap purchase token to collateral", async () => {
-    await orderBook.connect(user0).createIncreaseOrder(
+    await orderbook.connect(user0).createIncreaseOrder(
       [usdc.address],
       toWei(50000, 6),
       btc.address,
@@ -822,8 +822,8 @@ describe("OrderBook, increase position orders", function () {
     );
 
     const executorBalanceBefore = await user1.getBalance();
-    const order = await orderBook.increaseOrders(user0.address, 0);
-    const tx = await orderBook.executeIncreaseOrder(user0.address, 0, user1.address);
+    const order = await orderbook.increaseOrders(user0.address, 0);
+    const tx = await orderbook.executeIncreaseOrder(user0.address, 0, user1.address);
     reportGasUsed(tx, "executeIncreaseOrder gas used");
 
     const executorBalanceAfter = await user1.getBalance();
@@ -833,13 +833,13 @@ describe("OrderBook, increase position orders", function () {
     expect(position.size, "size").to.be.equal(order.sizeDelta);
     expect(position.collateral, "collateral").to.be.equal("49799979800000000000000000000000000");
 
-    const orderAfter = await orderBook.increaseOrders(user0.address, 0);
+    const orderAfter = await orderbook.increaseOrders(user0.address, 0);
     expect(orderAfter.account).to.be.equal(constants.AddressZero);
   });
 
   it("executeOrder, short, purchase token same as collateral", async () => {
     usdc.mint(user0.address, toWei(50000, 18));
-    await orderBook.connect(user0).createIncreaseOrder(
+    await orderbook.connect(user0).createIncreaseOrder(
       [usdc.address],
       toWei(50000, 6),
       btc.address,
@@ -856,8 +856,8 @@ describe("OrderBook, increase position orders", function () {
 
     const executorBalanceBefore = await user1.getBalance();
 
-    const order = await orderBook.increaseOrders(user0.address, 0);
-    const tx = await orderBook.executeIncreaseOrder(user0.address, 0, user1.address);
+    const order = await orderbook.increaseOrders(user0.address, 0);
+    const tx = await orderbook.executeIncreaseOrder(user0.address, 0, user1.address);
     reportGasUsed(tx, "executeIncreaseOrder gas used");
 
     const executorBalanceAfter = await user1.getBalance();
@@ -869,12 +869,12 @@ describe("OrderBook, increase position orders", function () {
     expect(position.collateral).to.be.equal("49900000000000000000000000000000000");
     expect(position.size, "position.size").to.be.equal(order.sizeDelta);
 
-    const orderAfter = await orderBook.increaseOrders(user0.address, 0);
+    const orderAfter = await orderbook.increaseOrders(user0.address, 0);
     expect(orderAfter.account).to.be.equal(constants.AddressZero);
   });
 
   it("executeOrder, short, swap purchase token to collateral", async () => {
-    await orderBook.connect(user0).createIncreaseOrder(
+    await orderbook.connect(user0).createIncreaseOrder(
       [btc.address],
       toWei(1, 8),
       btc.address,
@@ -891,8 +891,8 @@ describe("OrderBook, increase position orders", function () {
 
     const executorBalanceBefore = await user1.getBalance();
 
-    const order = await orderBook.increaseOrders(user0.address, 0);
-    const tx = await orderBook.executeIncreaseOrder(user0.address, 0, user1.address);
+    const order = await orderbook.increaseOrders(user0.address, 0);
+    const tx = await orderbook.executeIncreaseOrder(user0.address, 0, user1.address);
     reportGasUsed(tx, "executeIncreaseOrder gas used");
 
     const position = positionWrapper(
@@ -904,14 +904,14 @@ describe("OrderBook, increase position orders", function () {
     const executorBalanceAfter = await user1.getBalance();
     expect(executorBalanceAfter).to.be.equal(executorBalanceBefore.add(defaultExecutionFee));
 
-    const orderAfter = await orderBook.increaseOrders(user0.address, 0);
+    const orderAfter = await orderbook.increaseOrders(user0.address, 0);
     expect(orderAfter.account).to.be.equal(constants.AddressZero);
   });
 
   it("executeOrder, short, pay AVAX, no swap", async () => {
     const amountIn = toWei(50, 18);
     const value = defaultExecutionFee.add(amountIn);
-    await orderBook.connect(user0).createIncreaseOrder(
+    await orderbook.connect(user0).createIncreaseOrder(
       [avax.address],
       amountIn,
       avax.address,
@@ -925,8 +925,8 @@ describe("OrderBook, increase position orders", function () {
       true,
       { value: value },
     );
-    const order = await orderBook.increaseOrders(user0.address, 0);
-    const tx = await orderBook.executeIncreaseOrder(user0.address, 0, user1.address);
+    const order = await orderbook.increaseOrders(user0.address, 0);
+    const tx = await orderbook.executeIncreaseOrder(user0.address, 0, user1.address);
     reportGasUsed(tx, "executeIncreaseOrder gas used");
 
     const position = positionWrapper(
@@ -935,13 +935,13 @@ describe("OrderBook, increase position orders", function () {
     expect(position.collateral).to.be.equal("14870000000000000000000000000000000");
     expect(position.size, "position.size").to.be.equal(order.sizeDelta);
 
-    const orderAfter = await orderBook.increaseOrders(user0.address, 0);
+    const orderAfter = await orderbook.increaseOrders(user0.address, 0);
     expect(orderAfter.account).to.be.equal(constants.AddressZero);
   });
 
   it("createIncreaseOrder, bad path", async () => {
     await expect(
-      orderBook.connect(user0).createIncreaseOrder(
+      orderbook.connect(user0).createIncreaseOrder(
         [btc.address, btc.address],
         toWei(1, 8),
         btc.address,

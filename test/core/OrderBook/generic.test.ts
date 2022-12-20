@@ -19,7 +19,7 @@ chai.use(solidity);
 const { expect } = chai;
 
 let ship: Ship;
-let orderBook: OrderBook;
+let orderbook: OrderBook;
 let router: Router;
 let vault: Vault;
 let usdg: USDG;
@@ -49,7 +49,7 @@ describe("OrderBook", function () {
     alice = accounts.alice;
     bob = accounts.bob;
 
-    orderBook = await ship.connect(OrderBook__factory);
+    orderbook = await ship.connect(OrderBook__factory);
     router = await ship.connect(Router__factory);
     vault = await ship.connect(Vault__factory);
     usdg = await ship.connect(USDG__factory);
@@ -57,32 +57,32 @@ describe("OrderBook", function () {
   });
 
   it("setGov", async () => {
-    await expect(orderBook.connect(alice).setGov(bob.address)).to.be.revertedWith("OrderBook: forbidden");
+    await expect(orderbook.connect(alice).setGov(bob.address)).to.be.revertedWith("OrderBook: forbidden");
 
-    expect(await orderBook.gov()).eq(deployer.address);
+    expect(await orderbook.gov()).eq(deployer.address);
 
-    await orderBook.setGov(alice.address);
-    expect(await orderBook.gov()).eq(alice.address);
+    await orderbook.setGov(alice.address);
+    expect(await orderbook.gov()).eq(alice.address);
 
-    await orderBook.connect(alice).setGov(bob.address);
-    expect(await orderBook.gov()).eq(bob.address);
+    await orderbook.connect(alice).setGov(bob.address);
+    expect(await orderbook.gov()).eq(bob.address);
   });
 
   it("set*", async () => {
-    await expect(orderBook.connect(bob).setMinExecutionFee(600000)).to.be.revertedWith(
+    await expect(orderbook.connect(bob).setMinExecutionFee(600000)).to.be.revertedWith(
       "OrderBook: forbidden",
     );
-    orderBook.setMinExecutionFee(600000);
+    orderbook.setMinExecutionFee(600000);
 
-    await expect(orderBook.connect(bob).setMinPurchaseTokenAmountUsd(1)).to.be.revertedWith(
+    await expect(orderbook.connect(bob).setMinPurchaseTokenAmountUsd(1)).to.be.revertedWith(
       "OrderBook: forbidden",
     );
-    orderBook.setMinPurchaseTokenAmountUsd(1);
+    orderbook.setMinPurchaseTokenAmountUsd(1);
   });
 
   it("initialize, already initialized", async () => {
     await expect(
-      orderBook.connect(bob).initialize(
+      orderbook.connect(bob).initialize(
         router.address,
         vault.address,
         avax.address,
@@ -93,7 +93,7 @@ describe("OrderBook", function () {
     ).to.be.revertedWith("OrderBook: forbidden");
 
     await expect(
-      orderBook.initialize(
+      orderbook.initialize(
         router.address,
         vault.address,
         avax.address,

@@ -19,12 +19,12 @@ import {
   OrderBook,
   PositionManager__factory,
   OrderBook__factory,
+  PriceFeed,
 } from "../../types";
 import { deployments } from "hardhat";
 import chai from "chai";
 import { solidity } from "ethereum-waffle";
 import { advanceTime, reportGasUsed, Ship, toChainlinkPrice, toUsd, toWei } from "../../utils";
-import { PriceFeed } from "types";
 import { BigNumberish, constants, utils, BigNumber } from "ethers";
 
 chai.use(solidity);
@@ -43,7 +43,7 @@ let btcPriceFeed: PriceFeed;
 let usdc: Token;
 let shortsTracker: ShortsTracker;
 let positionManager: PositionManager;
-let orderBook: OrderBook;
+let orderbook: OrderBook;
 let timelock: Timelock;
 
 let alice: SignerWithAddress;
@@ -96,7 +96,7 @@ describe("PositionManager", () => {
     usdc = (await ship.connect("usdc")) as Token;
     shortsTracker = await ship.connect(ShortsTracker__factory);
     positionManager = await ship.connect(PositionManager__factory);
-    orderBook = await ship.connect(OrderBook__factory);
+    orderbook = await ship.connect(OrderBook__factory);
     timelock = await ship.connect(Timelock__factory);
 
     await xlxManager.setCooldownDuration(24 * 60 * 60);
@@ -139,8 +139,8 @@ describe("PositionManager", () => {
     await btc.connect(bob).approve(router.address, toWei(10, 8));
     await router.connect(bob).swap([btc.address, usdg.address], toWei(10, 8), toWei(59000, 18), bob.address);
 
-    await router.addPlugin(orderBook.address);
-    await router.connect(alice).approvePlugin(orderBook.address);
+    await router.addPlugin(orderbook.address);
+    await router.connect(alice).approvePlugin(orderbook.address);
   });
 
   it("inits", async () => {
@@ -738,7 +738,7 @@ describe("PositionManager", () => {
   it("executeSwapOrder", async () => {
     await usdc.mint(alice.address, toWei(1000, 6));
     await usdc.connect(alice).approve(router.address, toWei(100, 6));
-    await orderBook.connect(alice).createSwapOrder(
+    await orderbook.connect(alice).createSwapOrder(
       [usdc.address, btc.address],
       toWei(100, 6), //amountIn,
       0,
@@ -749,7 +749,7 @@ describe("PositionManager", () => {
       false,
       { value: toWei(1, 17) },
     );
-    const orderIndex = (await orderBook.swapOrdersIndex(alice.address)).toNumber() - 1;
+    const orderIndex = (await orderbook.swapOrdersIndex(alice.address)).toNumber() - 1;
 
     await expect(
       positionManager.connect(bob).executeSwapOrder(alice.address, orderIndex, bob.address),
@@ -758,7 +758,7 @@ describe("PositionManager", () => {
     const balanceBefore = await ship.provider.getBalance(bob.address);
     await positionManager.setOrderKeeper(bob.address, true);
     await positionManager.connect(bob).executeSwapOrder(alice.address, orderIndex, bob.address);
-    expect((await orderBook.swapOrders(alice.address, orderIndex))[0]).to.be.equal(constants.AddressZero);
+    expect((await orderbook.swapOrders(alice.address, orderIndex))[0]).to.be.equal(constants.AddressZero);
     const balanceAfter = await ship.provider.getBalance(bob.address);
     expect(balanceAfter.gt(balanceBefore)).to.be.true;
   });
@@ -782,7 +782,7 @@ describe("PositionManager", () => {
     ) => {
       const path = isLong ? [usdc.address, btc.address] : [usdc.address];
       const collateralToken = isLong ? btc.address : usdc.address;
-      return orderBook.connect(alice).createIncreaseOrder(
+      return orderbook.connect(alice).createIncreaseOrder(
         path,
         amountIn,
         btc.address, // indexToken
@@ -799,7 +799,7 @@ describe("PositionManager", () => {
     };
 
     await createIncreaseOrder();
-    let orderIndex = (await orderBook.increaseOrdersIndex(alice.address)).toNumber() - 1;
+    let orderIndex = (await orderbook.increaseOrdersIndex(alice.address)).toNumber() - 1;
     expect(await positionManager.isOrderKeeper(bob.address)).to.be.false;
     await expect(
       positionManager.connect(bob).executeIncreaseOrder(alice.address, orderIndex, bob.address),
@@ -809,7 +809,7 @@ describe("PositionManager", () => {
     await positionManager.setOrderKeeper(bob.address, true);
     expect(await positionManager.isOrderKeeper(bob.address)).to.be.true;
     await positionManager.connect(bob).executeIncreaseOrder(alice.address, orderIndex, bob.address);
-    expect((await orderBook.increaseOrders(alice.address, orderIndex))[0]).to.be.equal(constants.AddressZero);
+    expect((await orderbook.increaseOrders(alice.address, orderIndex))[0]).to.be.equal(constants.AddressZero);
     const balanceAfter = await ship.provider.getBalance(bob.address);
     expect(balanceAfter.gt(balanceBefore)).to.be.true;
 
@@ -821,7 +821,7 @@ describe("PositionManager", () => {
 
     // should revert on deposits
     await createIncreaseOrder(toWei(100, 6), 0);
-    orderIndex = (await orderBook.increaseOrdersIndex(alice.address)).toNumber() - 1;
+    orderIndex = (await orderbook.increaseOrdersIndex(alice.address)).toNumber() - 1;
     const badOrderIndex1 = orderIndex;
     await expect(
       positionManager.connect(bob).executeIncreaseOrder(alice.address, orderIndex, bob.address),
@@ -829,7 +829,7 @@ describe("PositionManager", () => {
 
     // should block if leverage is decreased
     await createIncreaseOrder(toWei(100, 6), toUsd(100));
-    orderIndex = (await orderBook.increaseOrdersIndex(alice.address)).toNumber() - 1;
+    orderIndex = (await orderbook.increaseOrdersIndex(alice.address)).toNumber() - 1;
     const badOrderIndex2 = orderIndex;
     await expect(
       positionManager.connect(bob).executeIncreaseOrder(alice.address, orderIndex, bob.address),
@@ -837,7 +837,7 @@ describe("PositionManager", () => {
 
     // should not block if leverage is not decreased
     await createIncreaseOrder();
-    orderIndex = (await orderBook.increaseOrdersIndex(alice.address)).toNumber() - 1;
+    orderIndex = (await orderbook.increaseOrdersIndex(alice.address)).toNumber() - 1;
     await positionManager.connect(bob).executeIncreaseOrder(alice.address, orderIndex, bob.address);
 
     await positionManager.setShouldValidateIncreaseOrder(false);
@@ -851,16 +851,16 @@ describe("PositionManager", () => {
     expect(await positionManager.shouldValidateIncreaseOrder()).to.be.true;
 
     await createIncreaseOrder(toWei(1000, 6), toUsd(2000), false);
-    orderIndex = (await orderBook.increaseOrdersIndex(alice.address)).toNumber() - 1;
+    orderIndex = (await orderbook.increaseOrdersIndex(alice.address)).toNumber() - 1;
     await positionManager.connect(bob).executeIncreaseOrder(alice.address, orderIndex, bob.address);
 
     // should not block deposits for shorts
     await createIncreaseOrder(toWei(100, 6), 0, false);
-    orderIndex = (await orderBook.increaseOrdersIndex(alice.address)).toNumber() - 1;
+    orderIndex = (await orderbook.increaseOrdersIndex(alice.address)).toNumber() - 1;
     await positionManager.connect(bob).executeIncreaseOrder(alice.address, orderIndex, bob.address);
 
     await createIncreaseOrder(toWei(100, 6), toUsd(100), false);
-    orderIndex = (await orderBook.increaseOrdersIndex(alice.address)).toNumber() - 1;
+    orderIndex = (await orderbook.increaseOrdersIndex(alice.address)).toNumber() - 1;
     await positionManager.connect(bob).executeIncreaseOrder(alice.address, orderIndex, bob.address);
   });
 
@@ -881,13 +881,13 @@ describe("PositionManager", () => {
     let position = await vault.getPosition(alice.address, avax.address, avax.address, true);
 
     const executionFee = toWei(1, 17); // 0.1 WETH
-    await orderBook
+    await orderbook
       .connect(alice)
       .createDecreaseOrder(avax.address, position[0], avax.address, position[1], true, toUsd(290), true, {
         value: executionFee,
       });
 
-    const orderIndex = (await orderBook.decreaseOrdersIndex(alice.address)).toNumber() - 1;
+    const orderIndex = (await orderbook.decreaseOrdersIndex(alice.address)).toNumber() - 1;
     await expect(
       positionManager.connect(bob).executeDecreaseOrder(alice.address, orderIndex, bob.address),
     ).to.be.revertedWith("PositionManager: forbidden");
@@ -895,7 +895,7 @@ describe("PositionManager", () => {
     const balanceBefore = await ship.provider.getBalance(bob.address);
     await positionManager.setOrderKeeper(bob.address, true);
     await positionManager.connect(bob).executeDecreaseOrder(alice.address, orderIndex, bob.address);
-    expect((await orderBook.decreaseOrders(alice.address, orderIndex))[0]).to.be.equal(constants.AddressZero);
+    expect((await orderbook.decreaseOrders(alice.address, orderIndex))[0]).to.be.equal(constants.AddressZero);
     const balanceAfter = await ship.provider.getBalance(bob.address);
     expect(balanceAfter.gt(balanceBefore)).to.be.true;
 
@@ -1027,7 +1027,7 @@ describe("PositionManager next short data calculations", function () {
     usdc = (await ship.connect("usdc")) as Token;
     shortsTracker = await ship.connect(ShortsTracker__factory);
     positionManager = await ship.connect(PositionManager__factory);
-    orderBook = await ship.connect(OrderBook__factory);
+    orderbook = await ship.connect(OrderBook__factory);
     timelock = await ship.connect(Timelock__factory);
 
     await xlxManager.setCooldownDuration(24 * 60 * 60);
@@ -1074,13 +1074,13 @@ describe("PositionManager next short data calculations", function () {
     await vault.setFundingRate(60 * 60, 600, 600);
 
     await vault.setGov(timelock.address);
-    await orderBook.setMinExecutionFee(500000);
-    await orderBook.setMinPurchaseTokenAmountUsd(toWei(5, 30));
+    await orderbook.setMinExecutionFee(500000);
+    await orderbook.setMinPurchaseTokenAmountUsd(toWei(5, 30));
 
     await btcPriceFeed.setLatestAnswer(toChainlinkPrice(60000));
 
-    await router.addPlugin(orderBook.address);
-    await router.connect(alice).approvePlugin(orderBook.address);
+    await router.addPlugin(orderbook.address);
+    await router.connect(alice).approvePlugin(orderbook.address);
   });
 
   it("PositionManager and XlxManager init with shortsTracker", async () => {
@@ -1662,7 +1662,7 @@ describe("PositionManager next short data calculations", function () {
       .increasePosition([usdc.address], btc.address, toWei(50000, 6), 0, toUsd(100000), false, toUsd(50000));
 
     const executionFee = toWei(1, 17); // 0.1 WETH
-    await orderBook.connect(alice).createIncreaseOrder(
+    await orderbook.connect(alice).createIncreaseOrder(
       [usdc.address], // path
       toWei(1000, 6), // amountIn
       btc.address, // indexToken
@@ -1682,8 +1682,8 @@ describe("PositionManager next short data calculations", function () {
     let shortSize = await vault.globalShortSizes(btc.address);
     expect(shortSize, "shortSize 0").to.be.equal(toUsd(100000));
 
-    const orderIndex = (await orderBook.increaseOrdersIndex(alice.address)).toNumber() - 1;
-    expect((await orderBook.increaseOrders(alice.address, orderIndex))[0]).to.be.equal(alice.address);
+    const orderIndex = (await orderbook.increaseOrdersIndex(alice.address)).toNumber() - 1;
+    expect((await orderbook.increaseOrders(alice.address, orderIndex))[0]).to.be.equal(alice.address);
 
     let [size] = await vault.getPosition(alice.address, btc.address, btc.address, true);
     expect(size, "size 0").to.be.equal(0);
@@ -1713,10 +1713,10 @@ describe("PositionManager next short data calculations", function () {
       .connect(bob)
       .increasePosition([usdc.address], btc.address, toWei(50000, 6), 0, toUsd(100000), false, toUsd(50000));
 
-    await router.connect(bob).approvePlugin(orderBook.address);
+    await router.connect(bob).approvePlugin(orderbook.address);
 
     const executionFee = toWei(1, 17); // 0.1 WETH
-    await orderBook.connect(bob).createDecreaseOrder(
+    await orderbook.connect(bob).createDecreaseOrder(
       btc.address, // indexToken
       toUsd(10000), // sizeDelta
       usdc.address, // collateralToken
@@ -1727,7 +1727,7 @@ describe("PositionManager next short data calculations", function () {
       { value: executionFee },
     );
 
-    const orderIndex = (await orderBook.decreaseOrdersIndex(bob.address)).toNumber() - 1;
+    const orderIndex = (await orderbook.decreaseOrdersIndex(bob.address)).toNumber() - 1;
     await btcPriceFeed.setLatestAnswer(toChainlinkPrice(60000));
     let [size] = await vault.getPosition(bob.address, usdc.address, btc.address, false);
     expect(size, "size 1").to.be.equal(toUsd(100000));

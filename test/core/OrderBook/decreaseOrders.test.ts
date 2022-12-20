@@ -11,6 +11,7 @@ import {
   Router,
   VaultPriceFeed,
   Vault,
+  PriceFeed,
 } from "../../../types";
 import { deployments } from "hardhat";
 import chai from "chai";
@@ -26,13 +27,12 @@ import {
   validateOrderFields,
 } from "./shared";
 import { BigNumber, constants } from "ethers";
-import { PriceFeed } from "types";
 
 chai.use(solidity);
 const { expect } = chai;
 
 let ship: Ship;
-let orderBook: OrderBook;
+let orderbook: OrderBook;
 let router: Router;
 let vault: Vault;
 let vaultPriceFeed: VaultPriceFeed;
@@ -60,7 +60,7 @@ const setup = deployments.createFixture(async (hre) => {
 });
 
 async function getCreatedDecreaseOrder(address: string, orderIndex = 0) {
-  const order = await orderBook.decreaseOrders(address, orderIndex);
+  const order = await orderbook.decreaseOrders(address, orderIndex);
   return order;
 }
 
@@ -74,7 +74,7 @@ describe("OrderBook, decrease position orders", function () {
     user2 = users[2];
     user3 = users[3];
 
-    orderBook = await ship.connect(OrderBook__factory);
+    orderbook = await ship.connect(OrderBook__factory);
     router = await ship.connect(Router__factory);
     vault = await ship.connect(Vault__factory);
     vaultPriceFeed = await ship.connect(VaultPriceFeed__factory);
@@ -85,10 +85,10 @@ describe("OrderBook, decrease position orders", function () {
 
     const usdg = await ship.connect(USDG__factory);
 
-    await orderBook.setMinExecutionFee(500000);
-    await orderBook.setMinPurchaseTokenAmountUsd(toWei(5, 30));
-    await router.addPlugin(orderBook.address);
-    await router.connect(user0).approvePlugin(orderBook.address);
+    await orderbook.setMinExecutionFee(500000);
+    await orderbook.setMinPurchaseTokenAmountUsd(toWei(5, 30));
+    await router.addPlugin(orderbook.address);
+    await router.connect(user0).approvePlugin(orderbook.address);
 
     await vaultPriceFeed.setPriceSampleSpace(1);
     await vaultPriceFeed.setIsSecondaryPriceEnabled(false);
@@ -139,7 +139,7 @@ describe("OrderBook, decrease position orders", function () {
 
   it("Create decrase order, bad fee", async () => {
     await expect(
-      orderBook
+      orderbook
         .connect(user0)
         .createDecreaseOrder(
           btc.address,
@@ -157,7 +157,7 @@ describe("OrderBook, decrease position orders", function () {
   });
 
   it("Create decrease order, long", async () => {
-    const tx = await orderBook
+    const tx = await orderbook
       .connect(user0)
       .createDecreaseOrder(
         btc.address,
@@ -174,7 +174,7 @@ describe("OrderBook, decrease position orders", function () {
     reportGasUsed(tx, "createDecraseOrder gas used");
     const order = await getCreatedDecreaseOrder(user0.address);
 
-    expect(await avax.balanceOf(orderBook.address), "AVAX balance").to.be.equal(defaultExecutionFee);
+    expect(await avax.balanceOf(orderbook.address), "AVAX balance").to.be.equal(defaultExecutionFee);
 
     validateOrderFields(order, {
       account: user0.address,
@@ -190,7 +190,7 @@ describe("OrderBook, decrease position orders", function () {
   });
 
   it("updateDecreaseOrder", async () => {
-    const tx = await orderBook
+    const tx = await orderbook
       .connect(user0)
       .createDecreaseOrder(
         btc.address,
@@ -211,12 +211,12 @@ describe("OrderBook, decrease position orders", function () {
     const newCollateralDelta = defaultCollateralDelta.add(100);
 
     await expect(
-      orderBook
+      orderbook
         .connect(user1)
         .updateDecreaseOrder(0, newCollateralDelta, newSizeDelta, newTriggerPrice, newTriggerAboveThreshold),
     ).to.be.revertedWith("OrderBook: non-existent order");
 
-    const tx2 = await orderBook
+    const tx2 = await orderbook
       .connect(user0)
       .updateDecreaseOrder(0, newCollateralDelta, newSizeDelta, newTriggerPrice, newTriggerAboveThreshold);
     reportGasUsed(tx2, "updateDecreaseOrder gas used");
@@ -232,7 +232,7 @@ describe("OrderBook, decrease position orders", function () {
   });
 
   it("Create decrease order, short", async () => {
-    const tx = await orderBook
+    const tx = await orderbook
       .connect(user0)
       .createDecreaseOrder(
         btc.address,
@@ -248,9 +248,9 @@ describe("OrderBook, decrease position orders", function () {
       );
     reportGasUsed(tx, "createDecreaseOrder gas used");
     const order = await getCreatedDecreaseOrder(user0.address);
-    const btcBalanceAfter = await btc.balanceOf(orderBook.address);
+    const btcBalanceAfter = await btc.balanceOf(orderbook.address);
 
-    expect(await avax.balanceOf(orderBook.address), "AVAX balance").to.be.equal(defaultExecutionFee);
+    expect(await avax.balanceOf(orderbook.address), "AVAX balance").to.be.equal(defaultExecutionFee);
 
     validateOrderFields(order, {
       account: user0.address,
@@ -266,7 +266,7 @@ describe("OrderBook, decrease position orders", function () {
   });
 
   it("Create two orders", async () => {
-    await orderBook
+    await orderbook
       .connect(user0)
       .createDecreaseOrder(
         btc.address,
@@ -280,7 +280,7 @@ describe("OrderBook, decrease position orders", function () {
           value: defaultExecutionFee,
         },
       );
-    await orderBook
+    await orderbook
       .connect(user0)
       .createDecreaseOrder(
         btc.address,
@@ -319,7 +319,7 @@ describe("OrderBook, decrease position orders", function () {
       await btcPriceFeed.setLatestAnswer(toChainlinkPrice(BTC_PRICE));
       await btcPriceFeed.setLatestAnswer(toChainlinkPrice(BTC_PRICE));
 
-      await orderBook
+      await orderbook
         .connect(user0)
         .createDecreaseOrder(
           btc.address,
@@ -334,9 +334,9 @@ describe("OrderBook, decrease position orders", function () {
           },
         );
 
-      const order = await orderBook.decreaseOrders(user0.address, orderIndex);
+      const order = await orderbook.decreaseOrders(user0.address, orderIndex);
       await expect(
-        orderBook.executeDecreaseOrder(order.account, orderIndex, user1.address),
+        orderbook.executeDecreaseOrder(order.account, orderIndex, user1.address),
         "1",
       ).to.be.revertedWith("OrderBook: invalid price for execution");
 
@@ -344,7 +344,7 @@ describe("OrderBook, decrease position orders", function () {
         // on first price update all limit orders are still invalid
         btcPriceFeed.setLatestAnswer(toChainlinkPrice(newBtcPrice as number));
         await expect(
-          orderBook.executeDecreaseOrder(order.account, orderIndex, user1.address),
+          orderbook.executeDecreaseOrder(order.account, orderIndex, user1.address),
           "2",
         ).to.be.revertedWith("OrderBook: invalid price for execution");
       }
@@ -352,7 +352,7 @@ describe("OrderBook, decrease position orders", function () {
       // now both min and max prices satisfies requirement
       btcPriceFeed.setLatestAnswer(toChainlinkPrice(newBtcPrice as number));
       await expect(
-        orderBook.executeDecreaseOrder(order.account, orderIndex, user1.address),
+        orderbook.executeDecreaseOrder(order.account, orderIndex, user1.address),
         "3",
       ).to.not.be.revertedWith("OrderBook: invalid price for execution");
       // so we are sure we passed price validations inside OrderBook
@@ -362,7 +362,7 @@ describe("OrderBook, decrease position orders", function () {
   });
 
   it("Execute decrease order, non-existent", async () => {
-    await orderBook
+    await orderbook
       .connect(user0)
       .createDecreaseOrder(
         btc.address,
@@ -377,7 +377,7 @@ describe("OrderBook, decrease position orders", function () {
         },
       );
 
-    await expect(orderBook.executeDecreaseOrder(user0.address, 1, user1.address)).to.be.revertedWith(
+    await expect(orderbook.executeDecreaseOrder(user0.address, 1, user1.address)).to.be.revertedWith(
       "OrderBook: non-existent order",
     );
   });
@@ -389,7 +389,7 @@ describe("OrderBook, decrease position orders", function () {
     const btcBalanceBefore = await btc.balanceOf(user0.address);
     let position = positionWrapper(await vault.getPosition(user0.address, btc.address, btc.address, true));
 
-    await orderBook
+    await orderbook
       .connect(user0)
       .createDecreaseOrder(
         btc.address,
@@ -404,12 +404,12 @@ describe("OrderBook, decrease position orders", function () {
         },
       );
 
-    const order = await orderBook.decreaseOrders(user0.address, 0);
+    const order = await orderbook.decreaseOrders(user0.address, 0);
 
     await btcPriceFeed.setLatestAnswer(toChainlinkPrice(BTC_PRICE + 5050));
 
     const executorBalanceBefore = await user1.getBalance();
-    const tx = await orderBook.executeDecreaseOrder(user0.address, 0, user1.address);
+    const tx = await orderbook.executeDecreaseOrder(user0.address, 0, user1.address);
     reportGasUsed(tx, "executeDecreaseOrder gas used");
 
     const executorBalanceAfter = await user1.getBalance();
@@ -423,7 +423,7 @@ describe("OrderBook, decrease position orders", function () {
     expect(position.size).to.be.equal(0);
     expect(position.collateral).to.be.equal(0);
 
-    const orderAfter = await orderBook.increaseOrders(user0.address, 0);
+    const orderAfter = await orderbook.increaseOrders(user0.address, 0);
     expect(orderAfter.account).to.be.equal(constants.AddressZero);
   });
 
@@ -436,7 +436,7 @@ describe("OrderBook, decrease position orders", function () {
     let position = positionWrapper(await vault.getPosition(user0.address, usdc.address, btc.address, false));
     const usdcBalanceBefore = await usdc.balanceOf(user0.address);
 
-    await orderBook
+    await orderbook
       .connect(user0)
       .createDecreaseOrder(
         btc.address,
@@ -452,12 +452,12 @@ describe("OrderBook, decrease position orders", function () {
       );
     const executor = user1;
 
-    const order = await orderBook.decreaseOrders(user0.address, 0);
+    const order = await orderbook.decreaseOrders(user0.address, 0);
     await btcPriceFeed.setLatestAnswer(toChainlinkPrice(BTC_PRICE - 1500));
 
     const executorBalanceBefore = await executor.getBalance();
 
-    const tx = await orderBook.executeDecreaseOrder(user0.address, 0, executor.address);
+    const tx = await orderbook.executeDecreaseOrder(user0.address, 0, executor.address);
     reportGasUsed(tx, "executeDecreaseOrder gas used");
 
     const executorBalanceAfter = await executor.getBalance();
@@ -471,7 +471,7 @@ describe("OrderBook, decrease position orders", function () {
     expect(position.size).to.be.equal(0);
     expect(position.collateral).to.be.equal(0);
 
-    const orderAfter = await orderBook.increaseOrders(user0.address, 0);
+    const orderAfter = await orderbook.increaseOrders(user0.address, 0);
     expect(orderAfter.account).to.be.equal(constants.AddressZero);
   });
 
@@ -484,7 +484,7 @@ describe("OrderBook, decrease position orders", function () {
 
     let position = positionWrapper(await vault.getPosition(user0.address, avax.address, avax.address, true));
 
-    const userTx = await orderBook
+    const userTx = await orderbook
       .connect(user0)
       .createDecreaseOrder(
         avax.address,
@@ -501,7 +501,7 @@ describe("OrderBook, decrease position orders", function () {
 
     reportGasUsed(userTx, "createSwapOrder");
     const userTxFee = await getTxFees(userTx);
-    const order = await orderBook.decreaseOrders(user0.address, 0);
+    const order = await orderbook.decreaseOrders(user0.address, 0);
 
     await btcPriceFeed.setLatestAnswer(toChainlinkPrice(BTC_PRICE - 1500));
 
@@ -509,7 +509,7 @@ describe("OrderBook, decrease position orders", function () {
 
     const balanceBefore = await user0.getBalance();
     const executorBalanceBefore = await executor.getBalance();
-    const tx = await orderBook.executeDecreaseOrder(user0.address, 0, executor.address);
+    const tx = await orderbook.executeDecreaseOrder(user0.address, 0, executor.address);
     reportGasUsed(tx, "executeDecreaseOrder gas used");
 
     const executorBalanceAfter = await executor.getBalance();
@@ -524,12 +524,12 @@ describe("OrderBook, decrease position orders", function () {
     expect(position.size, "position.size").to.be.equal("1500000000000000000000000000000000");
     expect(position.collateral, "position.collateral").to.be.equal("748500000000000000000000000000000");
 
-    const orderAfter = await orderBook.increaseOrders(user0.address, 0);
+    const orderAfter = await orderbook.increaseOrders(user0.address, 0);
     expect(orderAfter.account).to.be.equal(constants.AddressZero);
   });
 
   it("Cancel decrease order", async () => {
-    let tx = await orderBook
+    let tx = await orderbook
       .connect(user0)
       .createDecreaseOrder(
         btc.address,
@@ -546,12 +546,12 @@ describe("OrderBook, decrease position orders", function () {
     let order = await getCreatedDecreaseOrder(user0.address);
     expect(order.account).to.not.be.equal(constants.AddressZero);
 
-    await expect(orderBook.connect(user0).cancelDecreaseOrder(1)).to.be.revertedWith(
+    await expect(orderbook.connect(user0).cancelDecreaseOrder(1)).to.be.revertedWith(
       "OrderBook: non-existent order",
     );
 
     const balanceBefore = await user0.getBalance();
-    tx = await orderBook.connect(user0).cancelDecreaseOrder(0);
+    tx = await orderbook.connect(user0).cancelDecreaseOrder(0);
     reportGasUsed(tx, "cancelDecreaseOrder gas used");
 
     order = await getCreatedDecreaseOrder(user0.address);

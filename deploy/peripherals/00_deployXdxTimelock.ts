@@ -15,7 +15,7 @@ const func: DeployFunction = async (hre) => {
   const buffer = 24 * 60 * 60;
   const longBuffer = 7 * 24 * 60 * 60;
   const tokenManager = await connect(TokenManager__factory);
-  const mintReceiver = { address: AddressZero };
+  const mintReceiver = deployer;
   const maxTokenSupply = toWei(13250000, 18);
 
   await deploy(XdxTimelock__factory, {
@@ -33,4 +33,4 @@ const func: DeployFunction = async (hre) => {
 
 export default func;
 func.tags = ["xdxTimelock"];
-func.dependencies = ["tokenManager"];
+func.dependencies = ["tokens"];
