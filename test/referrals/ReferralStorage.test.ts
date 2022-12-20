@@ -34,7 +34,7 @@ const setup = deployments.createFixture(async (hre) => {
 // Tier1 (12% discount, 8% rebate) = Tier {totalRebate = 2000, defaultTradersDiscountShare = 6000}
 // Tier2 (12% discount, 15% rebate) = Tier {totalRebate = 2700, defaultTradersDiscountShare = 4444}
 // for the last tier extra EsGMX incentives will be handled off-chain
-describe.only("ReferralStorage", () => {
+describe("ReferralStorage", () => {
   beforeEach(async () => {
     const { accounts, users } = await setup();
 
