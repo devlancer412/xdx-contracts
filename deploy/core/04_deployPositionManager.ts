@@ -78,9 +78,9 @@ const func: DeployFunction = async (hre) => {
     await router.addPlugin(positionManager.address);
   }
 
-  if ((await positionManager.contract.gov()) != (await vault.gov())) {
-    await positionManager.contract.setGov(await vault.gov());
-  }
+  // if ((await positionManager.contract.gov()) != (await vault.gov())) {
+  //   await positionManager.contract.setGov(await vault.gov());
+  // }
 };
 
 export default func;

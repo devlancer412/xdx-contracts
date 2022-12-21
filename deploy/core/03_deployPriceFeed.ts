@@ -5,7 +5,6 @@ import {
   FastPriceEvents__factory,
   VaultPriceFeed__factory,
   PriceFeedTimelock__factory,
-  TokenManager__factory,
   Vault__factory,
   USDG__factory,
   Router__factory,

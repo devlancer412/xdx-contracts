@@ -190,7 +190,7 @@ describe("FastPriceTimelock", () => {
           3 * 24 * 60 * 60, // _buffer
           tokenManager.address, // _tokenManager
           mintReceiver.address, // _mintReceiver
-          user0.address, // _glpManager
+          user0.address, // _xlxManager
           user1.address, // _rewardRouter
           1000, // _maxTokenSupply
           10, // marginFeeBasisPoints
@@ -480,33 +480,33 @@ describe("FastPriceTimelock", () => {
   it("withdrawToken", async () => {
     await priceFeedTimelock.setContractHandler(user0.address, true);
 
-    const gmx = await ship.connect(XDX__factory);
-    await gmx.setGov(priceFeedTimelock.address);
+    const xdx = await ship.connect(XDX__factory);
+    await xdx.setGov(priceFeedTimelock.address);
 
     await expect(
-      priceFeedTimelock.connect(user0).withdrawToken(gmx.address, avax.address, user0.address, 100),
+      priceFeedTimelock.connect(user0).withdrawToken(xdx.address, avax.address, user0.address, 100),
     ).to.be.revertedWith("Timelock: forbidden");
 
     await expect(
-      priceFeedTimelock.connect(deployer).withdrawToken(gmx.address, avax.address, user0.address, 100),
+      priceFeedTimelock.connect(deployer).withdrawToken(xdx.address, avax.address, user0.address, 100),
     ).to.be.revertedWith("Timelock: action not signalled");
 
     await expect(
-      priceFeedTimelock.connect(user0).signalWithdrawToken(gmx.address, avax.address, user0.address, 100),
+      priceFeedTimelock.connect(user0).signalWithdrawToken(xdx.address, avax.address, user0.address, 100),
     ).to.be.revertedWith("Timelock: forbidden");
 
     await priceFeedTimelock
       .connect(deployer)
-      .signalWithdrawToken(gmx.address, avax.address, user0.address, 100);
+      .signalWithdrawToken(xdx.address, avax.address, user0.address, 100);
 
     await expect(
-      priceFeedTimelock.connect(deployer).withdrawToken(gmx.address, avax.address, user0.address, 100),
+      priceFeedTimelock.connect(deployer).withdrawToken(xdx.address, avax.address, user0.address, 100),
     ).to.be.revertedWith("Timelock: action time not yet passed");
 
     await advanceTimeAndBlock(4 * 24 * 60 * 60);
 
     await expect(
-      priceFeedTimelock.connect(deployer).withdrawToken(gmx.address, avax.address, user0.address, 100),
+      priceFeedTimelock.connect(deployer).withdrawToken(xdx.address, avax.address, user0.address, 100),
     ).to.be.revertedWith("Timelock: action time not yet passed");
 
     await advanceTimeAndBlock(1 * 24 * 60 * 60 + 10);
@@ -516,24 +516,24 @@ describe("FastPriceTimelock", () => {
     ).to.be.revertedWith("Timelock: action not signalled");
 
     await expect(
-      priceFeedTimelock.connect(deployer).withdrawToken(gmx.address, usdc.address, user0.address, 100),
+      priceFeedTimelock.connect(deployer).withdrawToken(xdx.address, usdc.address, user0.address, 100),
     ).to.be.revertedWith("Timelock: action not signalled");
 
     await expect(
-      priceFeedTimelock.connect(deployer).withdrawToken(gmx.address, avax.address, user1.address, 100),
+      priceFeedTimelock.connect(deployer).withdrawToken(xdx.address, avax.address, user1.address, 100),
     ).to.be.revertedWith("Timelock: action not signalled");
 
     await expect(
-      priceFeedTimelock.connect(deployer).withdrawToken(gmx.address, avax.address, user0.address, 101),
+      priceFeedTimelock.connect(deployer).withdrawToken(xdx.address, avax.address, user0.address, 101),
     ).to.be.revertedWith("Timelock: action not signalled");
 
     await expect(
-      priceFeedTimelock.connect(deployer).withdrawToken(gmx.address, avax.address, user0.address, 100),
+      priceFeedTimelock.connect(deployer).withdrawToken(xdx.address, avax.address, user0.address, 100),
     ).to.be.revertedWith("ERC20: transfer amount exceeds balance");
 
-    await avax.mint(gmx.address, 100);
+    await avax.mint(xdx.address, 100);
     expect(await avax.balanceOf(user0.address)).eq(0);
-    await priceFeedTimelock.connect(deployer).withdrawToken(gmx.address, avax.address, user0.address, 100);
+    await priceFeedTimelock.connect(deployer).withdrawToken(xdx.address, avax.address, user0.address, 100);
     expect(await avax.balanceOf(user0.address)).eq(100);
   });
 

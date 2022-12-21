@@ -1,14 +1,9 @@
 import {
-  Timelock,
-  Timelock__factory,
-  ReferralStorage,
-  ReferralStorage__factory,
   XDX,
   EsXDX,
   MintableBaseToken,
   RewardTracker,
   RewardDistributor,
-  RewardRouter,
   XDX__factory,
   EsXDX__factory,
 } from "../../types";
@@ -17,7 +12,6 @@ import chai from "chai";
 import { solidity } from "ethereum-waffle";
 import { advanceTimeAndBlock, Ship, toWei } from "../../utils";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { utils, constants } from "ethers";
 
 chai.use(solidity);
 const { expect } = chai;
@@ -51,7 +45,7 @@ const setup = deployments.createFixture(async (hre) => {
 // Tier1 (12% discount, 8% rebate) = Tier {totalRebate = 2000, defaultTradersDiscountShare = 6000}
 // Tier2 (12% discount, 15% rebate) = Tier {totalRebate = 2700, defaultTradersDiscountShare = 4444}
 // for the last tier extra EsXDX incentives will be handled off-chain
-describe.only("BonusDistributor", () => {
+describe("BonusDistributor", () => {
   beforeEach(async () => {
     const { accounts } = await setup();
 

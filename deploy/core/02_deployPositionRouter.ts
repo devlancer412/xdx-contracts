@@ -40,7 +40,7 @@ const func: DeployFunction = async (hre) => {
 
   if (positionRouter.newlyDeployed) {
     await positionRouter.contract.setDelayValues(1, 180, 30 * 60);
-    await positionRouter.contract.setGov(await vault.gov());
+    // await positionRouter.contract.setGov(await vault.gov());
 
     await shortsTracker.setHandler(positionRouter.address, true);
     await router.addPlugin(positionRouter.address);

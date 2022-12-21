@@ -164,7 +164,7 @@ const func: DeployFunction = async (hre) => {
       "vXLX", // _symbol
       vestingDuration, // _vestingDuration
       esXdx.address, // _esToken
-      feeXlxTracker.address, // _pairToken
+      stakedXlxTracker.address, // _pairToken
       xdx.address, // _claimableToken
       stakedXlxTracker.address, // _rewardTracker
     ],

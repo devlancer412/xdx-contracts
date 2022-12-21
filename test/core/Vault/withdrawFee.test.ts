@@ -219,7 +219,7 @@ describe("Vault.withdrawFee", function () {
           5 * 24 * 60 * 60, // _buffer
           alice.address, // _tokenManager
           bob.address, // _mintReceiver
-          user.address, // _glpManager
+          user.address, // _xlxManager
           user1.address, // _rewardRouter
           toWei(1000, 18), // _maxTokenSupply
           10, // marginFeeBasisPoints
@@ -303,7 +303,7 @@ describe("Vault.withdrawFee", function () {
           5 * 24 * 60 * 60, // _buffer
           alice.address, // _tokenManager
           bob.address, // _mintReceiver
-          user.address, // _glpManager
+          user.address, // _xlxManager
           user1.address, // _rewardRouter
           toWei(1000, 18), // _maxTokenSupply
           10, // marginFeeBasisPoints

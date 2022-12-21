@@ -151,7 +151,7 @@ describe("Timelock", () => {
     expect(await timelock.admin()).eq(deployer.address);
     expect(await timelock.buffer()).eq(3 * 24 * 60 * 60);
     expect(await timelock.tokenManager()).eq(tokenManager.address);
-    expect(await timelock.maxTokenSupply()).eq(toWei(1000, 18));
+    expect(await timelock.maxTokenSupply()).eq(toWei(13250000, 18));
 
     await expect(
       ship.deploy(Timelock__factory, {
