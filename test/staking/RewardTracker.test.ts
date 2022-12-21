@@ -1,37 +1,8 @@
-import {
-  Timelock,
-  XDX,
-  EsXDX,
-  MintableBaseToken,
-  RewardTracker,
-  RewardDistributor,
-  RewardRouterV2,
-  Vault,
-  XLX,
-  XlxManager,
-  USDG,
-  Token,
-  Vester,
-  TokenManager,
-  StakedXlx,
-  XlxBalance,
-  EsXdxBatchSender__factory,
-  RewardRouterV2__factory,
-  Vault__factory,
-  XLX__factory,
-  XDX__factory,
-  XlxManager__factory,
-  USDG__factory,
-  EsXDX__factory,
-  Timelock__factory,
-  TokenManager__factory,
-  StakedXlx__factory,
-  XlxBalance__factory,
-} from "../../types";
+import { XDX, EsXDX, RewardTracker, RewardDistributor, XDX__factory, EsXDX__factory } from "../../types";
 import { deployments } from "hardhat";
 import chai from "chai";
 import { solidity } from "ethereum-waffle";
-import { advanceTimeAndBlock, reportGasUsed, Ship, toWei } from "../../utils";
+import { advanceTimeAndBlock, Ship, toWei } from "../../utils";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 chai.use(solidity);
@@ -61,10 +32,6 @@ const setup = deployments.createFixture(async (hre) => {
   };
 });
 
-// Tier0 (5% discount, 5% rebate) = Tier {totalRebate = 1000, defaultTradersDiscountShare = 5000}
-// Tier1 (12% discount, 8% rebate) = Tier {totalRebate = 2000, defaultTradersDiscountShare = 6000}
-// Tier2 (12% discount, 15% rebate) = Tier {totalRebate = 2700, defaultTradersDiscountShare = 4444}
-// for the last tier extra EsXDX incentives will be handled off-chain
 describe("RewardTracker", () => {
   beforeEach(async () => {
     const { accounts, users } = await setup();
