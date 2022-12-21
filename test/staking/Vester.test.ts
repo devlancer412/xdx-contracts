@@ -464,7 +464,7 @@ describe("Vester", () => {
     expect(await xdxVester.lastVestingTimes(user0.address)).eq(0);
   });
 
-  it.only("handles pairing", async () => {
+  it("handles pairing", async () => {
     await stakedXdxTracker.setInPrivateTransferMode(true);
     await stakedXdxTracker.setInPrivateStakingMode(true);
     await bonusXdxTracker.setInPrivateTransferMode(true);

@@ -36,7 +36,9 @@ const func: DeployFunction = async (hre) => {
       const tokenContract = await connect(token.name);
       const priceFeedContract = (await connect(token.name + "PriceFeed")) as PriceFeed;
       token.address = tokenContract.address;
-      token.priceFeed = priceFeedContract.address;
+      if (!hre.network.tags.live) {
+        token.priceFeed = priceFeedContract.address;
+      }
     }
   }
 
