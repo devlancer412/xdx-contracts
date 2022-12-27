@@ -9,8 +9,12 @@ const func: DeployFunction = async (hre) => {
 
   const referralStorage = await deploy(ReferralStorage__factory);
   if (referralStorage.newlyDeployed) {
-    await referralStorage.contract.setHandler(positionRouter.address, true);
-    await positionRouter.setReferralStorage(referralStorage.address);
+    let tx = await referralStorage.contract.setHandler(positionRouter.address, true);
+    console.log("Set PositionRouter as handler of ReferralStorage at ", tx.hash);
+    await tx.wait();
+    tx = await positionRouter.setReferralStorage(referralStorage.address);
+    console.log("Set ReferralStorage to PositionRouter at ", tx.hash);
+    await tx.wait();
   }
 };
 

@@ -24,7 +24,7 @@ const func: DeployFunction = async (hre) => {
   let orderKeepers: string[];
   let liquidators: string[];
 
-  const nativeToken = tokens.avax.nativeToken as NativeToken;
+  const nativeToken = tokens[hre.network.name as "avax" | "avax_test"].nativeToken as NativeToken;
 
   if (hre.network.tags.prod) {
     orderKeepers = configOrderKeepers;
@@ -55,27 +55,39 @@ const func: DeployFunction = async (hre) => {
   });
 
   if (positionManager.newlyDeployed) {
-    await positionManager.contract.setReferralStorage(referralStorage.address);
-    await positionManager.contract.setShouldValidateIncreaseOrder(false);
+    let tx = await positionManager.contract.setReferralStorage(referralStorage.address);
+    console.log("Set ReferralStorage to PositionManager at ", tx.hash);
+    await tx.wait();
+    tx = await positionManager.contract.setShouldValidateIncreaseOrder(false);
+    console.log("Set should validate increaseOrder to PositionManager at ", tx.hash);
+    await tx.wait();
   }
 
   for (const orderKeeper of orderKeepers) {
     if (!(await positionManager.contract.isOrderKeeper(orderKeeper))) {
-      await positionManager.contract.setOrderKeeper(orderKeeper, true);
+      const tx = await positionManager.contract.setOrderKeeper(orderKeeper, true);
+      console.log("Set", orderKeeper, "as orderKeeper of PositionManager at ", tx.hash);
+      await tx.wait();
     }
   }
 
   for (const liquidator of liquidators) {
     if (!(await positionManager.contract.isLiquidator(liquidator))) {
-      await positionManager.contract.setLiquidator(liquidator, true);
+      const tx = await positionManager.contract.setLiquidator(liquidator, true);
+      console.log("Set", liquidator, "as liquidator of PositionManager at ", tx.hash);
+      await tx.wait();
     }
   }
 
   if (!(await shortsTracker.isHandler(positionManager.address))) {
-    await shortsTracker.setHandler(positionManager.address, true);
+    const tx = await shortsTracker.setHandler(positionManager.address, true);
+    console.log("Set PositionManager as handler of ShortsTracker at ", tx.hash);
+    await tx.wait();
   }
   if (!(await router.plugins(positionManager.address))) {
-    await router.addPlugin(positionManager.address);
+    const tx = await router.addPlugin(positionManager.address);
+    console.log("Set PositionManager as plugin of Router at ", tx.hash);
+    await tx.wait();
   }
 
   // if ((await positionManager.contract.gov()) != (await vault.gov())) {

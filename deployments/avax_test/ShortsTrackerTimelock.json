@@ -1,0 +1,747 @@
+{
+  "address": "0xC548a8AeE03eb1f80Cb5CeF18Fa00F43f86d21aE",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_admin",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_buffer",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_averagePriceUpdateDelay",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_maxAveragePriceChange",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "action",
+          "type": "bytes32"
+        }
+      ],
+      "name": "ClearAction",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "oldAveragePrice",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newAveragePrice",
+          "type": "uint256"
+        }
+      ],
+      "name": "GlobalShortAveragePriceUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "admin",
+          "type": "address"
+        }
+      ],
+      "name": "SetAdmin",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "averagePriceUpdateDelay",
+          "type": "uint256"
+        }
+      ],
+      "name": "SetAveragePriceUpdateDelay",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "target",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "gov",
+          "type": "address"
+        }
+      ],
+      "name": "SetGov",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "handler",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isHandler",
+          "type": "bool"
+        }
+      ],
+      "name": "SetHandler",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "target",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isGlobalShortDataReady",
+          "type": "bool"
+        }
+      ],
+      "name": "SetIsGlobalShortDataReady",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "maxAveragePriceChange",
+          "type": "uint256"
+        }
+      ],
+      "name": "SetMaxAveragePriceChange",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "action",
+          "type": "bytes32"
+        }
+      ],
+      "name": "SignalPendingAction",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "admin",
+          "type": "address"
+        }
+      ],
+      "name": "SignalSetAdmin",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "averagePriceUpdateDelay",
+          "type": "uint256"
+        }
+      ],
+      "name": "SignalSetAveragePriceUpdateDelay",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "target",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "gov",
+          "type": "address"
+        }
+      ],
+      "name": "SignalSetGov",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "target",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isGlobalShortDataReady",
+          "type": "bool"
+        }
+      ],
+      "name": "SignalSetIsGlobalShortDataReady",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "maxAveragePriceChange",
+          "type": "uint256"
+        }
+      ],
+      "name": "SignalSetMaxAveragePriceChange",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "BASIS_POINTS_DIVISOR",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "MAX_BUFFER",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "admin",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "averagePriceUpdateDelay",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "buffer",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IShortsTracker",
+          "name": "_shortsTracker",
+          "type": "address"
+        }
+      ],
+      "name": "disableIsGlobalShortDataReady",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "isHandler",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "lastUpdated",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "maxAveragePriceChange",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "pendingActions",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_admin",
+          "type": "address"
+        }
+      ],
+      "name": "setAdmin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_averagePriceUpdateDelay",
+          "type": "uint256"
+        }
+      ],
+      "name": "setAveragePriceUpdateDelay",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_buffer",
+          "type": "uint256"
+        }
+      ],
+      "name": "setBuffer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IShortsTracker",
+          "name": "_shortsTracker",
+          "type": "address"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_tokens",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "_averagePrices",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "setGlobalShortAveragePrices",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_shortsTracker",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_gov",
+          "type": "address"
+        }
+      ],
+      "name": "setGov",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_handler",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_isActive",
+          "type": "bool"
+        }
+      ],
+      "name": "setHandler",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IShortsTracker",
+          "name": "_shortsTracker",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_value",
+          "type": "bool"
+        }
+      ],
+      "name": "setIsGlobalShortDataReady",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_maxAveragePriceChange",
+          "type": "uint256"
+        }
+      ],
+      "name": "setMaxAveragePriceChange",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_admin",
+          "type": "address"
+        }
+      ],
+      "name": "signalSetAdmin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_averagePriceUpdateDelay",
+          "type": "uint256"
+        }
+      ],
+      "name": "signalSetAveragePriceUpdateDelay",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_shortsTracker",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_gov",
+          "type": "address"
+        }
+      ],
+      "name": "signalSetGov",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IShortsTracker",
+          "name": "_shortsTracker",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_value",
+          "type": "bool"
+        }
+      ],
+      "name": "signalSetIsGlobalShortDataReady",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_maxAveragePriceChange",
+          "type": "uint256"
+        }
+      ],
+      "name": "signalSetMaxAveragePriceChange",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x894131cfb2c9ffc6e70d3ccdd56f1972e9a5c07958078e88fb325ad5f8dde521",
+  "receipt": {
+    "to": null,
+    "from": "0xf5CA36c9873d61Bc28C117BD470981Ef6647A685",
+    "contractAddress": "0xC548a8AeE03eb1f80Cb5CeF18Fa00F43f86d21aE",
+    "transactionIndex": 0,
+    "gasUsed": "1661506",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x3377777d5c160d2c9e6af6f49a5312416a4a4f918684d70468dfaaac62016df3",
+    "transactionHash": "0x894131cfb2c9ffc6e70d3ccdd56f1972e9a5c07958078e88fb325ad5f8dde521",
+    "logs": [],
+    "blockNumber": 17371187,
+    "cumulativeGasUsed": "1661506",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0xf5CA36c9873d61Bc28C117BD470981Ef6647A685",
+    60,
+    300,
+    20
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "a5c1ec6ed734a994a4a7c4ed9bed389b",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_buffer\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_averagePriceUpdateDelay\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_maxAveragePriceChange\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"action\",\"type\":\"bytes32\"}],\"name\":\"ClearAction\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"oldAveragePrice\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newAveragePrice\",\"type\":\"uint256\"}],\"name\":\"GlobalShortAveragePriceUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"}],\"name\":\"SetAdmin\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"averagePriceUpdateDelay\",\"type\":\"uint256\"}],\"name\":\"SetAveragePriceUpdateDelay\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"gov\",\"type\":\"address\"}],\"name\":\"SetGov\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"handler\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"isHandler\",\"type\":\"bool\"}],\"name\":\"SetHandler\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"isGlobalShortDataReady\",\"type\":\"bool\"}],\"name\":\"SetIsGlobalShortDataReady\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"maxAveragePriceChange\",\"type\":\"uint256\"}],\"name\":\"SetMaxAveragePriceChange\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"action\",\"type\":\"bytes32\"}],\"name\":\"SignalPendingAction\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"}],\"name\":\"SignalSetAdmin\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"averagePriceUpdateDelay\",\"type\":\"uint256\"}],\"name\":\"SignalSetAveragePriceUpdateDelay\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"gov\",\"type\":\"address\"}],\"name\":\"SignalSetGov\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"isGlobalShortDataReady\",\"type\":\"bool\"}],\"name\":\"SignalSetIsGlobalShortDataReady\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"maxAveragePriceChange\",\"type\":\"uint256\"}],\"name\":\"SignalSetMaxAveragePriceChange\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"BASIS_POINTS_DIVISOR\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_BUFFER\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"admin\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"averagePriceUpdateDelay\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"buffer\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contract IShortsTracker\",\"name\":\"_shortsTracker\",\"type\":\"address\"}],\"name\":\"disableIsGlobalShortDataReady\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"isHandler\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"lastUpdated\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxAveragePriceChange\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"pendingActions\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"}],\"name\":\"setAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_averagePriceUpdateDelay\",\"type\":\"uint256\"}],\"name\":\"setAveragePriceUpdateDelay\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_buffer\",\"type\":\"uint256\"}],\"name\":\"setBuffer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contract IShortsTracker\",\"name\":\"_shortsTracker\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"_tokens\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_averagePrices\",\"type\":\"uint256[]\"}],\"name\":\"setGlobalShortAveragePrices\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_shortsTracker\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_gov\",\"type\":\"address\"}],\"name\":\"setGov\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_handler\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_isActive\",\"type\":\"bool\"}],\"name\":\"setHandler\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contract IShortsTracker\",\"name\":\"_shortsTracker\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_value\",\"type\":\"bool\"}],\"name\":\"setIsGlobalShortDataReady\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_maxAveragePriceChange\",\"type\":\"uint256\"}],\"name\":\"setMaxAveragePriceChange\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"}],\"name\":\"signalSetAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_averagePriceUpdateDelay\",\"type\":\"uint256\"}],\"name\":\"signalSetAveragePriceUpdateDelay\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_shortsTracker\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_gov\",\"type\":\"address\"}],\"name\":\"signalSetGov\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contract IShortsTracker\",\"name\":\"_shortsTracker\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_value\",\"type\":\"bool\"}],\"name\":\"signalSetIsGlobalShortDataReady\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_maxAveragePriceChange\",\"type\":\"uint256\"}],\"name\":\"signalSetMaxAveragePriceChange\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/peripherals/ShortsTrackerTimelock.sol\":\"ShortsTrackerTimelock\"},\"evmVersion\":\"istanbul\",\"libraries\":{\"__CACHE_BREAKER__\":\"0x00000000d41867734bbee4c6863d9255b2b06ac1\"},\"metadata\":{\"bytecodeHash\":\"none\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":20},\"remappings\":[]},\"sources\":{\"contracts/access/Governable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\ncontract Governable {\\n    address public gov;\\n\\n    constructor() public {\\n        gov = msg.sender;\\n    }\\n\\n    modifier onlyGov() {\\n        require(msg.sender == gov, \\\"Governable: forbidden\\\");\\n        _;\\n    }\\n\\n    function setGov(address _gov) external onlyGov {\\n        gov = _gov;\\n    }\\n}\\n\",\"keccak256\":\"0xe719b0de64ee00468f6a985c8ef08ebdd271d99d6616308cbba458f78ed8c532\",\"license\":\"MIT\"},\"contracts/core/interfaces/IShortsTracker.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\ninterface IShortsTracker {\\n    function isGlobalShortDataReady() external view returns (bool);\\n    function globalShortAveragePrices(address _token) external view returns (uint256);\\n    function getNextGlobalShortData(\\n        address _account,\\n        address _collateralToken,\\n        address _indexToken,\\n        uint256 _nextPrice,\\n        uint256 _sizeDelta,\\n        bool _isIncrease\\n    ) external view returns (uint256, uint256);\\n    function updateGlobalShortData(\\n        address _account,\\n        address _collateralToken,\\n        address _indexToken,\\n        bool _isLong,\\n        uint256 _sizeDelta,\\n        uint256 _markPrice,\\n        bool _isIncrease\\n    ) external;\\n    function setIsGlobalShortDataReady(bool value) external;\\n    function setInitData(address[] calldata _tokens, uint256[] calldata _averagePrices) external;\\n}\\n\",\"keccak256\":\"0x7b3f7791cba4f3ccfa308a9bf176663e9cead74bf78ac1c7ae9f2a041a26075d\",\"license\":\"MIT\"},\"contracts/libraries/math/SafeMath.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\n/**\\n * @dev Wrappers over Solidity's arithmetic operations with added overflow\\n * checks.\\n *\\n * Arithmetic operations in Solidity wrap on overflow. This can easily result\\n * in bugs, because programmers usually assume that an overflow raises an\\n * error, which is the standard behavior in high level programming languages.\\n * `SafeMath` restores this intuition by reverting the transaction when an\\n * operation overflows.\\n *\\n * Using this library instead of the unchecked operations eliminates an entire\\n * class of bugs, so it's recommended to use it always.\\n */\\nlibrary SafeMath {\\n    /**\\n     * @dev Returns the addition of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `+` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Addition cannot overflow.\\n     */\\n    function add(uint256 a, uint256 b) internal pure returns (uint256) {\\n        uint256 c = a + b;\\n        require(c >= a, \\\"SafeMath: addition overflow\\\");\\n\\n        return c;\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting on\\n     * overflow (when the result is negative).\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return sub(a, b, \\\"SafeMath: subtraction overflow\\\");\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting with custom message on\\n     * overflow (when the result is negative).\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        require(b <= a, errorMessage);\\n        uint256 c = a - b;\\n\\n        return c;\\n    }\\n\\n    /**\\n     * @dev Returns the multiplication of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `*` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Multiplication cannot overflow.\\n     */\\n    function mul(uint256 a, uint256 b) internal pure returns (uint256) {\\n        // Gas optimization: this is cheaper than requiring 'a' not being zero, but the\\n        // benefit is lost if 'b' is also tested.\\n        // See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522\\n        if (a == 0) {\\n            return 0;\\n        }\\n\\n        uint256 c = a * b;\\n        require(c / a == b, \\\"SafeMath: multiplication overflow\\\");\\n\\n        return c;\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers. Reverts on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * Counterpart to Solidity's `/` operator. Note: this function uses a\\n     * `revert` opcode (which leaves remaining gas untouched) while Solidity\\n     * uses an invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return div(a, b, \\\"SafeMath: division by zero\\\");\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers. Reverts with custom message on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * Counterpart to Solidity's `/` operator. Note: this function uses a\\n     * `revert` opcode (which leaves remaining gas untouched) while Solidity\\n     * uses an invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        require(b > 0, errorMessage);\\n        uint256 c = a / b;\\n        // assert(a == b * c + a % b); // There is no case in which this doesn't hold\\n\\n        return c;\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * Reverts when dividing by zero.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return mod(a, b, \\\"SafeMath: modulo by zero\\\");\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * Reverts with custom message when dividing by zero.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        require(b != 0, errorMessage);\\n        return a % b;\\n    }\\n}\\n\",\"keccak256\":\"0x41b0da7db3e1f79b338824fed2bc4732430b78002a9d51c2cfa86ad5a12c2763\",\"license\":\"MIT\"},\"contracts/peripherals/ShortsTrackerTimelock.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\nimport \\\"../libraries/math/SafeMath.sol\\\";\\nimport \\\"../access/Governable.sol\\\";\\nimport \\\"../core/interfaces/IShortsTracker.sol\\\";\\n\\npragma solidity 0.6.12;\\n\\ncontract ShortsTrackerTimelock {\\n    using SafeMath for uint256;\\n\\n    uint256 public constant BASIS_POINTS_DIVISOR = 10000;\\n    uint256 public constant MAX_BUFFER = 5 days;\\n\\n    mapping (bytes32 => uint256) public pendingActions;\\n\\n    address public admin;\\n    uint256 public buffer;\\n\\n    mapping (address => bool) public isHandler;\\n    mapping (address => uint256) public lastUpdated;\\n    uint256 public averagePriceUpdateDelay;\\n    uint256 public maxAveragePriceChange;\\n\\n    event GlobalShortAveragePriceUpdated(address indexed token, uint256 oldAveragePrice, uint256 newAveragePrice);\\n\\n    event SignalSetGov(address target, address gov);\\n    event SetGov(address target, address gov);\\n\\n    event SignalSetAdmin(address admin);\\n    event SetAdmin(address admin);\\n\\n    event SetHandler(address indexed handler, bool isHandler);\\n\\n    event SignalSetMaxAveragePriceChange(uint256 maxAveragePriceChange);\\n    event SetMaxAveragePriceChange(uint256 maxAveragePriceChange);\\n\\n    event SignalSetAveragePriceUpdateDelay(uint256 averagePriceUpdateDelay);\\n    event SetAveragePriceUpdateDelay(uint256 averagePriceUpdateDelay);\\n\\n    event SignalSetIsGlobalShortDataReady(address target, bool isGlobalShortDataReady);\\n    event SetIsGlobalShortDataReady(address target, bool isGlobalShortDataReady);\\n\\n    event SignalPendingAction(bytes32 action);\\n    event ClearAction(bytes32 action);\\n\\n    constructor(\\n        address _admin,\\n        uint256 _buffer,\\n        uint256 _averagePriceUpdateDelay,\\n        uint256 _maxAveragePriceChange\\n    ) public {\\n        admin = _admin;\\n        buffer = _buffer;\\n        averagePriceUpdateDelay = _averagePriceUpdateDelay;\\n        maxAveragePriceChange = _maxAveragePriceChange;\\n    }\\n\\n    modifier onlyAdmin() {\\n        require(msg.sender == admin, \\\"ShortsTrackerTimelock: admin forbidden\\\");\\n        _;\\n    }\\n\\n    modifier onlyHandler() {\\n        require(isHandler[msg.sender] || msg.sender == admin, \\\"ShortsTrackerTimelock: handler forbidden\\\");\\n        _;\\n    }\\n\\n    function setBuffer(uint256 _buffer) external onlyAdmin {\\n        require(_buffer <= MAX_BUFFER, \\\"ShortsTrackerTimelock: invalid buffer\\\");\\n        require(_buffer > buffer, \\\"ShortsTrackerTimelock: buffer cannot be decreased\\\");\\n        buffer = _buffer;\\n    }\\n\\n    function signalSetAdmin(address _admin) external onlyAdmin {\\n        require(_admin != address(0), \\\"ShortsTrackerTimelock: invalid admin\\\");\\n\\n        bytes32 action = keccak256(abi.encodePacked(\\\"setAdmin\\\", _admin));\\n        _setPendingAction(action);\\n\\n        emit SignalSetAdmin(_admin);\\n    }\\n\\n    function setAdmin(address _admin) external onlyAdmin {\\n        bytes32 action = keccak256(abi.encodePacked(\\\"setAdmin\\\", _admin));\\n        _validateAction(action);\\n        _clearAction(action);\\n\\n        admin = _admin;\\n\\n        emit SetAdmin(_admin);\\n    }\\n\\n    function setHandler(address _handler, bool _isActive) external onlyAdmin {\\n        isHandler[_handler] = _isActive;\\n\\n        emit SetHandler(_handler, _isActive);\\n    }\\n\\n    function signalSetGov(address _shortsTracker, address _gov) external onlyAdmin {\\n        require(_gov != address(0), \\\"ShortsTrackerTimelock: invalid gov\\\");\\n\\n        bytes32 action = keccak256(abi.encodePacked(\\\"setGov\\\", _shortsTracker, _gov));\\n        _setPendingAction(action);\\n\\n        emit SignalSetGov(_shortsTracker, _gov);\\n    }\\n\\n    function setGov(address _shortsTracker, address _gov) external onlyAdmin {\\n        bytes32 action = keccak256(abi.encodePacked(\\\"setGov\\\", _shortsTracker, _gov));\\n        _validateAction(action);\\n        _clearAction(action);\\n\\n        Governable(_shortsTracker).setGov(_gov);\\n\\n        emit SetGov(_shortsTracker, _gov);\\n    }\\n\\n    function signalSetAveragePriceUpdateDelay(uint256 _averagePriceUpdateDelay) external onlyAdmin {\\n        bytes32 action = keccak256(abi.encodePacked(\\\"setAveragePriceUpdateDelay\\\", _averagePriceUpdateDelay));\\n        _setPendingAction(action);\\n\\n        emit SignalSetAveragePriceUpdateDelay(_averagePriceUpdateDelay);\\n    }\\n\\n    function setAveragePriceUpdateDelay(uint256 _averagePriceUpdateDelay) external onlyAdmin {\\n        bytes32 action = keccak256(abi.encodePacked(\\\"setAveragePriceUpdateDelay\\\", _averagePriceUpdateDelay));\\n        _validateAction(action);\\n        _clearAction(action);\\n\\n        averagePriceUpdateDelay = _averagePriceUpdateDelay;\\n\\n        emit SetAveragePriceUpdateDelay(_averagePriceUpdateDelay);\\n    }\\n\\n    function signalSetMaxAveragePriceChange(uint256 _maxAveragePriceChange) external onlyAdmin {\\n        bytes32 action = keccak256(abi.encodePacked(\\\"setMaxAveragePriceChange\\\", _maxAveragePriceChange));\\n        _setPendingAction(action);\\n\\n        emit SignalSetMaxAveragePriceChange(_maxAveragePriceChange);\\n    }\\n\\n    function setMaxAveragePriceChange(uint256 _maxAveragePriceChange) external onlyAdmin {\\n        bytes32 action = keccak256(abi.encodePacked(\\\"setMaxAveragePriceChange\\\", _maxAveragePriceChange));\\n        _validateAction(action);\\n        _clearAction(action);\\n\\n        maxAveragePriceChange = _maxAveragePriceChange;\\n\\n        emit SetMaxAveragePriceChange(_maxAveragePriceChange);\\n    }\\n\\n    function signalSetIsGlobalShortDataReady(IShortsTracker _shortsTracker, bool _value) external onlyAdmin {\\n        bytes32 action = keccak256(abi.encodePacked(\\\"setIsGlobalShortDataReady\\\", address(_shortsTracker), _value));\\n        _setPendingAction(action);\\n\\n        emit SignalSetIsGlobalShortDataReady(address(_shortsTracker), _value);\\n    }\\n\\n    function setIsGlobalShortDataReady(IShortsTracker _shortsTracker, bool _value) external onlyAdmin {\\n        bytes32 action = keccak256(abi.encodePacked(\\\"setIsGlobalShortDataReady\\\", address(_shortsTracker), _value));\\n        _validateAction(action);\\n        _clearAction(action);\\n\\n        _shortsTracker.setIsGlobalShortDataReady(_value);\\n\\n        emit SetIsGlobalShortDataReady(address(_shortsTracker), _value);\\n    }\\n\\n    function disableIsGlobalShortDataReady(IShortsTracker _shortsTracker) external onlyAdmin {\\n        _shortsTracker.setIsGlobalShortDataReady(false);\\n\\n        emit SetIsGlobalShortDataReady(address(_shortsTracker), false);\\n    }\\n\\n    function setGlobalShortAveragePrices(IShortsTracker _shortsTracker, address[] calldata _tokens, uint256[] calldata _averagePrices) external onlyHandler {\\n        _shortsTracker.setIsGlobalShortDataReady(false);\\n\\n        for (uint256 i = 0; i < _tokens.length; i++) {\\n            address token = _tokens[i];\\n            uint256 oldAveragePrice = _shortsTracker.globalShortAveragePrices(token);\\n            uint256 newAveragePrice = _averagePrices[i];\\n            uint256 diff = newAveragePrice > oldAveragePrice ? newAveragePrice.sub(oldAveragePrice) : oldAveragePrice.sub(newAveragePrice);\\n            require(diff.mul(BASIS_POINTS_DIVISOR).div(oldAveragePrice) < maxAveragePriceChange, \\\"ShortsTrackerTimelock: too big change\\\");\\n\\n            require(block.timestamp >= lastUpdated[token].add(averagePriceUpdateDelay), \\\"ShortsTrackerTimelock: too early\\\");\\n            lastUpdated[token] = block.timestamp;\\n\\n            emit GlobalShortAveragePriceUpdated(token, oldAveragePrice, newAveragePrice);\\n        }\\n\\n        _shortsTracker.setInitData(_tokens, _averagePrices);\\n    }\\n\\n    function _setPendingAction(bytes32 _action) private {\\n        require(pendingActions[_action] == 0, \\\"ShortsTrackerTimelock: action already signalled\\\");\\n        pendingActions[_action] = block.timestamp.add(buffer);\\n        emit SignalPendingAction(_action);\\n    }\\n\\n    function _validateAction(bytes32 _action) private view {\\n        require(pendingActions[_action] != 0, \\\"ShortsTrackerTimelock: action not signalled\\\");\\n        require(pendingActions[_action] <= block.timestamp, \\\"ShortsTrackerTimelock: action time not yet passed\\\");\\n    }\\n\\n    function _clearAction(bytes32 _action) private {\\n        require(pendingActions[_action] != 0, \\\"ShortsTrackerTimelock: invalid _action\\\");\\n        delete pendingActions[_action];\\n        emit ClearAction(_action);\\n    }\\n}\\n\",\"keccak256\":\"0xd56b3cad5fae8b4dc6dd43d73207959a06b72c58318982394fd680ab381587d9\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50604051611bef380380611bef8339818101604052608081101561003357600080fd5b50805160208201516040830151606090930151600180546001600160a01b0319166001600160a01b0390941693909317909255600255600591909155600655611b6e806100816000396000f3fe608060405234801561001057600080fd5b506004361061011d5760003560e01c80630a6f93e614610122578063126082cf1461015a5780631ab8fe04146101625780632591d4831461016a5780632c166c411461019a57806333156639146101b75780633976e566146101d457806342588a67146102a257806342773c2c146102bf57806346ea87af146102c75780634882fa131461030157806351a6de0d1461032f5780635c3bca361461035d57806361d075691461037a578063627395eb14610382578063704b6c02146103a8578063717cf5d6146103ce578063996a7a1e146103f45780639cb7de4b14610422578063adc7ea3714610450578063e30569e51461046d578063edaafe201461048a578063f851a44014610492575b600080fd5b6101486004803603602081101561013857600080fd5b50356001600160a01b03166104b6565b60408051918252519081900360200190f35b6101486104c8565b6101486104ce565b6101986004803603604081101561018057600080fd5b506001600160a01b03813516906020013515156104d4565b005b610198600480360360208110156101b057600080fd5b5035610639565b610198600480360360208110156101cd57600080fd5b5035610718565b610198600480360360608110156101ea57600080fd5b6001600160a01b038235169190810190604081016020820135600160201b81111561021457600080fd5b82018360208201111561022657600080fd5b803590602001918460208302840111600160201b8311171561024757600080fd5b919390929091602081019035600160201b81111561026457600080fd5b82018360208201111561027657600080fd5b803590602001918460208302840111600160201b8311171561029757600080fd5b5090925090506107f9565b610198600480360360208110156102b857600080fd5b5035610b98565b610148610c6b565b6102ed600480360360208110156102dd57600080fd5b50356001600160a01b0316610c71565b604080519115158252519081900360200190f35b6101986004803603604081101561031757600080fd5b506001600160a01b0381351690602001351515610c86565b6101986004803603604081101561034557600080fd5b506001600160a01b0381358116916020013516610d82565b6101986004803603602081101561037357600080fd5b5035610eda565b610148610fab565b6101986004803603602081101561039857600080fd5b50356001600160a01b0316610fb2565b610198600480360360208110156103be57600080fd5b50356001600160a01b03166110a0565b610198600480360360208110156103e457600080fd5b50356001600160a01b0316611194565b6101986004803603604081101561040a57600080fd5b506001600160a01b03813581169160200135166112af565b6101986004803603604081101561043857600080fd5b506001600160a01b03813516906020013515156113dc565b6101986004803603602081101561046657600080fd5b5035611485565b6101486004803603602081101561048357600080fd5b5035611555565b610148611567565b61049a61156d565b604080516001600160a01b039092168252519081900360200190f35b60046020526000908152604090205481565b61271081565b60055481565b6001546001600160a01b0316331461051d5760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b60408051787365744973476c6f62616c53686f727444617461526561647960381b6020808301919091526001600160601b0319606086901b16603983015283151560f81b604d8301528251602e818403018152604e90920190925280519101206105868161157c565b61058f81611616565b826001600160a01b0316633d30cabf836040518263ffffffff1660e01b8152600401808215158152602001915050600060405180830381600087803b1580156105d757600080fd5b505af11580156105eb573d6000803e3d6000fd5b5050604080516001600160a01b0387168152851515602082015281517f177de4361fc37a0e8defe8ac0c685d3472789b507959897eec32350c9d2c36669450908190039091019150a1505050565b6001546001600160a01b031633146106825760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b60408051777365744d61784176657261676550726963654368616e676560401b602080830191909152603880830185905283518084039091018152605890920190925280519101206106d38161157c565b6106dc81611616565b60068290556040805183815290517fe846c28c10eef345d8d4fea8b403bfac624c32c3e64ce0b666f23404f2edb5149181900360200190a15050565b6001546001600160a01b031633146107615760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b604080517973657441766572616765507269636555706461746544656c617960301b602080830191909152603a80830185905283518084039091018152605a90920190925280519101206107b48161157c565b6107bd81611616565b60058290556040805183815290517fa043b6b847902bb85c2a2575e9bce3a077bcaad8ec888ac941f50a6f4acdbb3d9181900360200190a15050565b3360009081526003602052604090205460ff168061082157506001546001600160a01b031633145b61085c5760405162461bcd60e51b8152600401808060200182810382526028815260200180611a1a6028913960400191505060405180910390fd5b60408051633d30cabf60e01b815260006004820181905291516001600160a01b03881692633d30cabf926024808201939182900301818387803b1580156108a257600080fd5b505af11580156108b6573d6000803e3d6000fd5b5050505060005b83811015610ad35760008585838181106108d357fe5b905060200201356001600160a01b031690506000876001600160a01b03166362749803836040518263ffffffff1660e01b815260040180826001600160a01b0316815260200191505060206040518083038186803b15801561093457600080fd5b505afa158015610948573d6000803e3d6000fd5b505050506040513d602081101561095e57600080fd5b50519050600085858581811061097057fe5b90506020020135905060008282116109915761098c83836116a7565b61099b565b61099b82846116a7565b6006549091506109b7846109b1846127106116f2565b9061174b565b106109f35760405162461bcd60e51b8152600401808060200182810382526025815260200180611b3d6025913960400191505060405180910390fd5b6005546001600160a01b038516600090815260046020526040902054610a189161178a565b421015610a6c576040805162461bcd60e51b815260206004820181905260248201527f53686f727473547261636b657254696d656c6f636b3a20746f6f206561726c79604482015290519081900360640190fd5b6001600160a01b038416600081815260046020908152604091829020429055815186815290810185905281517fa6a58ff784b1e07988de90568885d7bbd8e5485c3ec4344195c7306108553256929181900390910190a25050600190920191506108bd9050565b50846001600160a01b031663bbd97187858585856040518563ffffffff1660e01b81526004018080602001806020018381038352878782818152602001925060200280828437600083820152601f01601f19169091018481038352858152602090810191508690860280828437600081840152601f19601f8201169050808301925050509650505050505050600060405180830381600087803b158015610b7957600080fd5b505af1158015610b8d573d6000803e3d6000fd5b505050505050505050565b6001546001600160a01b03163314610be15760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b604080517973657441766572616765507269636555706461746544656c617960301b602080830191909152603a80830185905283518084039091018152605a9092019092528051910120610c34816117e2565b6040805183815290517fc226c48cee6a025ab009e01969a2e89f1ce4d455cfa2900745b2237cb0bb8d619181900360200190a15050565b60065481565b60036020526000908152604090205460ff1681565b6001546001600160a01b03163314610ccf5760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b60408051787365744973476c6f62616c53686f727444617461526561647960381b6020808301919091526001600160601b0319606086901b16603983015283151560f81b604d8301528251602e818403018152604e9092019092528051910120610d38816117e2565b604080516001600160a01b0385168152831515602082015281517f362e5bba25647700de1a7562fc07672df837bef17125e07a6f79abea31ee5a48929181900390910190a1505050565b6001546001600160a01b03163314610dcb5760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b604080516539b2ba23b7bb60d11b6020808301919091526001600160601b0319606086811b8216602685015285901b16603a8301528251602e818403018152604e9092019092528051910120610e208161157c565b610e2981611616565b826001600160a01b031663cfad57a2836040518263ffffffff1660e01b815260040180826001600160a01b03168152602001915050600060405180830381600087803b158015610e7857600080fd5b505af1158015610e8c573d6000803e3d6000fd5b5050604080516001600160a01b0380881682528616602082015281517f53351836099c03ffc3b1727d8abd4b0222afa87d4ed76ae3102d51369ef7f7859450908190039091019150a1505050565b6001546001600160a01b03163314610f235760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b60408051777365744d61784176657261676550726963654368616e676560401b60208083019190915260388083018590528351808403909101815260589092019092528051910120610f74816117e2565b6040805183815290517f21f68305d262b9ce144019f5d9f755a2dd1b5c2d35996cd4b649c285d7525cd19181900360200190a15050565b6206978081565b6001546001600160a01b03163314610ffb5760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b60408051633d30cabf60e01b815260006004820181905291516001600160a01b03841692633d30cabf926024808201939182900301818387803b15801561104157600080fd5b505af1158015611055573d6000803e3d6000fd5b5050604080516001600160a01b03851681526000602082015281517f177de4361fc37a0e8defe8ac0c685d3472789b507959897eec32350c9d2c36669450908190039091019150a150565b6001546001600160a01b031633146110e95760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b604080516739b2ba20b236b4b760c11b6020808301919091526001600160601b0319606085901b1660288301528251601c818403018152603c90920190925280519101206111368161157c565b61113f81611616565b600180546001600160a01b0384166001600160a01b0319909116811790915560408051918252517f5a272403b402d892977df56625f4164ccaf70ca3863991c43ecfe76a6905b0a19181900360200190a15050565b6001546001600160a01b031633146111dd5760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b6001600160a01b0381166112225760405162461bcd60e51b8152600401808060200182810382526024815260200180611ac36024913960400191505060405180910390fd5b604080516739b2ba20b236b4b760c11b6020808301919091526001600160601b0319606085901b1660288301528251601c818403018152603c909201909252805191012061126f816117e2565b604080516001600160a01b038416815290517fbccacda50126e9efa231593d2a9d4394d7cda7909ab2e14d2ae878ab2a306b3f9181900360200190a15050565b6001546001600160a01b031633146112f85760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b6001600160a01b03811661133d5760405162461bcd60e51b81526004018080602001828103825260228152602001806119816022913960400191505060405180910390fd5b604080516539b2ba23b7bb60d11b6020808301919091526001600160601b0319606086811b8216602685015285901b16603a8301528251602e818403018152604e9092019092528051910120611392816117e2565b604080516001600160a01b0380861682528416602082015281517f84f5d90471bb5811423318895e49ef4de52f5a6f4dac67af85e4202410bb66a4929181900390910190a1505050565b6001546001600160a01b031633146114255760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b6001600160a01b038216600081815260036020908152604091829020805460ff1916851515908117909155825190815291517fd373464a39404e5f98fdb4b152b8ba9a094561e97e5c4b4ea11eb18cd9e6695e9281900390910190a25050565b6001546001600160a01b031633146114ce5760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b620697808111156115105760405162461bcd60e51b8152600401808060200182810382526025815260200180611ae76025913960400191505060405180910390fd5b60025481116115505760405162461bcd60e51b8152600401808060200182810382526031815260200180611b0c6031913960400191505060405180910390fd5b600255565b60006020819052908152604090205481565b60025481565b6001546001600160a01b031681565b6000818152602081905260409020546115c65760405162461bcd60e51b815260040180806020018281038252602b8152602001806119c9602b913960400191505060405180910390fd5b6000818152602081905260409020544210156116135760405162461bcd60e51b8152600401808060200182810382526031815260200180611a926031913960400191505060405180910390fd5b50565b6000818152602081905260409020546116605760405162461bcd60e51b81526004018080602001828103825260268152602001806119a36026913960400191505060405180910390fd5b60008181526020818152604080832092909255815183815291517f194ed6dd5e37e2acc44a19455c3f208c4831ee695fe362d9c4ef2d316bc53aec9281900390910190a150565b60006116e983836040518060400160405280601e81526020017f536166654d6174683a207375627472616374696f6e206f766572666c6f770000815250611884565b90505b92915050565b600082611701575060006116ec565b8282028284828161170e57fe5b04146116e95760405162461bcd60e51b8152600401808060200182810382526021815260200180611a716021913960400191505060405180910390fd5b60006116e983836040518060400160405280601a815260200179536166654d6174683a206469766973696f6e206279207a65726f60301b81525061191b565b6000828201838110156116e9576040805162461bcd60e51b815260206004820152601b60248201527a536166654d6174683a206164646974696f6e206f766572666c6f7760281b604482015290519081900360640190fd5b6000818152602081905260409020541561182d5760405162461bcd60e51b815260040180806020018281038252602f815260200180611a42602f913960400191505060405180910390fd5b60025461183b90429061178a565b6000828152602081815260409182902092909255805183815290517f5fb9c0ecf7b4a28c4c480212e868f9da7f373a2ed4d23498b0be6aadf35242fb929181900390910190a150565b600081848411156119135760405162461bcd60e51b81526004018080602001828103825283818151815260200191508051906020019080838360005b838110156118d85781810151838201526020016118c0565b50505050905090810190601f1680156119055780820380516001836020036101000a031916815260200191505b509250505060405180910390fd5b505050900390565b6000818361196a5760405162461bcd60e51b81526020600482018181528351602484015283519092839260449091019190850190808383600083156118d85781810151838201526020016118c0565b50600083858161197657fe5b049594505050505056fe53686f727473547261636b657254696d656c6f636b3a20696e76616c696420676f7653686f727473547261636b657254696d656c6f636b3a20696e76616c6964205f616374696f6e53686f727473547261636b657254696d656c6f636b3a20616374696f6e206e6f74207369676e616c6c656453686f727473547261636b657254696d656c6f636b3a2061646d696e20666f7262696464656e53686f727473547261636b657254696d656c6f636b3a2068616e646c657220666f7262696464656e53686f727473547261636b657254696d656c6f636b3a20616374696f6e20616c7265616479207369676e616c6c6564536166654d6174683a206d756c7469706c69636174696f6e206f766572666c6f7753686f727473547261636b657254696d656c6f636b3a20616374696f6e2074696d65206e6f74207965742070617373656453686f727473547261636b657254696d656c6f636b3a20696e76616c69642061646d696e53686f727473547261636b657254696d656c6f636b3a20696e76616c69642062756666657253686f727473547261636b657254696d656c6f636b3a206275666665722063616e6e6f742062652064656372656173656453686f727473547261636b657254696d656c6f636b3a20746f6f20626967206368616e6765a164736f6c634300060c000a",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061011d5760003560e01c80630a6f93e614610122578063126082cf1461015a5780631ab8fe04146101625780632591d4831461016a5780632c166c411461019a57806333156639146101b75780633976e566146101d457806342588a67146102a257806342773c2c146102bf57806346ea87af146102c75780634882fa131461030157806351a6de0d1461032f5780635c3bca361461035d57806361d075691461037a578063627395eb14610382578063704b6c02146103a8578063717cf5d6146103ce578063996a7a1e146103f45780639cb7de4b14610422578063adc7ea3714610450578063e30569e51461046d578063edaafe201461048a578063f851a44014610492575b600080fd5b6101486004803603602081101561013857600080fd5b50356001600160a01b03166104b6565b60408051918252519081900360200190f35b6101486104c8565b6101486104ce565b6101986004803603604081101561018057600080fd5b506001600160a01b03813516906020013515156104d4565b005b610198600480360360208110156101b057600080fd5b5035610639565b610198600480360360208110156101cd57600080fd5b5035610718565b610198600480360360608110156101ea57600080fd5b6001600160a01b038235169190810190604081016020820135600160201b81111561021457600080fd5b82018360208201111561022657600080fd5b803590602001918460208302840111600160201b8311171561024757600080fd5b919390929091602081019035600160201b81111561026457600080fd5b82018360208201111561027657600080fd5b803590602001918460208302840111600160201b8311171561029757600080fd5b5090925090506107f9565b610198600480360360208110156102b857600080fd5b5035610b98565b610148610c6b565b6102ed600480360360208110156102dd57600080fd5b50356001600160a01b0316610c71565b604080519115158252519081900360200190f35b6101986004803603604081101561031757600080fd5b506001600160a01b0381351690602001351515610c86565b6101986004803603604081101561034557600080fd5b506001600160a01b0381358116916020013516610d82565b6101986004803603602081101561037357600080fd5b5035610eda565b610148610fab565b6101986004803603602081101561039857600080fd5b50356001600160a01b0316610fb2565b610198600480360360208110156103be57600080fd5b50356001600160a01b03166110a0565b610198600480360360208110156103e457600080fd5b50356001600160a01b0316611194565b6101986004803603604081101561040a57600080fd5b506001600160a01b03813581169160200135166112af565b6101986004803603604081101561043857600080fd5b506001600160a01b03813516906020013515156113dc565b6101986004803603602081101561046657600080fd5b5035611485565b6101486004803603602081101561048357600080fd5b5035611555565b610148611567565b61049a61156d565b604080516001600160a01b039092168252519081900360200190f35b60046020526000908152604090205481565b61271081565b60055481565b6001546001600160a01b0316331461051d5760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b60408051787365744973476c6f62616c53686f727444617461526561647960381b6020808301919091526001600160601b0319606086901b16603983015283151560f81b604d8301528251602e818403018152604e90920190925280519101206105868161157c565b61058f81611616565b826001600160a01b0316633d30cabf836040518263ffffffff1660e01b8152600401808215158152602001915050600060405180830381600087803b1580156105d757600080fd5b505af11580156105eb573d6000803e3d6000fd5b5050604080516001600160a01b0387168152851515602082015281517f177de4361fc37a0e8defe8ac0c685d3472789b507959897eec32350c9d2c36669450908190039091019150a1505050565b6001546001600160a01b031633146106825760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b60408051777365744d61784176657261676550726963654368616e676560401b602080830191909152603880830185905283518084039091018152605890920190925280519101206106d38161157c565b6106dc81611616565b60068290556040805183815290517fe846c28c10eef345d8d4fea8b403bfac624c32c3e64ce0b666f23404f2edb5149181900360200190a15050565b6001546001600160a01b031633146107615760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b604080517973657441766572616765507269636555706461746544656c617960301b602080830191909152603a80830185905283518084039091018152605a90920190925280519101206107b48161157c565b6107bd81611616565b60058290556040805183815290517fa043b6b847902bb85c2a2575e9bce3a077bcaad8ec888ac941f50a6f4acdbb3d9181900360200190a15050565b3360009081526003602052604090205460ff168061082157506001546001600160a01b031633145b61085c5760405162461bcd60e51b8152600401808060200182810382526028815260200180611a1a6028913960400191505060405180910390fd5b60408051633d30cabf60e01b815260006004820181905291516001600160a01b03881692633d30cabf926024808201939182900301818387803b1580156108a257600080fd5b505af11580156108b6573d6000803e3d6000fd5b5050505060005b83811015610ad35760008585838181106108d357fe5b905060200201356001600160a01b031690506000876001600160a01b03166362749803836040518263ffffffff1660e01b815260040180826001600160a01b0316815260200191505060206040518083038186803b15801561093457600080fd5b505afa158015610948573d6000803e3d6000fd5b505050506040513d602081101561095e57600080fd5b50519050600085858581811061097057fe5b90506020020135905060008282116109915761098c83836116a7565b61099b565b61099b82846116a7565b6006549091506109b7846109b1846127106116f2565b9061174b565b106109f35760405162461bcd60e51b8152600401808060200182810382526025815260200180611b3d6025913960400191505060405180910390fd5b6005546001600160a01b038516600090815260046020526040902054610a189161178a565b421015610a6c576040805162461bcd60e51b815260206004820181905260248201527f53686f727473547261636b657254696d656c6f636b3a20746f6f206561726c79604482015290519081900360640190fd5b6001600160a01b038416600081815260046020908152604091829020429055815186815290810185905281517fa6a58ff784b1e07988de90568885d7bbd8e5485c3ec4344195c7306108553256929181900390910190a25050600190920191506108bd9050565b50846001600160a01b031663bbd97187858585856040518563ffffffff1660e01b81526004018080602001806020018381038352878782818152602001925060200280828437600083820152601f01601f19169091018481038352858152602090810191508690860280828437600081840152601f19601f8201169050808301925050509650505050505050600060405180830381600087803b158015610b7957600080fd5b505af1158015610b8d573d6000803e3d6000fd5b505050505050505050565b6001546001600160a01b03163314610be15760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b604080517973657441766572616765507269636555706461746544656c617960301b602080830191909152603a80830185905283518084039091018152605a9092019092528051910120610c34816117e2565b6040805183815290517fc226c48cee6a025ab009e01969a2e89f1ce4d455cfa2900745b2237cb0bb8d619181900360200190a15050565b60065481565b60036020526000908152604090205460ff1681565b6001546001600160a01b03163314610ccf5760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b60408051787365744973476c6f62616c53686f727444617461526561647960381b6020808301919091526001600160601b0319606086901b16603983015283151560f81b604d8301528251602e818403018152604e9092019092528051910120610d38816117e2565b604080516001600160a01b0385168152831515602082015281517f362e5bba25647700de1a7562fc07672df837bef17125e07a6f79abea31ee5a48929181900390910190a1505050565b6001546001600160a01b03163314610dcb5760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b604080516539b2ba23b7bb60d11b6020808301919091526001600160601b0319606086811b8216602685015285901b16603a8301528251602e818403018152604e9092019092528051910120610e208161157c565b610e2981611616565b826001600160a01b031663cfad57a2836040518263ffffffff1660e01b815260040180826001600160a01b03168152602001915050600060405180830381600087803b158015610e7857600080fd5b505af1158015610e8c573d6000803e3d6000fd5b5050604080516001600160a01b0380881682528616602082015281517f53351836099c03ffc3b1727d8abd4b0222afa87d4ed76ae3102d51369ef7f7859450908190039091019150a1505050565b6001546001600160a01b03163314610f235760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b60408051777365744d61784176657261676550726963654368616e676560401b60208083019190915260388083018590528351808403909101815260589092019092528051910120610f74816117e2565b6040805183815290517f21f68305d262b9ce144019f5d9f755a2dd1b5c2d35996cd4b649c285d7525cd19181900360200190a15050565b6206978081565b6001546001600160a01b03163314610ffb5760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b60408051633d30cabf60e01b815260006004820181905291516001600160a01b03841692633d30cabf926024808201939182900301818387803b15801561104157600080fd5b505af1158015611055573d6000803e3d6000fd5b5050604080516001600160a01b03851681526000602082015281517f177de4361fc37a0e8defe8ac0c685d3472789b507959897eec32350c9d2c36669450908190039091019150a150565b6001546001600160a01b031633146110e95760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b604080516739b2ba20b236b4b760c11b6020808301919091526001600160601b0319606085901b1660288301528251601c818403018152603c90920190925280519101206111368161157c565b61113f81611616565b600180546001600160a01b0384166001600160a01b0319909116811790915560408051918252517f5a272403b402d892977df56625f4164ccaf70ca3863991c43ecfe76a6905b0a19181900360200190a15050565b6001546001600160a01b031633146111dd5760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b6001600160a01b0381166112225760405162461bcd60e51b8152600401808060200182810382526024815260200180611ac36024913960400191505060405180910390fd5b604080516739b2ba20b236b4b760c11b6020808301919091526001600160601b0319606085901b1660288301528251601c818403018152603c909201909252805191012061126f816117e2565b604080516001600160a01b038416815290517fbccacda50126e9efa231593d2a9d4394d7cda7909ab2e14d2ae878ab2a306b3f9181900360200190a15050565b6001546001600160a01b031633146112f85760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b6001600160a01b03811661133d5760405162461bcd60e51b81526004018080602001828103825260228152602001806119816022913960400191505060405180910390fd5b604080516539b2ba23b7bb60d11b6020808301919091526001600160601b0319606086811b8216602685015285901b16603a8301528251602e818403018152604e9092019092528051910120611392816117e2565b604080516001600160a01b0380861682528416602082015281517f84f5d90471bb5811423318895e49ef4de52f5a6f4dac67af85e4202410bb66a4929181900390910190a1505050565b6001546001600160a01b031633146114255760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b6001600160a01b038216600081815260036020908152604091829020805460ff1916851515908117909155825190815291517fd373464a39404e5f98fdb4b152b8ba9a094561e97e5c4b4ea11eb18cd9e6695e9281900390910190a25050565b6001546001600160a01b031633146114ce5760405162461bcd60e51b81526004018080602001828103825260268152602001806119f46026913960400191505060405180910390fd5b620697808111156115105760405162461bcd60e51b8152600401808060200182810382526025815260200180611ae76025913960400191505060405180910390fd5b60025481116115505760405162461bcd60e51b8152600401808060200182810382526031815260200180611b0c6031913960400191505060405180910390fd5b600255565b60006020819052908152604090205481565b60025481565b6001546001600160a01b031681565b6000818152602081905260409020546115c65760405162461bcd60e51b815260040180806020018281038252602b8152602001806119c9602b913960400191505060405180910390fd5b6000818152602081905260409020544210156116135760405162461bcd60e51b8152600401808060200182810382526031815260200180611a926031913960400191505060405180910390fd5b50565b6000818152602081905260409020546116605760405162461bcd60e51b81526004018080602001828103825260268152602001806119a36026913960400191505060405180910390fd5b60008181526020818152604080832092909255815183815291517f194ed6dd5e37e2acc44a19455c3f208c4831ee695fe362d9c4ef2d316bc53aec9281900390910190a150565b60006116e983836040518060400160405280601e81526020017f536166654d6174683a207375627472616374696f6e206f766572666c6f770000815250611884565b90505b92915050565b600082611701575060006116ec565b8282028284828161170e57fe5b04146116e95760405162461bcd60e51b8152600401808060200182810382526021815260200180611a716021913960400191505060405180910390fd5b60006116e983836040518060400160405280601a815260200179536166654d6174683a206469766973696f6e206279207a65726f60301b81525061191b565b6000828201838110156116e9576040805162461bcd60e51b815260206004820152601b60248201527a536166654d6174683a206164646974696f6e206f766572666c6f7760281b604482015290519081900360640190fd5b6000818152602081905260409020541561182d5760405162461bcd60e51b815260040180806020018281038252602f815260200180611a42602f913960400191505060405180910390fd5b60025461183b90429061178a565b6000828152602081815260409182902092909255805183815290517f5fb9c0ecf7b4a28c4c480212e868f9da7f373a2ed4d23498b0be6aadf35242fb929181900390910190a150565b600081848411156119135760405162461bcd60e51b81526004018080602001828103825283818151815260200191508051906020019080838360005b838110156118d85781810151838201526020016118c0565b50505050905090810190601f1680156119055780820380516001836020036101000a031916815260200191505b509250505060405180910390fd5b505050900390565b6000818361196a5760405162461bcd60e51b81526020600482018181528351602484015283519092839260449091019190850190808383600083156118d85781810151838201526020016118c0565b50600083858161197657fe5b049594505050505056fe53686f727473547261636b657254696d656c6f636b3a20696e76616c696420676f7653686f727473547261636b657254696d656c6f636b3a20696e76616c6964205f616374696f6e53686f727473547261636b657254696d656c6f636b3a20616374696f6e206e6f74207369676e616c6c656453686f727473547261636b657254696d656c6f636b3a2061646d696e20666f7262696464656e53686f727473547261636b657254696d656c6f636b3a2068616e646c657220666f7262696464656e53686f727473547261636b657254696d656c6f636b3a20616374696f6e20616c7265616479207369676e616c6c6564536166654d6174683a206d756c7469706c69636174696f6e206f766572666c6f7753686f727473547261636b657254696d656c6f636b3a20616374696f6e2074696d65206e6f74207965742070617373656453686f727473547261636b657254696d656c6f636b3a20696e76616c69642061646d696e53686f727473547261636b657254696d656c6f636b3a20696e76616c69642062756666657253686f727473547261636b657254696d656c6f636b3a206275666665722063616e6e6f742062652064656372656173656453686f727473547261636b657254696d656c6f636b3a20746f6f20626967206368616e6765a164736f6c634300060c000a",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 30796,
+        "contract": "contracts/peripherals/ShortsTrackerTimelock.sol:ShortsTrackerTimelock",
+        "label": "pendingActions",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_mapping(t_bytes32,t_uint256)"
+      },
+      {
+        "astId": 30798,
+        "contract": "contracts/peripherals/ShortsTrackerTimelock.sol:ShortsTrackerTimelock",
+        "label": "admin",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_address"
+      },
+      {
+        "astId": 30800,
+        "contract": "contracts/peripherals/ShortsTrackerTimelock.sol:ShortsTrackerTimelock",
+        "label": "buffer",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 30804,
+        "contract": "contracts/peripherals/ShortsTrackerTimelock.sol:ShortsTrackerTimelock",
+        "label": "isHandler",
+        "offset": 0,
+        "slot": "3",
+        "type": "t_mapping(t_address,t_bool)"
+      },
+      {
+        "astId": 30808,
+        "contract": "contracts/peripherals/ShortsTrackerTimelock.sol:ShortsTrackerTimelock",
+        "label": "lastUpdated",
+        "offset": 0,
+        "slot": "4",
+        "type": "t_mapping(t_address,t_uint256)"
+      },
+      {
+        "astId": 30810,
+        "contract": "contracts/peripherals/ShortsTrackerTimelock.sol:ShortsTrackerTimelock",
+        "label": "averagePriceUpdateDelay",
+        "offset": 0,
+        "slot": "5",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 30812,
+        "contract": "contracts/peripherals/ShortsTrackerTimelock.sol:ShortsTrackerTimelock",
+        "label": "maxAveragePriceChange",
+        "offset": 0,
+        "slot": "6",
+        "type": "t_uint256"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_mapping(t_address,t_bool)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => bool)",
+        "numberOfBytes": "32",
+        "value": "t_bool"
+      },
+      "t_mapping(t_address,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_mapping(t_bytes32,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}

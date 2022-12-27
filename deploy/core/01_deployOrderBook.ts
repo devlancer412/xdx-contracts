@@ -6,7 +6,7 @@ import { NativeToken, tokens } from "../../config";
 const func: DeployFunction = async (hre) => {
   const { deploy, connect } = await Ship.init(hre);
 
-  const nativeToken = tokens.avax.nativeToken as NativeToken;
+  const nativeToken = tokens[hre.network.name as "avax" | "avax_test"].nativeToken as NativeToken;
 
   if (!hre.network.tags.prod) {
     const nativeTokenContract = await connect(nativeToken.name);
@@ -21,7 +21,7 @@ const func: DeployFunction = async (hre) => {
     const vault = await connect(Vault__factory);
     const usdg = await connect(USDG__factory);
 
-    await orderbook.contract.initialize(
+    const tx = await orderbook.contract.initialize(
       router.address, // router
       vault.address, // vault
       nativeToken.address, // weth
@@ -29,6 +29,8 @@ const func: DeployFunction = async (hre) => {
       "10000000000000000", // 0.01 AVAX
       toWei(10, 30), // min purchase token amount usd
     );
+    console.log("Inintialize Orderbook at ", tx.hash);
+    await tx.wait();
   }
 };
 

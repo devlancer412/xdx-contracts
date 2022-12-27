@@ -24,7 +24,9 @@ const func: DeployFunction = async (hre) => {
 
   if (shortsTrackerTimelock.newlyDeployed) {
     for (const handler of handlers) {
-      await shortsTrackerTimelock.contract.setHandler(handler, true);
+      const tx = await shortsTrackerTimelock.contract.setHandler(handler, true);
+      console.log("Set ", handler, " to handler of ShortsTrackerTimelock at ", tx.hash);
+      await tx.wait();
     }
   }
 };

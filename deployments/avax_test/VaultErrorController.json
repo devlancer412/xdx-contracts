@@ -1,0 +1,100 @@
+{
+  "address": "0xE629A1f081Ca2cDe39BD0831f730c2209D781E77",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "gov",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IVault",
+          "name": "_vault",
+          "type": "address"
+        },
+        {
+          "internalType": "string[]",
+          "name": "_errors",
+          "type": "string[]"
+        }
+      ],
+      "name": "setErrors",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_gov",
+          "type": "address"
+        }
+      ],
+      "name": "setGov",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xbff2cdb563b5710cb22d0ba506c2e59e51a657913b0dfa5ea22063f5023335e6",
+  "receipt": {
+    "to": null,
+    "from": "0xf5CA36c9873d61Bc28C117BD470981Ef6647A685",
+    "contractAddress": "0xE629A1f081Ca2cDe39BD0831f730c2209D781E77",
+    "transactionIndex": 0,
+    "gasUsed": "255729",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xdba142037862668d4aec5e1a6db73541d8ac50d7531cd2121174026bdf301365",
+    "transactionHash": "0xbff2cdb563b5710cb22d0ba506c2e59e51a657913b0dfa5ea22063f5023335e6",
+    "logs": [],
+    "blockNumber": 17371060,
+    "cumulativeGasUsed": "255729",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "a5c1ec6ed734a994a4a7c4ed9bed389b",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"gov\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contract IVault\",\"name\":\"_vault\",\"type\":\"address\"},{\"internalType\":\"string[]\",\"name\":\"_errors\",\"type\":\"string[]\"}],\"name\":\"setErrors\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_gov\",\"type\":\"address\"}],\"name\":\"setGov\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/core/VaultErrorController.sol\":\"VaultErrorController\"},\"evmVersion\":\"istanbul\",\"libraries\":{\"__CACHE_BREAKER__\":\"0x00000000d41867734bbee4c6863d9255b2b06ac1\"},\"metadata\":{\"bytecodeHash\":\"none\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":20},\"remappings\":[]},\"sources\":{\"contracts/access/Governable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\ncontract Governable {\\n    address public gov;\\n\\n    constructor() public {\\n        gov = msg.sender;\\n    }\\n\\n    modifier onlyGov() {\\n        require(msg.sender == gov, \\\"Governable: forbidden\\\");\\n        _;\\n    }\\n\\n    function setGov(address _gov) external onlyGov {\\n        gov = _gov;\\n    }\\n}\\n\",\"keccak256\":\"0xe719b0de64ee00468f6a985c8ef08ebdd271d99d6616308cbba458f78ed8c532\",\"license\":\"MIT\"},\"contracts/core/VaultErrorController.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\npragma experimental ABIEncoderV2;\\n\\nimport \\\"./interfaces/IVault.sol\\\";\\nimport \\\"../access/Governable.sol\\\";\\n\\ncontract VaultErrorController is Governable {\\n    function setErrors(IVault _vault, string[] calldata _errors) external onlyGov {\\n        for (uint256 i = 0; i < _errors.length; i++) {\\n            _vault.setError(i, _errors[i]);\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x88326a4f1e2e409d1347878d30581e89b0e32ba29c7bb9d55a13c800a89d45ce\",\"license\":\"MIT\"},\"contracts/core/interfaces/IVault.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\nimport \\\"./IVaultUtils.sol\\\";\\n\\ninterface IVault {\\n    function isInitialized() external view returns (bool);\\n    function isSwapEnabled() external view returns (bool);\\n    function isLeverageEnabled() external view returns (bool);\\n\\n    function setVaultUtils(IVaultUtils _vaultUtils) external;\\n    function setError(uint256 _errorCode, string calldata _error) external;\\n\\n    function router() external view returns (address);\\n    function usdg() external view returns (address);\\n    function gov() external view returns (address);\\n\\n    function whitelistedTokenCount() external view returns (uint256);\\n    function maxLeverage() external view returns (uint256);\\n\\n    function minProfitTime() external view returns (uint256);\\n    function hasDynamicFees() external view returns (bool);\\n    function fundingInterval() external view returns (uint256);\\n    function totalTokenWeights() external view returns (uint256);\\n    function getTargetUsdgAmount(address _token) external view returns (uint256);\\n\\n    function inManagerMode() external view returns (bool);\\n    function inPrivateLiquidationMode() external view returns (bool);\\n\\n    function maxGasPrice() external view returns (uint256);\\n\\n    function approvedRouters(address _account, address _router) external view returns (bool);\\n    function isLiquidator(address _account) external view returns (bool);\\n    function isManager(address _account) external view returns (bool);\\n\\n    function minProfitBasisPoints(address _token) external view returns (uint256);\\n    function tokenBalances(address _token) external view returns (uint256);\\n    function lastFundingTimes(address _token) external view returns (uint256);\\n\\n    function setMaxLeverage(uint256 _maxLeverage) external;\\n    function setInManagerMode(bool _inManagerMode) external;\\n    function setManager(address _manager, bool _isManager) external;\\n    function setIsSwapEnabled(bool _isSwapEnabled) external;\\n    function setIsLeverageEnabled(bool _isLeverageEnabled) external;\\n    function setMaxGasPrice(uint256 _maxGasPrice) external;\\n    function setUsdgAmount(address _token, uint256 _amount) external;\\n    function setBufferAmount(address _token, uint256 _amount) external;\\n    function setMaxGlobalShortSize(address _token, uint256 _amount) external;\\n    function setInPrivateLiquidationMode(bool _inPrivateLiquidationMode) external;\\n    function setLiquidator(address _liquidator, bool _isActive) external;\\n\\n    function setFundingRate(uint256 _fundingInterval, uint256 _fundingRateFactor, uint256 _stableFundingRateFactor) external;\\n\\n    function setFees(\\n        uint256 _taxBasisPoints,\\n        uint256 _stableTaxBasisPoints,\\n        uint256 _mintBurnFeeBasisPoints,\\n        uint256 _swapFeeBasisPoints,\\n        uint256 _stableSwapFeeBasisPoints,\\n        uint256 _marginFeeBasisPoints,\\n        uint256 _liquidationFeeUsd,\\n        uint256 _minProfitTime,\\n        bool _hasDynamicFees\\n    ) external;\\n\\n    function setTokenConfig(\\n        address _token,\\n        uint256 _tokenDecimals,\\n        uint256 _redemptionBps,\\n        uint256 _minProfitBps,\\n        uint256 _maxUsdgAmount,\\n        bool _isStable,\\n        bool _isShortable\\n    ) external;\\n\\n    function setPriceFeed(address _priceFeed) external;\\n    function withdrawFees(address _token, address _receiver) external returns (uint256);\\n\\n    function directPoolDeposit(address _token) external;\\n    function buyUSDG(address _token, address _receiver) external returns (uint256);\\n    function sellUSDG(address _token, address _receiver) external returns (uint256);\\n    function swap(address _tokenIn, address _tokenOut, address _receiver) external returns (uint256);\\n    function increasePosition(address _account, address _collateralToken, address _indexToken, uint256 _sizeDelta, bool _isLong) external;\\n    function decreasePosition(address _account, address _collateralToken, address _indexToken, uint256 _collateralDelta, uint256 _sizeDelta, bool _isLong, address _receiver) external returns (uint256);\\n    function validateLiquidation(address _account, address _collateralToken, address _indexToken, bool _isLong, bool _raise) external view returns (uint256, uint256);\\n    function liquidatePosition(address _account, address _collateralToken, address _indexToken, bool _isLong, address _feeReceiver) external;\\n    function tokenToUsdMin(address _token, uint256 _tokenAmount) external view returns (uint256);\\n\\n    function priceFeed() external view returns (address);\\n    function fundingRateFactor() external view returns (uint256);\\n    function stableFundingRateFactor() external view returns (uint256);\\n    function cumulativeFundingRates(address _token) external view returns (uint256);\\n    function getNextFundingRate(address _token) external view returns (uint256);\\n    function getFeeBasisPoints(address _token, uint256 _usdgDelta, uint256 _feeBasisPoints, uint256 _taxBasisPoints, bool _increment) external view returns (uint256);\\n\\n    function liquidationFeeUsd() external view returns (uint256);\\n    function taxBasisPoints() external view returns (uint256);\\n    function stableTaxBasisPoints() external view returns (uint256);\\n    function mintBurnFeeBasisPoints() external view returns (uint256);\\n    function swapFeeBasisPoints() external view returns (uint256);\\n    function stableSwapFeeBasisPoints() external view returns (uint256);\\n    function marginFeeBasisPoints() external view returns (uint256);\\n\\n    function allWhitelistedTokensLength() external view returns (uint256);\\n    function allWhitelistedTokens(uint256) external view returns (address);\\n    function whitelistedTokens(address _token) external view returns (bool);\\n    function stableTokens(address _token) external view returns (bool);\\n    function shortableTokens(address _token) external view returns (bool);\\n    function feeReserves(address _token) external view returns (uint256);\\n    function globalShortSizes(address _token) external view returns (uint256);\\n    function globalShortAveragePrices(address _token) external view returns (uint256);\\n    function maxGlobalShortSizes(address _token) external view returns (uint256);\\n    function tokenDecimals(address _token) external view returns (uint256);\\n    function tokenWeights(address _token) external view returns (uint256);\\n    function guaranteedUsd(address _token) external view returns (uint256);\\n    function poolAmounts(address _token) external view returns (uint256);\\n    function bufferAmounts(address _token) external view returns (uint256);\\n    function reservedAmounts(address _token) external view returns (uint256);\\n    function usdgAmounts(address _token) external view returns (uint256);\\n    function maxUsdgAmounts(address _token) external view returns (uint256);\\n    function getRedemptionAmount(address _token, uint256 _usdgAmount) external view returns (uint256);\\n    function getMaxPrice(address _token) external view returns (uint256);\\n    function getMinPrice(address _token) external view returns (uint256);\\n\\n    function getDelta(address _indexToken, uint256 _size, uint256 _averagePrice, bool _isLong, uint256 _lastIncreasedTime) external view returns (bool, uint256);\\n    function getPosition(address _account, address _collateralToken, address _indexToken, bool _isLong) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, bool, uint256);\\n}\\n\",\"keccak256\":\"0x247067b8f88636424e799a2b72b81884273813e62ad3bfedf428e0fb97714637\",\"license\":\"MIT\"},\"contracts/core/interfaces/IVaultUtils.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\ninterface IVaultUtils {\\n    function updateCumulativeFundingRate(address _collateralToken, address _indexToken) external returns (bool);\\n    function validateIncreasePosition(address _account, address _collateralToken, address _indexToken, uint256 _sizeDelta, bool _isLong) external view;\\n    function validateDecreasePosition(address _account, address _collateralToken, address _indexToken, uint256 _collateralDelta, uint256 _sizeDelta, bool _isLong, address _receiver) external view;\\n    function validateLiquidation(address _account, address _collateralToken, address _indexToken, bool _isLong, bool _raise) external view returns (uint256, uint256);\\n    function getEntryFundingRate(address _collateralToken, address _indexToken, bool _isLong) external view returns (uint256);\\n    function getPositionFee(address _account, address _collateralToken, address _indexToken, bool _isLong, uint256 _sizeDelta) external view returns (uint256);\\n    function getFundingFee(address _account, address _collateralToken, address _indexToken, bool _isLong, uint256 _size, uint256 _entryFundingRate) external view returns (uint256);\\n    function getBuyUsdgFeeBasisPoints(address _token, uint256 _usdgAmount) external view returns (uint256);\\n    function getSellUsdgFeeBasisPoints(address _token, uint256 _usdgAmount) external view returns (uint256);\\n    function getSwapFeeBasisPoints(address _tokenIn, address _tokenOut, uint256 _usdgAmount) external view returns (uint256);\\n    function getFeeBasisPoints(address _token, uint256 _usdgDelta, uint256 _feeBasisPoints, uint256 _taxBasisPoints, bool _increment) external view returns (uint256);\\n}\\n\",\"keccak256\":\"0xc8cad694c33f968559eb3feac2226fe26d81d457529b87ae8852390e1474d7be\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50600080546001600160a01b03191633179055610342806100326000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c806312d43a51146100465780636216c01b14610064578063cfad57a214610079575b600080fd5b61004e61008c565b60405161005b9190610259565b60405180910390f35b6100776100723660046101d8565b61009b565b005b6100776100873660046101b5565b610169565b6000546001600160a01b031681565b6000546001600160a01b031633146100ce5760405162461bcd60e51b81526004016100c59061026d565b60405180910390fd5b60005b8181101561016357836001600160a01b03166328e67be5828585858181106100f557fe5b905060200281019061010791906102d2565b6040518463ffffffff1660e01b81526004016101259392919061029c565b600060405180830381600087803b15801561013f57600080fd5b505af1158015610153573d6000803e3d6000fd5b5050600190920191506100d19050565b50505050565b6000546001600160a01b031633146101935760405162461bcd60e51b81526004016100c59061026d565b600080546001600160a01b0319166001600160a01b0392909216919091179055565b6000602082840312156101c6578081fd5b81356101d18161031d565b9392505050565b6000806000604084860312156101ec578182fd5b83356101f78161031d565b925060208401356001600160401b0380821115610212578384fd5b818601915086601f830112610225578384fd5b813581811115610233578485fd5b8760208083028501011115610246578485fd5b6020830194508093505050509250925092565b6001600160a01b0391909116815260200190565b60208082526015908201527423b7bb32b93730b136329d103337b93134b23232b760591b604082015260600190565b60008482526040602083015282604083015282846060840137818301606090810191909152601f909201601f1916010192915050565b6000808335601e198436030181126102e8578283fd5b8301803591506001600160401b03821115610301578283fd5b60200191503681900382131561031657600080fd5b9250929050565b6001600160a01b038116811461033257600080fd5b5056fea164736f6c634300060c000a",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c806312d43a51146100465780636216c01b14610064578063cfad57a214610079575b600080fd5b61004e61008c565b60405161005b9190610259565b60405180910390f35b6100776100723660046101d8565b61009b565b005b6100776100873660046101b5565b610169565b6000546001600160a01b031681565b6000546001600160a01b031633146100ce5760405162461bcd60e51b81526004016100c59061026d565b60405180910390fd5b60005b8181101561016357836001600160a01b03166328e67be5828585858181106100f557fe5b905060200281019061010791906102d2565b6040518463ffffffff1660e01b81526004016101259392919061029c565b600060405180830381600087803b15801561013f57600080fd5b505af1158015610153573d6000803e3d6000fd5b5050600190920191506100d19050565b50505050565b6000546001600160a01b031633146101935760405162461bcd60e51b81526004016100c59061026d565b600080546001600160a01b0319166001600160a01b0392909216919091179055565b6000602082840312156101c6578081fd5b81356101d18161031d565b9392505050565b6000806000604084860312156101ec578182fd5b83356101f78161031d565b925060208401356001600160401b0380821115610212578384fd5b818601915086601f830112610225578384fd5b813581811115610233578485fd5b8760208083028501011115610246578485fd5b6020830194508093505050509250925092565b6001600160a01b0391909116815260200190565b60208082526015908201527423b7bb32b93730b136329d103337b93134b23232b760591b604082015260600190565b60008482526040602083015282604083015282846060840137818301606090810191909152601f909201601f1916010192915050565b6000808335601e198436030181126102e8578283fd5b8301803591506001600160401b03821115610301578283fd5b60200191503681900382131561031657600080fd5b9250929050565b6001600160a01b038116811461033257600080fd5b5056fea164736f6c634300060c000a",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 3,
+        "contract": "contracts/core/VaultErrorController.sol:VaultErrorController",
+        "label": "gov",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      }
+    }
+  }
+}

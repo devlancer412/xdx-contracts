@@ -16,7 +16,7 @@ const func: DeployFunction = async (hre) => {
   const { deploy, connect, accounts } = await Ship.init(hre);
 
   const { deployer } = accounts;
-  const nativeToken = tokens.avax.nativeToken as NativeToken;
+  const nativeToken = tokens[hre.network.name as "avax" | "avax_test"].nativeToken as NativeToken;
 
   if (!hre.network.tags.prod) {
     const nativeTokenContract = await connect(nativeToken.name);
@@ -33,33 +33,47 @@ const func: DeployFunction = async (hre) => {
 
   const xlx = await deploy(XLX__factory);
   if (xlx.newlyDeployed) {
-    await xlx.contract.setInPrivateTransferMode(true);
+    const tx = await xlx.contract.setInPrivateTransferMode(true);
+    console.log("Set InPrivateTransferMode to xlx at ", tx.hash);
+    await tx.wait();
   }
 
   const shortsTracker = await deploy(ShortsTracker__factory, {
     args: [vault.address],
   });
   if (shortsTracker.newlyDeployed) {
-    await shortsTracker.contract.setGov(deployer.address);
+    const tx = await shortsTracker.contract.setGov(deployer.address);
+    console.log("Set gov to ShortsTracker at ", tx.hash);
+    await tx.wait();
   }
 
   const xlxManager = await deploy(XlxManager__factory, {
     args: [vault.address, usdg.address, xlx.address, shortsTracker.address, "900"], // 900 = 60 * 15
   });
   if (xlxManager.newlyDeployed) {
-    await xlxManager.contract.setInPrivateMode(true);
+    const tx = await xlxManager.contract.setInPrivateMode(true);
+    console.log("SetPrivateMode to XlxManager at ", tx.hash);
+    await tx.wait();
   }
   if (xlxManager.newlyDeployed || xlx.newlyDeployed) {
-    await xlx.contract.setMinter(xlxManager.address, true);
+    const tx = await xlx.contract.setMinter(xlxManager.address, true);
+    console.log("XLX: set minter to XlxManager at ", tx.hash);
+    await tx.wait();
   }
   if (xlxManager.newlyDeployed || usdg.newlyDeployed) {
-    await usdg.contract.addVault(xlxManager.address);
+    const tx = await usdg.contract.addVault(xlxManager.address);
+    console.log("USDG: add vault to XlxManger at ", tx.hash);
+    await tx.wait();
   }
 
   if (vault.newlyDeployed) {
-    await vault.contract.setFundingRate(60 * 60, 100, 100);
-    await vault.contract.setInManagerMode(true);
-    await vault.contract.setFees(
+    let tx = await vault.contract.setFundingRate(60 * 60, 100, 100);
+    console.log("Set funding rate to vault", tx.hash);
+    await tx.wait();
+    tx = await vault.contract.setInManagerMode(true);
+    console.log("Set InManagerMode to true", tx.hash);
+    await tx.wait();
+    tx = await vault.contract.setFees(
       10, // _taxBasisPoints
       5, // _stableTaxBasisPoints
       20, // _mintBurnFeeBasisPoints
@@ -70,23 +84,33 @@ const func: DeployFunction = async (hre) => {
       24 * 60 * 60, // _minProfitTime
       true, // _hasDynamicFees
     );
+    console.log("Set fees to vault", tx.hash);
+    await tx.wait();
   }
 
   if (vault.newlyDeployed || xlxManager.newlyDeployed) {
-    await vault.contract.setManager(xlxManager.address, true);
+    const tx = await vault.contract.setManager(xlxManager.address, true);
+    console.log("Set manager to vault at ", tx.hash);
+    await tx.wait();
   }
 
   const vaultErrorController = await deploy(VaultErrorController__factory);
   if (vaultErrorController.newlyDeployed || vault.newlyDeployed) {
-    await vault.contract.setErrorController(vaultErrorController.address);
-    await vaultErrorController.contract.setErrors(vault.address, errors);
+    let tx = await vault.contract.setErrorController(vaultErrorController.address);
+    console.log("Set ErrorController to vault at ", tx.hash);
+    await tx.wait();
+    tx = await vaultErrorController.contract.setErrors(vault.address, errors);
+    console.log("Set errors to vault at ", tx.hash);
+    await tx.wait();
   }
 
   const vaultUtils = await deploy(VaultUtils__factory, {
     args: [vault.address],
   });
   if (vault.newlyDeployed || vaultUtils.newlyDeployed) {
-    await vault.contract.setVaultUtils(vaultUtils.address);
+    const tx = await vault.contract.setVaultUtils(vaultUtils.address);
+    console.log("Set vaultUtils at ", tx.hash);
+    await tx.wait();
   }
 };
 

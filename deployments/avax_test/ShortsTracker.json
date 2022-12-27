@@ -1,0 +1,540 @@
+{
+  "address": "0x4e1548256ef5c1Fb420b4F8eEB32F94D1a581D38",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_vault",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "globalShortSize",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "globalShortAveragePrice",
+          "type": "uint256"
+        }
+      ],
+      "name": "GlobalShortDataUpdated",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "MAX_INT256",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_averagePrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_nextPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_nextSize",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_delta",
+          "type": "uint256"
+        },
+        {
+          "internalType": "int256",
+          "name": "_realisedPnl",
+          "type": "int256"
+        }
+      ],
+      "name": "_getNextGlobalAveragePrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "data",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_token",
+          "type": "address"
+        }
+      ],
+      "name": "getGlobalShortDelta",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_account",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_collateralToken",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_indexToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_nextPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_sizeDelta",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "_isIncrease",
+          "type": "bool"
+        }
+      ],
+      "name": "getNextGlobalShortData",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_account",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_collateralToken",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_indexToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_sizeDelta",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "_isIncrease",
+          "type": "bool"
+        }
+      ],
+      "name": "getRealisedPnl",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "globalShortAveragePrices",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "gov",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "isGlobalShortDataReady",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "isHandler",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_gov",
+          "type": "address"
+        }
+      ],
+      "name": "setGov",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_handler",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_isActive",
+          "type": "bool"
+        }
+      ],
+      "name": "setHandler",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_tokens",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "_averagePrices",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "setInitData",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bool",
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "name": "setIsGlobalShortDataReady",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_account",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_collateralToken",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_indexToken",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_isLong",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_sizeDelta",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_markPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "_isIncrease",
+          "type": "bool"
+        }
+      ],
+      "name": "updateGlobalShortData",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "vault",
+      "outputs": [
+        {
+          "internalType": "contract IVault",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x96a14ce74b2f57a0b6e360b80066e598aeeda2cde2dff2a129915818dcd5cfea",
+  "receipt": {
+    "to": null,
+    "from": "0xf5CA36c9873d61Bc28C117BD470981Ef6647A685",
+    "contractAddress": "0x4e1548256ef5c1Fb420b4F8eEB32F94D1a581D38",
+    "transactionIndex": 2,
+    "gasUsed": "1020906",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x7d22ea87b939f2038d715c86b6ccf410c36885ae3334cbb79a3466bdd299a800",
+    "transactionHash": "0x96a14ce74b2f57a0b6e360b80066e598aeeda2cde2dff2a129915818dcd5cfea",
+    "logs": [],
+    "blockNumber": 17374104,
+    "cumulativeGasUsed": "1221029",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0xb84439AA177f3838d46F0AD4e0CB3cb5C2534fdb"
+  ],
+  "numDeployments": 2,
+  "solcInputHash": "a5c1ec6ed734a994a4a7c4ed9bed389b",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_vault\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"globalShortSize\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"globalShortAveragePrice\",\"type\":\"uint256\"}],\"name\":\"GlobalShortDataUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"MAX_INT256\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_averagePrice\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nextPrice\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nextSize\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_delta\",\"type\":\"uint256\"},{\"internalType\":\"int256\",\"name\":\"_realisedPnl\",\"type\":\"int256\"}],\"name\":\"_getNextGlobalAveragePrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"data\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"getGlobalShortDelta\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_collateralToken\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_indexToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_nextPrice\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_sizeDelta\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_isIncrease\",\"type\":\"bool\"}],\"name\":\"getNextGlobalShortData\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_collateralToken\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_indexToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sizeDelta\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_isIncrease\",\"type\":\"bool\"}],\"name\":\"getRealisedPnl\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"globalShortAveragePrices\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"gov\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"isGlobalShortDataReady\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"isHandler\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_gov\",\"type\":\"address\"}],\"name\":\"setGov\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_handler\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_isActive\",\"type\":\"bool\"}],\"name\":\"setHandler\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_tokens\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_averagePrices\",\"type\":\"uint256[]\"}],\"name\":\"setInitData\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"value\",\"type\":\"bool\"}],\"name\":\"setIsGlobalShortDataReady\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_collateralToken\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_indexToken\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_isLong\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"_sizeDelta\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_markPrice\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_isIncrease\",\"type\":\"bool\"}],\"name\":\"updateGlobalShortData\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"vault\",\"outputs\":[{\"internalType\":\"contract IVault\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/core/ShortsTracker.sol\":\"ShortsTracker\"},\"evmVersion\":\"istanbul\",\"libraries\":{\"__CACHE_BREAKER__\":\"0x00000000d41867734bbee4c6863d9255b2b06ac1\"},\"metadata\":{\"bytecodeHash\":\"none\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":20},\"remappings\":[]},\"sources\":{\"contracts/access/Governable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\ncontract Governable {\\n    address public gov;\\n\\n    constructor() public {\\n        gov = msg.sender;\\n    }\\n\\n    modifier onlyGov() {\\n        require(msg.sender == gov, \\\"Governable: forbidden\\\");\\n        _;\\n    }\\n\\n    function setGov(address _gov) external onlyGov {\\n        gov = _gov;\\n    }\\n}\\n\",\"keccak256\":\"0xe719b0de64ee00468f6a985c8ef08ebdd271d99d6616308cbba458f78ed8c532\",\"license\":\"MIT\"},\"contracts/core/ShortsTracker.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\nimport \\\"../libraries/math/SafeMath.sol\\\";\\n\\nimport \\\"../access/Governable.sol\\\";\\nimport \\\"./interfaces/IShortsTracker.sol\\\";\\nimport \\\"./interfaces/IVault.sol\\\";\\n\\ncontract ShortsTracker is Governable, IShortsTracker {\\n  using SafeMath for uint256;\\n\\n  event GlobalShortDataUpdated(\\n    address indexed token,\\n    uint256 globalShortSize,\\n    uint256 globalShortAveragePrice\\n  );\\n\\n  uint256 public constant MAX_INT256 = uint256(type(int256).max);\\n\\n  IVault public vault;\\n\\n  mapping(address => bool) public isHandler;\\n  mapping(bytes32 => bytes32) public data;\\n\\n  mapping(address => uint256) public override globalShortAveragePrices;\\n  bool public override isGlobalShortDataReady;\\n\\n  modifier onlyHandler() {\\n    require(isHandler[msg.sender], \\\"ShortsTracker: forbidden\\\");\\n    _;\\n  }\\n\\n  constructor(address _vault) public {\\n    vault = IVault(_vault);\\n  }\\n\\n  function setHandler(address _handler, bool _isActive) external onlyGov {\\n    require(_handler != address(0), \\\"ShortsTracker: invalid _handler\\\");\\n    isHandler[_handler] = _isActive;\\n  }\\n\\n  function _setGlobalShortAveragePrice(address _token, uint256 _averagePrice) internal {\\n    globalShortAveragePrices[_token] = _averagePrice;\\n  }\\n\\n  function setIsGlobalShortDataReady(bool value) external override onlyGov {\\n    isGlobalShortDataReady = value;\\n  }\\n\\n  function updateGlobalShortData(\\n    address _account,\\n    address _collateralToken,\\n    address _indexToken,\\n    bool _isLong,\\n    uint256 _sizeDelta,\\n    uint256 _markPrice,\\n    bool _isIncrease\\n  ) external override onlyHandler {\\n    if (_isLong || _sizeDelta == 0) {\\n      return;\\n    }\\n\\n    if (!isGlobalShortDataReady) {\\n      return;\\n    }\\n\\n    (uint256 globalShortSize, uint256 globalShortAveragePrice) = getNextGlobalShortData(\\n      _account,\\n      _collateralToken,\\n      _indexToken,\\n      _markPrice,\\n      _sizeDelta,\\n      _isIncrease\\n    );\\n\\n    _setGlobalShortAveragePrice(_indexToken, globalShortAveragePrice);\\n\\n    emit GlobalShortDataUpdated(_indexToken, globalShortSize, globalShortAveragePrice);\\n  }\\n\\n  function getGlobalShortDelta(address _token) public view returns (bool, uint256) {\\n    uint256 size = vault.globalShortSizes(_token);\\n    uint256 averagePrice = globalShortAveragePrices[_token];\\n    if (size == 0) {\\n      return (false, 0);\\n    }\\n\\n    uint256 nextPrice = IVault(vault).getMaxPrice(_token);\\n    uint256 priceDelta = averagePrice > nextPrice\\n      ? averagePrice.sub(nextPrice)\\n      : nextPrice.sub(averagePrice);\\n    uint256 delta = size.mul(priceDelta).div(averagePrice);\\n    bool hasProfit = averagePrice > nextPrice;\\n\\n    return (hasProfit, delta);\\n  }\\n\\n  function setInitData(address[] calldata _tokens, uint256[] calldata _averagePrices)\\n    external\\n    override\\n    onlyGov\\n  {\\n    require(!isGlobalShortDataReady, \\\"ShortsTracker: already migrated\\\");\\n\\n    for (uint256 i = 0; i < _tokens.length; i++) {\\n      globalShortAveragePrices[_tokens[i]] = _averagePrices[i];\\n    }\\n    isGlobalShortDataReady = true;\\n  }\\n\\n  function getNextGlobalShortData(\\n    address _account,\\n    address _collateralToken,\\n    address _indexToken,\\n    uint256 _nextPrice,\\n    uint256 _sizeDelta,\\n    bool _isIncrease\\n  ) public view override returns (uint256, uint256) {\\n    int256 realisedPnl = getRealisedPnl(\\n      _account,\\n      _collateralToken,\\n      _indexToken,\\n      _sizeDelta,\\n      _isIncrease\\n    );\\n    uint256 averagePrice = globalShortAveragePrices[_indexToken];\\n    uint256 priceDelta = averagePrice > _nextPrice\\n      ? averagePrice.sub(_nextPrice)\\n      : _nextPrice.sub(averagePrice);\\n\\n    uint256 nextSize;\\n    uint256 delta;\\n    // avoid stack to deep\\n    {\\n      uint256 size = vault.globalShortSizes(_indexToken);\\n      nextSize = _isIncrease ? size.add(_sizeDelta) : size.sub(_sizeDelta);\\n\\n      if (nextSize == 0) {\\n        return (0, 0);\\n      }\\n\\n      if (averagePrice == 0) {\\n        return (nextSize, _nextPrice);\\n      }\\n\\n      delta = size.mul(priceDelta).div(averagePrice);\\n    }\\n\\n    uint256 nextAveragePrice = _getNextGlobalAveragePrice(\\n      averagePrice,\\n      _nextPrice,\\n      nextSize,\\n      delta,\\n      realisedPnl\\n    );\\n\\n    return (nextSize, nextAveragePrice);\\n  }\\n\\n  function getRealisedPnl(\\n    address _account,\\n    address _collateralToken,\\n    address _indexToken,\\n    uint256 _sizeDelta,\\n    bool _isIncrease\\n  ) public view returns (int256) {\\n    if (_isIncrease) {\\n      return 0;\\n    }\\n\\n    IVault _vault = vault;\\n    (\\n      uint256 size, /*uint256 collateral*/\\n      ,\\n      uint256 averagePrice,\\n      ,\\n      ,\\n      ,\\n      ,\\n      uint256 lastIncreasedTime\\n    ) = _vault.getPosition(_account, _collateralToken, _indexToken, false);\\n\\n    (bool hasProfit, uint256 delta) = _vault.getDelta(\\n      _indexToken,\\n      size,\\n      averagePrice,\\n      false,\\n      lastIncreasedTime\\n    );\\n    // get the proportional change in pnl\\n    uint256 adjustedDelta = _sizeDelta.mul(delta).div(size);\\n    require(adjustedDelta < MAX_INT256, \\\"ShortsTracker: overflow\\\");\\n    return hasProfit ? int256(adjustedDelta) : -int256(adjustedDelta);\\n  }\\n\\n  function _getNextGlobalAveragePrice(\\n    uint256 _averagePrice,\\n    uint256 _nextPrice,\\n    uint256 _nextSize,\\n    uint256 _delta,\\n    int256 _realisedPnl\\n  ) public pure returns (uint256) {\\n    (bool hasProfit, uint256 nextDelta) = _getNextDelta(\\n      _delta,\\n      _averagePrice,\\n      _nextPrice,\\n      _realisedPnl\\n    );\\n\\n    uint256 nextAveragePrice = _nextPrice.mul(_nextSize).div(\\n      hasProfit ? _nextSize.sub(nextDelta) : _nextSize.add(nextDelta)\\n    );\\n\\n    return nextAveragePrice;\\n  }\\n\\n  function _getNextDelta(\\n    uint256 _delta,\\n    uint256 _averagePrice,\\n    uint256 _nextPrice,\\n    int256 _realisedPnl\\n  ) internal pure returns (bool, uint256) {\\n    // global delta 10000, realised pnl 1000 => new pnl 9000\\n    // global delta 10000, realised pnl -1000 => new pnl 11000\\n    // global delta -10000, realised pnl 1000 => new pnl -11000\\n    // global delta -10000, realised pnl -1000 => new pnl -9000\\n    // global delta 10000, realised pnl 11000 => new pnl -1000 (flips sign)\\n    // global delta -10000, realised pnl -11000 => new pnl 1000 (flips sign)\\n\\n    bool hasProfit = _averagePrice > _nextPrice;\\n    if (hasProfit) {\\n      // global shorts pnl is positive\\n      if (_realisedPnl > 0) {\\n        if (uint256(_realisedPnl) > _delta) {\\n          _delta = uint256(_realisedPnl).sub(_delta);\\n          hasProfit = false;\\n        } else {\\n          _delta = _delta.sub(uint256(_realisedPnl));\\n        }\\n      } else {\\n        _delta = _delta.add(uint256(-_realisedPnl));\\n      }\\n\\n      return (hasProfit, _delta);\\n    }\\n\\n    if (_realisedPnl > 0) {\\n      _delta = _delta.add(uint256(_realisedPnl));\\n    } else {\\n      if (uint256(-_realisedPnl) > _delta) {\\n        _delta = uint256(-_realisedPnl).sub(_delta);\\n        hasProfit = true;\\n      } else {\\n        _delta = _delta.sub(uint256(-_realisedPnl));\\n      }\\n    }\\n    return (hasProfit, _delta);\\n  }\\n}\\n\",\"keccak256\":\"0x0c5e44639c96014d0de4d980e9ccc40374a0f677c0a3811fd196ba1d8a136a42\",\"license\":\"MIT\"},\"contracts/core/interfaces/IShortsTracker.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\ninterface IShortsTracker {\\n    function isGlobalShortDataReady() external view returns (bool);\\n    function globalShortAveragePrices(address _token) external view returns (uint256);\\n    function getNextGlobalShortData(\\n        address _account,\\n        address _collateralToken,\\n        address _indexToken,\\n        uint256 _nextPrice,\\n        uint256 _sizeDelta,\\n        bool _isIncrease\\n    ) external view returns (uint256, uint256);\\n    function updateGlobalShortData(\\n        address _account,\\n        address _collateralToken,\\n        address _indexToken,\\n        bool _isLong,\\n        uint256 _sizeDelta,\\n        uint256 _markPrice,\\n        bool _isIncrease\\n    ) external;\\n    function setIsGlobalShortDataReady(bool value) external;\\n    function setInitData(address[] calldata _tokens, uint256[] calldata _averagePrices) external;\\n}\\n\",\"keccak256\":\"0x7b3f7791cba4f3ccfa308a9bf176663e9cead74bf78ac1c7ae9f2a041a26075d\",\"license\":\"MIT\"},\"contracts/core/interfaces/IVault.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\nimport \\\"./IVaultUtils.sol\\\";\\n\\ninterface IVault {\\n    function isInitialized() external view returns (bool);\\n    function isSwapEnabled() external view returns (bool);\\n    function isLeverageEnabled() external view returns (bool);\\n\\n    function setVaultUtils(IVaultUtils _vaultUtils) external;\\n    function setError(uint256 _errorCode, string calldata _error) external;\\n\\n    function router() external view returns (address);\\n    function usdg() external view returns (address);\\n    function gov() external view returns (address);\\n\\n    function whitelistedTokenCount() external view returns (uint256);\\n    function maxLeverage() external view returns (uint256);\\n\\n    function minProfitTime() external view returns (uint256);\\n    function hasDynamicFees() external view returns (bool);\\n    function fundingInterval() external view returns (uint256);\\n    function totalTokenWeights() external view returns (uint256);\\n    function getTargetUsdgAmount(address _token) external view returns (uint256);\\n\\n    function inManagerMode() external view returns (bool);\\n    function inPrivateLiquidationMode() external view returns (bool);\\n\\n    function maxGasPrice() external view returns (uint256);\\n\\n    function approvedRouters(address _account, address _router) external view returns (bool);\\n    function isLiquidator(address _account) external view returns (bool);\\n    function isManager(address _account) external view returns (bool);\\n\\n    function minProfitBasisPoints(address _token) external view returns (uint256);\\n    function tokenBalances(address _token) external view returns (uint256);\\n    function lastFundingTimes(address _token) external view returns (uint256);\\n\\n    function setMaxLeverage(uint256 _maxLeverage) external;\\n    function setInManagerMode(bool _inManagerMode) external;\\n    function setManager(address _manager, bool _isManager) external;\\n    function setIsSwapEnabled(bool _isSwapEnabled) external;\\n    function setIsLeverageEnabled(bool _isLeverageEnabled) external;\\n    function setMaxGasPrice(uint256 _maxGasPrice) external;\\n    function setUsdgAmount(address _token, uint256 _amount) external;\\n    function setBufferAmount(address _token, uint256 _amount) external;\\n    function setMaxGlobalShortSize(address _token, uint256 _amount) external;\\n    function setInPrivateLiquidationMode(bool _inPrivateLiquidationMode) external;\\n    function setLiquidator(address _liquidator, bool _isActive) external;\\n\\n    function setFundingRate(uint256 _fundingInterval, uint256 _fundingRateFactor, uint256 _stableFundingRateFactor) external;\\n\\n    function setFees(\\n        uint256 _taxBasisPoints,\\n        uint256 _stableTaxBasisPoints,\\n        uint256 _mintBurnFeeBasisPoints,\\n        uint256 _swapFeeBasisPoints,\\n        uint256 _stableSwapFeeBasisPoints,\\n        uint256 _marginFeeBasisPoints,\\n        uint256 _liquidationFeeUsd,\\n        uint256 _minProfitTime,\\n        bool _hasDynamicFees\\n    ) external;\\n\\n    function setTokenConfig(\\n        address _token,\\n        uint256 _tokenDecimals,\\n        uint256 _redemptionBps,\\n        uint256 _minProfitBps,\\n        uint256 _maxUsdgAmount,\\n        bool _isStable,\\n        bool _isShortable\\n    ) external;\\n\\n    function setPriceFeed(address _priceFeed) external;\\n    function withdrawFees(address _token, address _receiver) external returns (uint256);\\n\\n    function directPoolDeposit(address _token) external;\\n    function buyUSDG(address _token, address _receiver) external returns (uint256);\\n    function sellUSDG(address _token, address _receiver) external returns (uint256);\\n    function swap(address _tokenIn, address _tokenOut, address _receiver) external returns (uint256);\\n    function increasePosition(address _account, address _collateralToken, address _indexToken, uint256 _sizeDelta, bool _isLong) external;\\n    function decreasePosition(address _account, address _collateralToken, address _indexToken, uint256 _collateralDelta, uint256 _sizeDelta, bool _isLong, address _receiver) external returns (uint256);\\n    function validateLiquidation(address _account, address _collateralToken, address _indexToken, bool _isLong, bool _raise) external view returns (uint256, uint256);\\n    function liquidatePosition(address _account, address _collateralToken, address _indexToken, bool _isLong, address _feeReceiver) external;\\n    function tokenToUsdMin(address _token, uint256 _tokenAmount) external view returns (uint256);\\n\\n    function priceFeed() external view returns (address);\\n    function fundingRateFactor() external view returns (uint256);\\n    function stableFundingRateFactor() external view returns (uint256);\\n    function cumulativeFundingRates(address _token) external view returns (uint256);\\n    function getNextFundingRate(address _token) external view returns (uint256);\\n    function getFeeBasisPoints(address _token, uint256 _usdgDelta, uint256 _feeBasisPoints, uint256 _taxBasisPoints, bool _increment) external view returns (uint256);\\n\\n    function liquidationFeeUsd() external view returns (uint256);\\n    function taxBasisPoints() external view returns (uint256);\\n    function stableTaxBasisPoints() external view returns (uint256);\\n    function mintBurnFeeBasisPoints() external view returns (uint256);\\n    function swapFeeBasisPoints() external view returns (uint256);\\n    function stableSwapFeeBasisPoints() external view returns (uint256);\\n    function marginFeeBasisPoints() external view returns (uint256);\\n\\n    function allWhitelistedTokensLength() external view returns (uint256);\\n    function allWhitelistedTokens(uint256) external view returns (address);\\n    function whitelistedTokens(address _token) external view returns (bool);\\n    function stableTokens(address _token) external view returns (bool);\\n    function shortableTokens(address _token) external view returns (bool);\\n    function feeReserves(address _token) external view returns (uint256);\\n    function globalShortSizes(address _token) external view returns (uint256);\\n    function globalShortAveragePrices(address _token) external view returns (uint256);\\n    function maxGlobalShortSizes(address _token) external view returns (uint256);\\n    function tokenDecimals(address _token) external view returns (uint256);\\n    function tokenWeights(address _token) external view returns (uint256);\\n    function guaranteedUsd(address _token) external view returns (uint256);\\n    function poolAmounts(address _token) external view returns (uint256);\\n    function bufferAmounts(address _token) external view returns (uint256);\\n    function reservedAmounts(address _token) external view returns (uint256);\\n    function usdgAmounts(address _token) external view returns (uint256);\\n    function maxUsdgAmounts(address _token) external view returns (uint256);\\n    function getRedemptionAmount(address _token, uint256 _usdgAmount) external view returns (uint256);\\n    function getMaxPrice(address _token) external view returns (uint256);\\n    function getMinPrice(address _token) external view returns (uint256);\\n\\n    function getDelta(address _indexToken, uint256 _size, uint256 _averagePrice, bool _isLong, uint256 _lastIncreasedTime) external view returns (bool, uint256);\\n    function getPosition(address _account, address _collateralToken, address _indexToken, bool _isLong) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, bool, uint256);\\n}\\n\",\"keccak256\":\"0x247067b8f88636424e799a2b72b81884273813e62ad3bfedf428e0fb97714637\",\"license\":\"MIT\"},\"contracts/core/interfaces/IVaultUtils.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\ninterface IVaultUtils {\\n    function updateCumulativeFundingRate(address _collateralToken, address _indexToken) external returns (bool);\\n    function validateIncreasePosition(address _account, address _collateralToken, address _indexToken, uint256 _sizeDelta, bool _isLong) external view;\\n    function validateDecreasePosition(address _account, address _collateralToken, address _indexToken, uint256 _collateralDelta, uint256 _sizeDelta, bool _isLong, address _receiver) external view;\\n    function validateLiquidation(address _account, address _collateralToken, address _indexToken, bool _isLong, bool _raise) external view returns (uint256, uint256);\\n    function getEntryFundingRate(address _collateralToken, address _indexToken, bool _isLong) external view returns (uint256);\\n    function getPositionFee(address _account, address _collateralToken, address _indexToken, bool _isLong, uint256 _sizeDelta) external view returns (uint256);\\n    function getFundingFee(address _account, address _collateralToken, address _indexToken, bool _isLong, uint256 _size, uint256 _entryFundingRate) external view returns (uint256);\\n    function getBuyUsdgFeeBasisPoints(address _token, uint256 _usdgAmount) external view returns (uint256);\\n    function getSellUsdgFeeBasisPoints(address _token, uint256 _usdgAmount) external view returns (uint256);\\n    function getSwapFeeBasisPoints(address _tokenIn, address _tokenOut, uint256 _usdgAmount) external view returns (uint256);\\n    function getFeeBasisPoints(address _token, uint256 _usdgDelta, uint256 _feeBasisPoints, uint256 _taxBasisPoints, bool _increment) external view returns (uint256);\\n}\\n\",\"keccak256\":\"0xc8cad694c33f968559eb3feac2226fe26d81d457529b87ae8852390e1474d7be\",\"license\":\"MIT\"},\"contracts/libraries/math/SafeMath.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.6.12;\\n\\n/**\\n * @dev Wrappers over Solidity's arithmetic operations with added overflow\\n * checks.\\n *\\n * Arithmetic operations in Solidity wrap on overflow. This can easily result\\n * in bugs, because programmers usually assume that an overflow raises an\\n * error, which is the standard behavior in high level programming languages.\\n * `SafeMath` restores this intuition by reverting the transaction when an\\n * operation overflows.\\n *\\n * Using this library instead of the unchecked operations eliminates an entire\\n * class of bugs, so it's recommended to use it always.\\n */\\nlibrary SafeMath {\\n    /**\\n     * @dev Returns the addition of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `+` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Addition cannot overflow.\\n     */\\n    function add(uint256 a, uint256 b) internal pure returns (uint256) {\\n        uint256 c = a + b;\\n        require(c >= a, \\\"SafeMath: addition overflow\\\");\\n\\n        return c;\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting on\\n     * overflow (when the result is negative).\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return sub(a, b, \\\"SafeMath: subtraction overflow\\\");\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting with custom message on\\n     * overflow (when the result is negative).\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        require(b <= a, errorMessage);\\n        uint256 c = a - b;\\n\\n        return c;\\n    }\\n\\n    /**\\n     * @dev Returns the multiplication of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `*` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Multiplication cannot overflow.\\n     */\\n    function mul(uint256 a, uint256 b) internal pure returns (uint256) {\\n        // Gas optimization: this is cheaper than requiring 'a' not being zero, but the\\n        // benefit is lost if 'b' is also tested.\\n        // See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522\\n        if (a == 0) {\\n            return 0;\\n        }\\n\\n        uint256 c = a * b;\\n        require(c / a == b, \\\"SafeMath: multiplication overflow\\\");\\n\\n        return c;\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers. Reverts on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * Counterpart to Solidity's `/` operator. Note: this function uses a\\n     * `revert` opcode (which leaves remaining gas untouched) while Solidity\\n     * uses an invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return div(a, b, \\\"SafeMath: division by zero\\\");\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers. Reverts with custom message on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * Counterpart to Solidity's `/` operator. Note: this function uses a\\n     * `revert` opcode (which leaves remaining gas untouched) while Solidity\\n     * uses an invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        require(b > 0, errorMessage);\\n        uint256 c = a / b;\\n        // assert(a == b * c + a % b); // There is no case in which this doesn't hold\\n\\n        return c;\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * Reverts when dividing by zero.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return mod(a, b, \\\"SafeMath: modulo by zero\\\");\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * Reverts with custom message when dividing by zero.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        require(b != 0, errorMessage);\\n        return a % b;\\n    }\\n}\\n\",\"keccak256\":\"0x41b0da7db3e1f79b338824fed2bc4732430b78002a9d51c2cfa86ad5a12c2763\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060405161111f38038061111f8339818101604052602081101561003357600080fd5b5051600080546001600160a01b03199081163317909155600180546001600160a01b03909316929091169190911790556110ad806100726000396000f3fe608060405234801561001057600080fd5b50600436106100d05760003560e01c80630147fb0c146100d5578063122e7b071461010457806312d43a511461010c5780633d30cabf1461013057806346ea87af146101515780635886b7111461018b57806362749803146101c05780639a11178f146101e65780639cb7de4b146101ee5780639cdeb5931461021c578063a83b75fd1461027f578063b364accb146102c3578063bbd9718714610304578063cfad57a2146103c2578063f3238cec146103e8578063fbfa77cf1461043a575b600080fd5b6100f2600480360360208110156100eb57600080fd5b5035610442565b60408051918252519081900360200190f35b6100f2610454565b61011461045f565b604080516001600160a01b039092168252519081900360200190f35b61014f6004803603602081101561014657600080fd5b5035151561046e565b005b6101776004803603602081101561016757600080fd5b50356001600160a01b03166104ce565b604080519115158252519081900360200190f35b6100f2600480360360a08110156101a157600080fd5b50803590602081013590604081013590606081013590608001356104e3565b6100f2600480360360208110156101d657600080fd5b50356001600160a01b031661053a565b61017761054c565b61014f6004803603604081101561020457600080fd5b506001600160a01b0381351690602001351515610555565b610266600480360360c081101561023257600080fd5b506001600160a01b03813581169160208101358216916040820135169060608101359060808101359060a001351515610628565b6040805192835260208301919091528051918290030190f35b6100f2600480360360a081101561029557600080fd5b506001600160a01b03813581169160208101358216916040820135169060608101359060800135151561077c565b6102e9600480360360208110156102d957600080fd5b50356001600160a01b031661095c565b60408051921515835260208301919091528051918290030190f35b61014f6004803603604081101561031a57600080fd5b810190602081018135600160201b81111561033457600080fd5b82018360208201111561034657600080fd5b803590602001918460208302840111600160201b8311171561036757600080fd5b919390929091602081019035600160201b81111561038457600080fd5b82018360208201111561039657600080fd5b803590602001918460208302840111600160201b831117156103b757600080fd5b509092509050610acf565b61014f600480360360208110156103d857600080fd5b50356001600160a01b0316610be1565b61014f600480360360e08110156103fe57600080fd5b506001600160a01b038135811691602081013582169160408201351690606081013515159060808101359060a08101359060c001351515610c50565b610114610d40565b60036020526000908152604090205481565b6001600160ff1b0381565b6000546001600160a01b031681565b6000546001600160a01b031633146104bb576040805162461bcd60e51b81526020600482015260156024820152600080516020611060833981519152604482015290519081900360640190fd5b6005805460ff1916911515919091179055565b60026020526000908152604090205460ff1681565b60008060006104f485898987610d4f565b91509150600061052b836105115761050c8884610e0c565b61051b565b61051b8884610e6d565b6105258a8a610eaf565b90610f08565b93505050505b95945050505050565b60046020526000908152604090205481565b60055460ff1681565b6000546001600160a01b031633146105a2576040805162461bcd60e51b81526020600482015260156024820152600080516020611060833981519152604482015290519081900360640190fd5b6001600160a01b0382166105fd576040805162461bcd60e51b815260206004820152601f60248201527f53686f727473547261636b65723a20696e76616c6964205f68616e646c657200604482015290519081900360640190fd5b6001600160a01b03919091166000908152600260205260409020805460ff1916911515919091179055565b600080600061063a898989888861077c565b6001600160a01b03881660009081526004602052604081205491925087821161066c576106678883610e6d565b610676565b6106768289610e6d565b6001546040805163114f1b5560e31b81526001600160a01b038d811660048301529151939450600093849384931691638a78daa8916024808301926020929190829003018186803b1580156106ca57600080fd5b505afa1580156106de573d6000803e3d6000fd5b505050506040513d60208110156106f457600080fd5b505190508861070c57610707818b610e6d565b610716565b610716818b610e0c565b92508261072f5760008097509750505050505050610771565b8461074557828b97509750505050505050610771565b610753856105258387610eaf565b9150506000610765858c85858a6104e3565b92975091955050505050505b965096945050505050565b6000811561078c57506000610531565b60015460408051634a3f088d60e01b81526001600160a01b038981166004830152888116602483015287811660448301526000606483018190529251931692829182918591634a3f088d91608480830192610100929190829003018186803b1580156107f757600080fd5b505afa15801561080b573d6000803e3d6000fd5b505050506040513d61010081101561082257600080fd5b50805160408083015160e0909301518151635c07eaab60e01b81526001600160a01b038d811660048301526024820185905260448201869052600060648301819052608483018490528451959950959750919550849391891692635c07eaab9260a480840193829003018186803b15801561089c57600080fd5b505afa1580156108b0573d6000803e3d6000fd5b505050506040513d60408110156108c657600080fd5b508051602090910151909250905060006108e4866105258c85610eaf565b90506001600160ff1b03811061093b576040805162461bcd60e51b815260206004820152601760248201527653686f727473547261636b65723a206f766572666c6f7760481b604482015290519081900360640190fd5b82610949578060000361094b565b805b9d9c50505050505050505050505050565b6001546040805163114f1b5560e31b81526001600160a01b038481166004830152915160009384938493911691638a78daa891602480820192602092909190829003018186803b1580156109af57600080fd5b505afa1580156109c3573d6000803e3d6000fd5b505050506040513d60208110156109d957600080fd5b50516001600160a01b03851660009081526004602052604090205490915081610a0a57600080935093505050610aca565b60015460408051637092736960e11b81526001600160a01b0388811660048301529151600093929092169163e124e6d291602480820192602092909190829003018186803b158015610a5b57600080fd5b505afa158015610a6f573d6000803e3d6000fd5b505050506040513d6020811015610a8557600080fd5b505190506000818311610aa157610a9c8284610e6d565b610aab565b610aab8383610e6d565b90506000610abd846105258785610eaf565b9290931195509093505050505b915091565b6000546001600160a01b03163314610b1c576040805162461bcd60e51b81526020600482015260156024820152600080516020611060833981519152604482015290519081900360640190fd5b60055460ff1615610b74576040805162461bcd60e51b815260206004820152601f60248201527f53686f727473547261636b65723a20616c7265616479206d6967726174656400604482015290519081900360640190fd5b60005b83811015610bcd57828282818110610b8b57fe5b9050602002013560046000878785818110610ba257fe5b602090810292909201356001600160a01b031683525081019190915260400160002055600101610b77565b50506005805460ff19166001179055505050565b6000546001600160a01b03163314610c2e576040805162461bcd60e51b81526020600482015260156024820152600080516020611060833981519152604482015290519081900360640190fd5b600080546001600160a01b0319166001600160a01b0392909216919091179055565b3360009081526002602052604090205460ff16610caf576040805162461bcd60e51b815260206004820152601860248201527729b437b93a39aa3930b1b5b2b91d103337b93134b23232b760411b604482015290519081900360640190fd5b8380610cb9575082155b15610cc357610d37565b60055460ff16610cd257610d37565b600080610ce3898989878988610628565b91509150610cf18782610f47565b604080518381526020810183905281516001600160a01b038a16927fd6137be44db128ffcf1ea1821dbe8f889f67f949be7656c2d8acba2a4a891a02928290030190a250505b50505050505050565b6001546001600160a01b031681565b6000808385118015610dae576000841315610d935786841115610d8157610d768488610e6d565b965060009050610d8e565b610d8b8785610e6d565b96505b610da4565b610da1876000869003610e0c565b96505b9150859050610e03565b6000841315610dc857610dc18785610e0c565b9650610dfd565b86846000031115610dec57610de1600085900388610e6d565b965060019050610dfd565b610dfa876000869003610e6d565b96505b91508590505b94509492505050565b600082820183811015610e64576040805162461bcd60e51b815260206004820152601b60248201527a536166654d6174683a206164646974696f6e206f766572666c6f7760281b604482015290519081900360640190fd5b90505b92915050565b6000610e6483836040518060400160405280601e81526020017f536166654d6174683a207375627472616374696f6e206f766572666c6f770000815250610f63565b600082610ebe57506000610e67565b82820282848281610ecb57fe5b0414610e645760405162461bcd60e51b81526004018080602001828103825260218152602001806110806021913960400191505060405180910390fd5b6000610e6483836040518060400160405280601a815260200179536166654d6174683a206469766973696f6e206279207a65726f60301b815250610ffa565b6001600160a01b03909116600090815260046020526040902055565b60008184841115610ff25760405162461bcd60e51b81526004018080602001828103825283818151815260200191508051906020019080838360005b83811015610fb7578181015183820152602001610f9f565b50505050905090810190601f168015610fe45780820380516001836020036101000a031916815260200191505b509250505060405180910390fd5b505050900390565b600081836110495760405162461bcd60e51b8152602060048201818152835160248401528351909283926044909101919085019080838360008315610fb7578181015183820152602001610f9f565b50600083858161105557fe5b049594505050505056fe476f7665726e61626c653a20666f7262696464656e0000000000000000000000536166654d6174683a206d756c7469706c69636174696f6e206f766572666c6f77a164736f6c634300060c000a",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100d05760003560e01c80630147fb0c146100d5578063122e7b071461010457806312d43a511461010c5780633d30cabf1461013057806346ea87af146101515780635886b7111461018b57806362749803146101c05780639a11178f146101e65780639cb7de4b146101ee5780639cdeb5931461021c578063a83b75fd1461027f578063b364accb146102c3578063bbd9718714610304578063cfad57a2146103c2578063f3238cec146103e8578063fbfa77cf1461043a575b600080fd5b6100f2600480360360208110156100eb57600080fd5b5035610442565b60408051918252519081900360200190f35b6100f2610454565b61011461045f565b604080516001600160a01b039092168252519081900360200190f35b61014f6004803603602081101561014657600080fd5b5035151561046e565b005b6101776004803603602081101561016757600080fd5b50356001600160a01b03166104ce565b604080519115158252519081900360200190f35b6100f2600480360360a08110156101a157600080fd5b50803590602081013590604081013590606081013590608001356104e3565b6100f2600480360360208110156101d657600080fd5b50356001600160a01b031661053a565b61017761054c565b61014f6004803603604081101561020457600080fd5b506001600160a01b0381351690602001351515610555565b610266600480360360c081101561023257600080fd5b506001600160a01b03813581169160208101358216916040820135169060608101359060808101359060a001351515610628565b6040805192835260208301919091528051918290030190f35b6100f2600480360360a081101561029557600080fd5b506001600160a01b03813581169160208101358216916040820135169060608101359060800135151561077c565b6102e9600480360360208110156102d957600080fd5b50356001600160a01b031661095c565b60408051921515835260208301919091528051918290030190f35b61014f6004803603604081101561031a57600080fd5b810190602081018135600160201b81111561033457600080fd5b82018360208201111561034657600080fd5b803590602001918460208302840111600160201b8311171561036757600080fd5b919390929091602081019035600160201b81111561038457600080fd5b82018360208201111561039657600080fd5b803590602001918460208302840111600160201b831117156103b757600080fd5b509092509050610acf565b61014f600480360360208110156103d857600080fd5b50356001600160a01b0316610be1565b61014f600480360360e08110156103fe57600080fd5b506001600160a01b038135811691602081013582169160408201351690606081013515159060808101359060a08101359060c001351515610c50565b610114610d40565b60036020526000908152604090205481565b6001600160ff1b0381565b6000546001600160a01b031681565b6000546001600160a01b031633146104bb576040805162461bcd60e51b81526020600482015260156024820152600080516020611060833981519152604482015290519081900360640190fd5b6005805460ff1916911515919091179055565b60026020526000908152604090205460ff1681565b60008060006104f485898987610d4f565b91509150600061052b836105115761050c8884610e0c565b61051b565b61051b8884610e6d565b6105258a8a610eaf565b90610f08565b93505050505b95945050505050565b60046020526000908152604090205481565b60055460ff1681565b6000546001600160a01b031633146105a2576040805162461bcd60e51b81526020600482015260156024820152600080516020611060833981519152604482015290519081900360640190fd5b6001600160a01b0382166105fd576040805162461bcd60e51b815260206004820152601f60248201527f53686f727473547261636b65723a20696e76616c6964205f68616e646c657200604482015290519081900360640190fd5b6001600160a01b03919091166000908152600260205260409020805460ff1916911515919091179055565b600080600061063a898989888861077c565b6001600160a01b03881660009081526004602052604081205491925087821161066c576106678883610e6d565b610676565b6106768289610e6d565b6001546040805163114f1b5560e31b81526001600160a01b038d811660048301529151939450600093849384931691638a78daa8916024808301926020929190829003018186803b1580156106ca57600080fd5b505afa1580156106de573d6000803e3d6000fd5b505050506040513d60208110156106f457600080fd5b505190508861070c57610707818b610e6d565b610716565b610716818b610e0c565b92508261072f5760008097509750505050505050610771565b8461074557828b97509750505050505050610771565b610753856105258387610eaf565b9150506000610765858c85858a6104e3565b92975091955050505050505b965096945050505050565b6000811561078c57506000610531565b60015460408051634a3f088d60e01b81526001600160a01b038981166004830152888116602483015287811660448301526000606483018190529251931692829182918591634a3f088d91608480830192610100929190829003018186803b1580156107f757600080fd5b505afa15801561080b573d6000803e3d6000fd5b505050506040513d61010081101561082257600080fd5b50805160408083015160e0909301518151635c07eaab60e01b81526001600160a01b038d811660048301526024820185905260448201869052600060648301819052608483018490528451959950959750919550849391891692635c07eaab9260a480840193829003018186803b15801561089c57600080fd5b505afa1580156108b0573d6000803e3d6000fd5b505050506040513d60408110156108c657600080fd5b508051602090910151909250905060006108e4866105258c85610eaf565b90506001600160ff1b03811061093b576040805162461bcd60e51b815260206004820152601760248201527653686f727473547261636b65723a206f766572666c6f7760481b604482015290519081900360640190fd5b82610949578060000361094b565b805b9d9c50505050505050505050505050565b6001546040805163114f1b5560e31b81526001600160a01b038481166004830152915160009384938493911691638a78daa891602480820192602092909190829003018186803b1580156109af57600080fd5b505afa1580156109c3573d6000803e3d6000fd5b505050506040513d60208110156109d957600080fd5b50516001600160a01b03851660009081526004602052604090205490915081610a0a57600080935093505050610aca565b60015460408051637092736960e11b81526001600160a01b0388811660048301529151600093929092169163e124e6d291602480820192602092909190829003018186803b158015610a5b57600080fd5b505afa158015610a6f573d6000803e3d6000fd5b505050506040513d6020811015610a8557600080fd5b505190506000818311610aa157610a9c8284610e6d565b610aab565b610aab8383610e6d565b90506000610abd846105258785610eaf565b9290931195509093505050505b915091565b6000546001600160a01b03163314610b1c576040805162461bcd60e51b81526020600482015260156024820152600080516020611060833981519152604482015290519081900360640190fd5b60055460ff1615610b74576040805162461bcd60e51b815260206004820152601f60248201527f53686f727473547261636b65723a20616c7265616479206d6967726174656400604482015290519081900360640190fd5b60005b83811015610bcd57828282818110610b8b57fe5b9050602002013560046000878785818110610ba257fe5b602090810292909201356001600160a01b031683525081019190915260400160002055600101610b77565b50506005805460ff19166001179055505050565b6000546001600160a01b03163314610c2e576040805162461bcd60e51b81526020600482015260156024820152600080516020611060833981519152604482015290519081900360640190fd5b600080546001600160a01b0319166001600160a01b0392909216919091179055565b3360009081526002602052604090205460ff16610caf576040805162461bcd60e51b815260206004820152601860248201527729b437b93a39aa3930b1b5b2b91d103337b93134b23232b760411b604482015290519081900360640190fd5b8380610cb9575082155b15610cc357610d37565b60055460ff16610cd257610d37565b600080610ce3898989878988610628565b91509150610cf18782610f47565b604080518381526020810183905281516001600160a01b038a16927fd6137be44db128ffcf1ea1821dbe8f889f67f949be7656c2d8acba2a4a891a02928290030190a250505b50505050505050565b6001546001600160a01b031681565b6000808385118015610dae576000841315610d935786841115610d8157610d768488610e6d565b965060009050610d8e565b610d8b8785610e6d565b96505b610da4565b610da1876000869003610e0c565b96505b9150859050610e03565b6000841315610dc857610dc18785610e0c565b9650610dfd565b86846000031115610dec57610de1600085900388610e6d565b965060019050610dfd565b610dfa876000869003610e6d565b96505b91508590505b94509492505050565b600082820183811015610e64576040805162461bcd60e51b815260206004820152601b60248201527a536166654d6174683a206164646974696f6e206f766572666c6f7760281b604482015290519081900360640190fd5b90505b92915050565b6000610e6483836040518060400160405280601e81526020017f536166654d6174683a207375627472616374696f6e206f766572666c6f770000815250610f63565b600082610ebe57506000610e67565b82820282848281610ecb57fe5b0414610e645760405162461bcd60e51b81526004018080602001828103825260218152602001806110806021913960400191505060405180910390fd5b6000610e6483836040518060400160405280601a815260200179536166654d6174683a206469766973696f6e206279207a65726f60301b815250610ffa565b6001600160a01b03909116600090815260046020526040902055565b60008184841115610ff25760405162461bcd60e51b81526004018080602001828103825283818151815260200191508051906020019080838360005b83811015610fb7578181015183820152602001610f9f565b50505050905090810190601f168015610fe45780820380516001836020036101000a031916815260200191505b509250505060405180910390fd5b505050900390565b600081836110495760405162461bcd60e51b8152602060048201818152835160248401528351909283926044909101919085019080838360008315610fb7578181015183820152602001610f9f565b50600083858161105557fe5b049594505050505056fe476f7665726e61626c653a20666f7262696464656e0000000000000000000000536166654d6174683a206d756c7469706c69636174696f6e206f766572666c6f77a164736f6c634300060c000a",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 3,
+        "contract": "contracts/core/ShortsTracker.sol:ShortsTracker",
+        "label": "gov",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      },
+      {
+        "astId": 9823,
+        "contract": "contracts/core/ShortsTracker.sol:ShortsTracker",
+        "label": "vault",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_contract(IVault)19477"
+      },
+      {
+        "astId": 9827,
+        "contract": "contracts/core/ShortsTracker.sol:ShortsTracker",
+        "label": "isHandler",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_mapping(t_address,t_bool)"
+      },
+      {
+        "astId": 9831,
+        "contract": "contracts/core/ShortsTracker.sol:ShortsTracker",
+        "label": "data",
+        "offset": 0,
+        "slot": "3",
+        "type": "t_mapping(t_bytes32,t_bytes32)"
+      },
+      {
+        "astId": 9836,
+        "contract": "contracts/core/ShortsTracker.sol:ShortsTracker",
+        "label": "globalShortAveragePrices",
+        "offset": 0,
+        "slot": "4",
+        "type": "t_mapping(t_address,t_uint256)"
+      },
+      {
+        "astId": 9839,
+        "contract": "contracts/core/ShortsTracker.sol:ShortsTracker",
+        "label": "isGlobalShortDataReady",
+        "offset": 0,
+        "slot": "5",
+        "type": "t_bool"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_contract(IVault)19477": {
+        "encoding": "inplace",
+        "label": "contract IVault",
+        "numberOfBytes": "20"
+      },
+      "t_mapping(t_address,t_bool)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => bool)",
+        "numberOfBytes": "32",
+        "value": "t_bool"
+      },
+      "t_mapping(t_address,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_mapping(t_bytes32,t_bytes32)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => bytes32)",
+        "numberOfBytes": "32",
+        "value": "t_bytes32"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}

@@ -1,20 +1,32 @@
-import { BigNumber, ContractReceipt } from "ethers";
-import * as fs from "fs";
-import { deployments, ethers } from "hardhat";
-import { GWITToken__factory, Marketplace__factory, Rooster__factory } from "../types";
-import { Ship, Time } from "../utils";
-const csvToObj = require("csv-to-js-parser").csvToObj;
-
-interface List {
-  amount: number;
-  address: string;
-}
+import { deployments } from "hardhat";
+import {
+  EsXDX__factory,
+  MintableBaseToken,
+  RewardDistributor,
+  RewardRouterV2__factory,
+  RewardTracker,
+  TokenManager__factory,
+  Vester,
+  XlxManager__factory,
+} from "../types";
+import { Ship } from "../utils";
 
 const main = async () => {
   const setup = deployments.createFixture(async (hre) => {
     const ship = await Ship.init(hre);
     const { accounts, users } = ship;
-    await deployments.fixture(["mocks", "grp", "gwit", "marketplace", "nfts", "gwit_init"]);
+    await deployments.fixture([
+      "tokenManager",
+      "bonusXdxTracker",
+      "feeXdxTracker",
+      "feeXlxTracker",
+      "stakedXlxTracker",
+      "stakedXdxDistributor",
+      "stakedXlxDistributor",
+      "esXdx",
+      "xdxVester",
+      "xlxVester",
+    ]);
 
     return {
       ship,
@@ -23,17 +35,24 @@ const main = async () => {
     };
   });
 
-  const getId = (rx: ContractReceipt) => {
-    const events = rx.events ?? [];
-    for (const ev of events) {
-      if (ev.event === "Transfer" && ev.args?.to === seller.address) {
-        return ev.args.id;
-      }
-    }
-  };
-
   const scaffold = await setup();
-  const seller = scaffold.users[0];
+
+  const deployer = scaffold.accounts.deployer;
+
+  const tokenManager = await scaffold.ship.connect(TokenManager__factory);
+  const rewardRouter = await scaffold.ship.connect(RewardRouterV2__factory);
+  const xlxManager = await scaffold.ship.connect(XlxManager__factory);
+  const stakedXdxTracker = (await scaffold.ship.connect("StakedXdxTracker")) as RewardTracker;
+  const bonusXdxTracker = (await scaffold.ship.connect("BonusXdxTracker")) as RewardTracker;
+  const feeXdxTracker = (await scaffold.ship.connect("FeeXdxTracker")) as RewardTracker;
+  const feeXlxTracker = (await scaffold.ship.connect("FeeXlxTracker")) as RewardTracker;
+  const stakedXlxTracker = (await scaffold.ship.connect("StakedXlxTracker")) as RewardTracker;
+  const stakedXdxDistributor = (await scaffold.ship.connect("StakedXdxDistributor")) as RewardDistributor;
+  const stakedXlxDistributor = (await scaffold.ship.connect("StakedXlxDistributor")) as RewardDistributor;
+  const esXdx = await scaffold.ship.connect(EsXDX__factory);
+  const bnXdx = (await scaffold.ship.connect("BN_XDX")) as MintableBaseToken;
+  const xdxVester = (await scaffold.ship.connect("XdxVester")) as Vester;
+  const xlxVester = (await scaffold.ship.connect("XlxVester")) as Vester;
 
   await esXdx.setHandler(tokenManager.address, true);
   await xdxVester.setHandler(deployer.address, true);

@@ -27,11 +27,15 @@ const func: DeployFunction = async (hre) => {
 
   if (priceFeedTimelock.newlyDeployed) {
     for (const signer of signers) {
-      await priceFeedTimelock.contract.setContractHandler(signer, true);
+      const tx = await priceFeedTimelock.contract.setContractHandler(signer, true);
+      console.log("Set ", signer, " to signer of priceFeedTimelock at ", tx.hash);
+      await tx.wait();
     }
 
     for (const keeper of keepers) {
-      await priceFeedTimelock.contract.setKeeper(keeper, true);
+      const tx = await priceFeedTimelock.contract.setKeeper(keeper, true);
+      console.log("Set ", keeper, " to keeper of priceFeedTimelock at ", tx.hash);
+      await tx.wait();
     }
   }
 };

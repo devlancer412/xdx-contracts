@@ -1,6 +1,7 @@
 import { DeployFunction } from "hardhat-deploy/types";
 import { TokenManager__factory } from "../../types";
 import { Ship } from "../../utils";
+import { signers as configSigners } from "../../config";
 
 const func: DeployFunction = async (hre) => {
   const { deploy, accounts } = await Ship.init(hre);
@@ -9,7 +10,7 @@ const func: DeployFunction = async (hre) => {
   let signers: string[] = [];
 
   if (hre.network.tags.prod) {
-    signers = ["0x45e48668F090a3eD1C7961421c60Df4E66f693BD"];
+    signers = configSigners;
   } else {
     signers = [signer1.address, signer2.address];
   }

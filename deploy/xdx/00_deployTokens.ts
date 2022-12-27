@@ -8,7 +8,9 @@ const func: DeployFunction = async (hre) => {
 
   const esXdx = await deploy(EsXDX__factory);
   if (esXdx.newlyDeployed) {
-    await esXdx.contract.setInPrivateTransferMode(true);
+    const tx = await esXdx.contract.setInPrivateTransferMode(true);
+    console.log("Set private transfer mode to esXdx at ", tx.hash);
+    await tx.wait();
   }
 
   await deploy(MintableBaseToken__factory, {

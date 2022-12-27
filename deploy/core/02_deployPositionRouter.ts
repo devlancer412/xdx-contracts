@@ -3,8 +3,6 @@ import {
   Router__factory,
   Vault__factory,
   ShortsTracker__factory,
-  ReferralStorage__factory,
-  Timelock__factory,
   PositionRouter__factory,
 } from "../../types";
 import { Ship } from "../../utils";
@@ -16,7 +14,7 @@ const minExecutionFee = "100000000000000"; // 0.0001 ETH
 const func: DeployFunction = async (hre) => {
   const { deploy, connect } = await Ship.init(hre);
 
-  const nativeToken = tokens.avax.nativeToken as NativeToken;
+  const nativeToken = tokens[hre.network.name as "avax" | "avax_test"].nativeToken as NativeToken;
 
   if (!hre.network.tags.prod) {
     const nativeTokenContract = await connect(nativeToken.name);
@@ -39,11 +37,17 @@ const func: DeployFunction = async (hre) => {
   });
 
   if (positionRouter.newlyDeployed) {
-    await positionRouter.contract.setDelayValues(1, 180, 30 * 60);
+    let tx = await positionRouter.contract.setDelayValues(1, 180, 30 * 60);
+    console.log("Set delay value to PositionRouter at ", tx.hash);
+    await tx.wait();
     // await positionRouter.contract.setGov(await vault.gov());
 
-    await shortsTracker.setHandler(positionRouter.address, true);
-    await router.addPlugin(positionRouter.address);
+    tx = await shortsTracker.setHandler(positionRouter.address, true);
+    console.log("Set PositionRouter to handler of ShortsTracker at ", tx.hash);
+    await tx.wait();
+    tx = await router.addPlugin(positionRouter.address);
+    console.log("Add PositionRouter to plugin of router at ", tx.hash);
+    await tx.wait();
   }
 };
 

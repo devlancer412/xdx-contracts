@@ -18,8 +18,8 @@ const func: DeployFunction = async (hre) => {
 
   const { signer1, signer2, deployer, updater1, updater2 } = accounts;
 
-  const { avax, btc, btcb, eth, mim, usdce, usdc } = tokens.avax;
-  const tokenArr = [avax, btc, btcb, eth, mim, usdce, usdc];
+  const { avax, btc, btcb, eth, usdce, usdc } = tokens[hre.network.name as "avax" | "avax_test"];
+  const tokenArr = [avax, btc, btcb, eth, usdce, usdc];
   const fastPriceTokens = [avax, btc, btcb, eth];
 
   let signers: string[];
@@ -34,9 +34,9 @@ const func: DeployFunction = async (hre) => {
 
     for (const token of tokenArr) {
       const tokenContract = await connect(token.name);
-      const priceFeedContract = (await connect(token.name + "PriceFeed")) as PriceFeed;
       token.address = tokenContract.address;
       if (!hre.network.tags.live) {
+        const priceFeedContract = (await connect(token.name + "PriceFeed")) as PriceFeed;
         token.priceFeed = priceFeedContract.address;
       }
     }
@@ -69,47 +69,84 @@ const func: DeployFunction = async (hre) => {
       positionRouter.address,
     ],
   });
-  console.log("FastPriceFeed deployed");
   const vaultPriceFeed = await deploy(VaultPriceFeed__factory);
-  console.log("VaultPriceFeed deployed");
 
   if (fastPriceFeed.newlyDeployed || vaultPriceFeed.newlyDeployed) {
-    await vaultPriceFeed.contract.setSecondaryPriceFeed(fastPriceFeed.address);
-    await fastPriceFeed.contract.setVaultPriceFeed(vaultPriceFeed.address);
+    let tx = await vaultPriceFeed.contract.setSecondaryPriceFeed(fastPriceFeed.address);
+    console.log("Set secondary price feed to VaultPriceFeed  at ", tx.hash);
+    await tx.wait();
+
+    tx = await fastPriceFeed.contract.setVaultPriceFeed(vaultPriceFeed.address);
+    console.log("Set vault price feed to FastPriceFeed  at ", tx.hash);
+    await tx.wait();
   }
 
   if (fastPriceEvents.newlyDeployed || fastPriceFeed.newlyDeployed) {
-    await fastPriceEvents.contract.setIsPriceFeed(fastPriceFeed.address, true);
+    const tx = await fastPriceEvents.contract.setIsPriceFeed(fastPriceFeed.address, true);
+    console.log("Set price feed to FastPriceEvents at ", tx.hash);
+    await tx.wait();
   }
   if (fastPriceFeed.newlyDeployed) {
-    await fastPriceFeed.contract.initialize(signers.length, signers, updaters);
-    await fastPriceFeed.contract.setTokens(
+    let tx = await fastPriceFeed.contract.initialize(signers.length, signers, updaters);
+    console.log("Initialize FastPriceFeed at ", tx.hash);
+    await tx.wait();
+
+    tx = await fastPriceFeed.contract.setTokens(
       fastPriceTokens.map((t) => t.address),
       fastPriceTokens.map((t) => t.fastPricePrecision),
     );
-    await fastPriceFeed.contract.setMaxTimeDeviation(60 * 60);
-    await fastPriceFeed.contract.setSpreadBasisPointsIfInactive(50);
-    await fastPriceFeed.contract.setSpreadBasisPointsIfChainError(500);
-    await fastPriceFeed.contract.setMaxCumulativeDeltaDiffs(
+    console.log("Set tokens to FastPriceFeed at ", tx.hash);
+    await tx.wait();
+
+    tx = await fastPriceFeed.contract.setMaxTimeDeviation(60 * 60);
+    console.log("Set max time deviation to FastPriceFeed at ", tx.hash);
+    await tx.wait();
+
+    tx = await fastPriceFeed.contract.setSpreadBasisPointsIfInactive(50);
+    console.log("Set spread points if inactive to FastPriceFeed at ", tx.hash);
+    await tx.wait();
+
+    tx = await fastPriceFeed.contract.setSpreadBasisPointsIfChainError(500);
+    console.log("Set spread basis points if chain error to FastPriceFeed at ", tx.hash);
+    await tx.wait();
+
+    tx = await fastPriceFeed.contract.setMaxCumulativeDeltaDiffs(
       fastPriceTokens.map((t) => t.address),
       fastPriceTokens.map((t) => t.maxCumulativeDeltaDiff),
     );
-    await fastPriceFeed.contract.setPriceDataInterval(1 * 60);
+    console.log("Set max cumulative delta diffs to FastPriceFeed at ", tx.hash);
+    await tx.wait();
 
-    await positionRouter.setPositionKeeper(fastPriceFeed.address, true);
-    // await fastPriceFeed.contract.setTokenManager(tokenManager.address);
+    tx = await fastPriceFeed.contract.setPriceDataInterval(1 * 60);
+    console.log("Set price data interval to FastPriceFeed at ", tx.hash);
+    await tx.wait();
+
+    tx = await positionRouter.setPositionKeeper(fastPriceFeed.address, true);
+    console.log("Set FastPriceFeed to position keeper of PositionRouter at ", tx.hash);
+    await tx.wait();
 
     if (hre.network.tags.live) {
-      await fastPriceFeed.contract.setGov(priceFeedTimelock.address);
+      tx = await fastPriceFeed.contract.setGov(priceFeedTimelock.address);
+      console.log("Set gov to FastPriceFeed at ", tx.hash);
+      await tx.wait();
     }
     console.log("FastPriceFeeed: initialized");
   }
 
   if (vaultPriceFeed.newlyDeployed) {
-    await vaultPriceFeed.contract.setMaxStrictPriceDeviation(toWei(1, 28));
-    await vaultPriceFeed.contract.setPriceSampleSpace(3);
-    await vaultPriceFeed.contract.setIsAmmEnabled(false);
-    await vault.initialize(
+    let tx = await vaultPriceFeed.contract.setMaxStrictPriceDeviation(toWei(1, 28));
+    console.log("Set set max strict price deviation to VaultPriceFeed at ", tx.hash);
+    await tx.wait();
+
+    tx = await vaultPriceFeed.contract.setPriceSampleSpace(3);
+    console.log("Set price sample space to VaultPriceFeed at ", tx.hash);
+    await tx.wait();
+
+    tx = await vaultPriceFeed.contract.setIsAmmEnabled(false);
+    console.log("Set set amm enabled to VaultPriceFeed at ", tx.hash);
+    await tx.wait();
+
+    tx = await vault.initialize(
       router.address, // router
       usdg.address, // usdg
       vaultPriceFeed.address, // priceFeed
@@ -117,26 +154,32 @@ const func: DeployFunction = async (hre) => {
       100, // fundingRateFactor
       100, // stableFundingRateFactor
     );
+    console.log("Initialize vault at ", tx.hash);
+    await tx.wait();
 
     for (const tokenItem of tokenArr) {
       const token = tokenItem as TokenData;
       if (token.spreadBasisPoints !== undefined) {
-        await vaultPriceFeed.contract.setSpreadBasisPoints(
+        const tx = await vaultPriceFeed.contract.setSpreadBasisPoints(
           tokenItem.address, // _token
           token.spreadBasisPoints, // _spreadBasisPoints
         );
+        console.log("Set spread basis points of ", tokenItem.name, " to VaultPriceFeed at ", tx.hash);
+        await tx.wait();
       }
     }
 
     for (const token of tokenArr) {
-      await vaultPriceFeed.contract.setTokenConfig(
+      let tx = await vaultPriceFeed.contract.setTokenConfig(
         token.address, // _token
         token.priceFeed, // _priceFeed
         token.priceDecimals, // _priceDecimals
         token.isStrictStable, // _isStrictStable
       );
+      console.log("Set token config of ", token.name, " to VaultPriceFeed at ", tx.hash);
+      await tx.wait();
 
-      await vault.setTokenConfig(
+      tx = await vault.setTokenConfig(
         token.address, // _token
         token.decimals, // _tokenDecimals
         token.tokenWeight, // _tokenWeight
@@ -145,10 +188,14 @@ const func: DeployFunction = async (hre) => {
         token.isStable, // _isStable
         token.isShortable, // _isShortable
       );
+      console.log("Set token config of ", token.name, " to vault at ", tx.hash);
+      await tx.wait();
     }
 
     if (hre.network.tags.live) {
-      await vaultPriceFeed.contract.setGov(priceFeedTimelock.address);
+      const tx = await vaultPriceFeed.contract.setGov(priceFeedTimelock.address);
+      console.log("Set gov to vault at ", tx.hash);
+      await tx.wait();
     }
     console.log("VaultPriceFeeed: initialized");
   }

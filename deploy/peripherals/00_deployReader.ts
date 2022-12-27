@@ -8,7 +8,9 @@ const func: DeployFunction = async (hre) => {
   const reader = await deploy(Reader__factory);
 
   if (reader.newlyDeployed) {
-    await reader.contract.setConfig(true);
+    const tx = await reader.contract.setConfig(true);
+    console.log("Set config to reader at ", tx.hash);
+    await tx.wait();
   }
 };
 
