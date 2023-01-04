@@ -350,29 +350,29 @@ describe("Vault.settings", function () {
 
     await newTokenPriceFeed.setLatestAnswer(toChainlinkPrice(300));
 
-    expect(await vault.whitelistedTokenCount()).eq(7);
+    expect(await vault.whitelistedTokenCount()).eq(6);
     expect(await vault.whitelistedTokens(newToken.address)).eq(false);
     expect(await vault.tokenDecimals(newToken.address)).eq(0);
     expect(await vault.tokenWeights(newToken.address)).eq(0);
-    expect(await vault.totalTokenWeights()).eq(100001);
+    expect(await vault.totalTokenWeights()).eq(100000);
     expect(await vault.minProfitBasisPoints(newToken.address)).eq(0);
     expect(await vault.maxUsdgAmounts(newToken.address)).eq(0);
     expect(await vault.stableTokens(newToken.address)).eq(false);
     expect(await vault.shortableTokens(newToken.address)).eq(false);
-    expect(await vault.allWhitelistedTokensLength()).eq(7);
+    expect(await vault.allWhitelistedTokensLength()).eq(6);
 
     await vault.setTokenConfig(...params);
 
-    expect(await vault.whitelistedTokenCount()).eq(8);
+    expect(await vault.whitelistedTokenCount()).eq(7);
     expect(await vault.whitelistedTokens(newToken.address)).eq(true);
     expect(await vault.tokenDecimals(newToken.address)).eq(18);
     expect(await vault.tokenWeights(newToken.address)).eq(10000);
-    expect(await vault.totalTokenWeights()).eq(110001);
+    expect(await vault.totalTokenWeights()).eq(110000);
     expect(await vault.minProfitBasisPoints(newToken.address)).eq(75);
     expect(await vault.maxUsdgAmounts(newToken.address)).eq(0);
     expect(await vault.stableTokens(newToken.address)).eq(true);
     expect(await vault.shortableTokens(newToken.address)).eq(true);
-    expect(await vault.allWhitelistedTokensLength()).eq(8);
+    expect(await vault.allWhitelistedTokensLength()).eq(7);
   });
 
   it("clearTokenConfig", async () => {
@@ -388,11 +388,11 @@ describe("Vault.settings", function () {
 
     await newTokenPriceFeed.setLatestAnswer(toChainlinkPrice(300));
 
-    expect(await vault.whitelistedTokenCount()).eq(7);
+    expect(await vault.whitelistedTokenCount()).eq(6);
     expect(await vault.whitelistedTokens(newToken.address)).eq(false);
     expect(await vault.tokenDecimals(newToken.address)).eq(0);
     expect(await vault.tokenWeights(newToken.address)).eq(0);
-    expect(await vault.totalTokenWeights()).eq(100001);
+    expect(await vault.totalTokenWeights()).eq(100000);
     expect(await vault.minProfitBasisPoints(newToken.address)).eq(0);
     expect(await vault.maxUsdgAmounts(newToken.address)).eq(0);
     expect(await vault.stableTokens(newToken.address)).eq(false);
@@ -400,11 +400,11 @@ describe("Vault.settings", function () {
 
     await vault.setTokenConfig(...params);
 
-    expect(await vault.whitelistedTokenCount()).eq(8);
+    expect(await vault.whitelistedTokenCount()).eq(7);
     expect(await vault.whitelistedTokens(newToken.address)).eq(true);
     expect(await vault.tokenDecimals(newToken.address)).eq(18);
     expect(await vault.tokenWeights(newToken.address)).eq(7000);
-    expect(await vault.totalTokenWeights()).eq(107001);
+    expect(await vault.totalTokenWeights()).eq(107000);
     expect(await vault.minProfitBasisPoints(newToken.address)).eq(75);
     expect(await vault.maxUsdgAmounts(newToken.address)).eq(500);
     expect(await vault.stableTokens(newToken.address)).eq(true);
@@ -416,11 +416,11 @@ describe("Vault.settings", function () {
 
     await vault.clearTokenConfig(newToken.address);
 
-    expect(await vault.whitelistedTokenCount()).eq(7);
+    expect(await vault.whitelistedTokenCount()).eq(6);
     expect(await vault.whitelistedTokens(newToken.address)).eq(false);
     expect(await vault.tokenDecimals(newToken.address)).eq(0);
     expect(await vault.tokenWeights(newToken.address)).eq(0);
-    expect(await vault.totalTokenWeights()).eq(100001);
+    expect(await vault.totalTokenWeights()).eq(100000);
     expect(await vault.minProfitBasisPoints(newToken.address)).eq(0);
     expect(await vault.maxUsdgAmounts(newToken.address)).eq(0);
     expect(await vault.stableTokens(newToken.address)).eq(false);

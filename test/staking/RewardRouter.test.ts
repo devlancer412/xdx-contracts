@@ -468,11 +468,13 @@ describe("RewardRouter", () => {
       .mintAndStakeXlx(avax.address, toWei(1, 18), toWei(280, 18), toWei(280, 18));
     await reportGasUsed(tx0, "mintAndStakeXlx gas used");
 
-    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq(toWei(28443, 16));
-    expect(await feeXlxTracker.depositBalances(user1.address, xlx.address)).eq(toWei(28443, 16));
+    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq(toWei(28428.75, 16));
+    expect(await feeXlxTracker.depositBalances(user1.address, xlx.address)).eq(toWei(28428.75, 16));
 
-    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq(toWei(28443, 16));
-    expect(await stakedXlxTracker.depositBalances(user1.address, feeXlxTracker.address)).eq(toWei(28443, 16));
+    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq(toWei(28428.75, 16));
+    expect(await stakedXlxTracker.depositBalances(user1.address, feeXlxTracker.address)).eq(
+      toWei(28428.75, 16),
+    );
 
     await avax.mint(user1.address, toWei(2, 18));
     await avax.connect(user1).approve(xlxManager.address, toWei(2, 18));
@@ -503,8 +505,8 @@ describe("RewardRouter", () => {
       ),
     ).to.be.revertedWith("XlxManager: cooldown duration not yet passed");
 
-    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq("798597142857142857142"); // 798.6
-    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq("798597142857142857142");
+    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq("798196785714285714285"); // 798.6
+    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq("798196785714285714285");
     expect(await avax.balanceOf(user1.address)).eq(0);
 
     const tx1 = await rewardRouter.connect(user1).unstakeAndRedeemXlx(
@@ -515,9 +517,9 @@ describe("RewardRouter", () => {
     );
     await reportGasUsed(tx1, "unstakeAndRedeemXlx gas used");
 
-    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq("558597142857142857142"); // 558.6
-    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq("558597142857142857142");
-    expect(await avax.balanceOf(user1.address)).eq("833378252860820087"); // ~0.83
+    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq("558196785714285714285"); // 558.6
+    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq("558196785714285714285");
+    expect(await avax.balanceOf(user1.address)).eq("833378240833073316"); // ~0.83
 
     await advanceTimeAndBlock(24 * 60 * 60);
 
@@ -536,7 +538,7 @@ describe("RewardRouter", () => {
     expect(await esXdx.balanceOf(user1.address)).gt(toWei(3033, 18));
     expect(await esXdx.balanceOf(user1.address)).lt(toWei(3034, 18));
 
-    expect(await avax.balanceOf(user1.address)).eq("833378252860820087");
+    expect(await avax.balanceOf(user1.address)).eq("833378240833073316");
     await rewardRouter.connect(user1).claimFees();
     expect(await avax.balanceOf(user1.address)).gt("6900000000000000000");
     expect(await avax.balanceOf(user1.address)).lt("6910000000000000000");
@@ -577,8 +579,8 @@ describe("RewardRouter", () => {
     expect(await feeXdxTracker.depositBalances(user1.address, bnXdx.address)).gt("13600000000000000000"); // 13.6
     expect(await feeXdxTracker.depositBalances(user1.address, bnXdx.address)).lt("13700000000000000000"); // 13.7
 
-    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq("558597142857142857142"); // 558.59
-    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq("558597142857142857142");
+    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq("558196785714285714285"); // 558.59
+    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq("558196785714285714285");
     expect(await (await avax.balanceOf(user1.address)).div(toWei(1, 15))).eq("6900"); // ~0.69
   });
 
@@ -614,7 +616,7 @@ describe("RewardRouter", () => {
     expect(await avax.balanceOf(vault.address)).eq(toWei(1, 18));
     expect(await ship.provider.getBalance(avax.address)).eq(toWei(1, 18));
     expect(await avax.totalSupply()).eq(toWei(1, 18));
-    expect(await stakedXlxTracker.balanceOf(user0.address)).eq("284430000000000000000"); // 284.43
+    expect(await stakedXlxTracker.balanceOf(user0.address)).eq("284287500000000000000"); // 284.2875
 
     await expect(
       rewardRouter.connect(user0).unstakeAndRedeemXlxETH(toWei(300, 18), toWei(1, 18), receiver0.address),
@@ -623,23 +625,23 @@ describe("RewardRouter", () => {
     await expect(
       rewardRouter
         .connect(user0)
-        .unstakeAndRedeemXlxETH("284430000000000000000", toWei(1, 18), receiver0.address),
+        .unstakeAndRedeemXlxETH("284287500000000000000", toWei(1, 18), receiver0.address),
     ).to.be.revertedWith("XlxManager: cooldown duration not yet passed");
 
     await advanceTimeAndBlock(24 * 60 * 60 + 10);
     await expect(
       rewardRouter
         .connect(user0)
-        .unstakeAndRedeemXlxETH("284430000000000000000", toWei(1, 18), receiver0.address),
+        .unstakeAndRedeemXlxETH("284287500000000000000", toWei(1, 18), receiver0.address),
     ).to.be.revertedWith("XlxManager: insufficient output");
 
     await rewardRouter
       .connect(user0)
-      .unstakeAndRedeemXlxETH("284430000000000000000", "900000000000000000", receiver0.address);
-    expect(await ship.provider.getBalance(receiver0.address)).eq("901146476190476190"); // 0.901146
-    expect(await avax.balanceOf(vault.address)).eq("98853523809523810"); // 0.9885
-    expect(await ship.provider.getBalance(avax.address)).eq("98853523809523810");
-    expect(await avax.totalSupply()).eq("98853523809523810");
+      .unstakeAndRedeemXlxETH("284287500000000000000", "900000000000000000", receiver0.address);
+    expect(await ship.provider.getBalance(receiver0.address)).eq("900243750000000000"); // 0.900243
+    expect(await avax.balanceOf(vault.address)).eq("99756250000000000"); // 0.99756
+    expect(await ship.provider.getBalance(avax.address)).eq("99756250000000000");
+    expect(await avax.totalSupply()).eq("99756250000000000");
   });
 
   it("xdx: signalTransfer, acceptTransfer", async () => {
@@ -725,7 +727,7 @@ describe("RewardRouter", () => {
     expect(await feeXdxTracker.depositBalances(user3.address, bnXdx.address)).eq(0);
     expect(await stakedXdxTracker.depositBalances(user4.address, xdx.address)).eq(toWei(200, 18));
     expect(await stakedXdxTracker.depositBalances(user4.address, esXdx.address)).gt(toWei(892, 18));
-    expect(await stakedXdxTracker.depositBalances(user4.address, esXdx.address)).lt(toWei(893, 18));
+    expect(await stakedXdxTracker.depositBalances(user4.address, esXdx.address)).lt(toWei(894, 18));
     expect(await feeXdxTracker.depositBalances(user4.address, bnXdx.address)).gt("547000000000000000"); // 0.547
     expect(await feeXdxTracker.depositBalances(user4.address, bnXdx.address)).lt("549000000000000000"); // 0.548
     expect(await xdxVester.transferredAverageStakedAmounts(user4.address)).gt(toWei(200, 18));
@@ -811,12 +813,12 @@ describe("RewardRouter", () => {
     expect(await feeXdxTracker.depositBalances(user2.address, bnXdx.address)).eq(0);
     expect(await feeXdxTracker.depositBalances(user3.address, bnXdx.address)).eq(0);
 
-    expect(await feeXlxTracker.depositBalances(user2.address, xlx.address)).eq("257083571428571428571"); // 257.1
+    expect(await feeXlxTracker.depositBalances(user2.address, xlx.address)).eq("256954642857142857142"); // 256.95
     expect(await feeXlxTracker.depositBalances(user3.address, xlx.address)).eq(0);
 
     expect(await stakedXlxTracker.depositBalances(user2.address, feeXlxTracker.address)).eq(
-      "257083571428571428571",
-    ); // 257.1
+      "256954642857142857142",
+    ); // 256.95
     expect(await stakedXlxTracker.depositBalances(user3.address, feeXlxTracker.address)).eq(0);
 
     expect(await xdxVester.transferredAverageStakedAmounts(user3.address)).eq(0);
@@ -843,12 +845,12 @@ describe("RewardRouter", () => {
     expect(await feeXdxTracker.depositBalances(user3.address, bnXdx.address)).lt("549000000000000000"); // 0.548
 
     expect(await feeXlxTracker.depositBalances(user2.address, xlx.address)).eq(0);
-    expect(await feeXlxTracker.depositBalances(user3.address, xlx.address)).eq("257083571428571428571"); // 257.08
+    expect(await feeXlxTracker.depositBalances(user3.address, xlx.address)).eq("256954642857142857142"); // 256.95
 
     expect(await stakedXlxTracker.depositBalances(user2.address, feeXlxTracker.address)).eq(0);
     expect(await stakedXlxTracker.depositBalances(user3.address, feeXlxTracker.address)).eq(
-      "257083571428571428571",
-    ); // 257.08
+      "256954642857142857142",
+    ); // 256.95
 
     expect(await xdxVester.transferredAverageStakedAmounts(user3.address)).eq(toWei(200, 18));
     expect(await xdxVester.transferredCumulativeRewards(user3.address)).gt(toWei(892, 18));
@@ -943,7 +945,7 @@ describe("RewardRouter", () => {
     expect(await xlxVester.getPairAmount(user3.address, toWei(1785, 18))).gt(toWei(270, 18));
     expect(await xlxVester.getPairAmount(user3.address, toWei(1785, 18))).lt(toWei(271, 18));
 
-    expect(await stakedXlxTracker.balanceOf(user3.address)).eq("257083571428571428571");
+    expect(await stakedXlxTracker.balanceOf(user3.address)).eq("256954642857142857142");
 
     expect(await esXdx.balanceOf(user3.address)).gt(toWei(1720, 18));
     expect(await esXdx.balanceOf(user3.address)).lt(toWei(1721, 18));
@@ -968,7 +970,7 @@ describe("RewardRouter", () => {
 
     await xlxVester.connect(user3).withdraw();
 
-    expect(await stakedXlxTracker.balanceOf(user3.address)).eq("257083571428571428571");
+    expect(await stakedXlxTracker.balanceOf(user3.address)).eq("256954642857142857142");
 
     expect(await esXdx.balanceOf(user3.address)).gt(toWei(1715, 18));
     expect(await esXdx.balanceOf(user3.address)).lt(toWei(1716, 18));
@@ -1031,7 +1033,7 @@ describe("RewardRouter", () => {
     await xdxVester.connect(user1).withdraw();
 
     expect(await feeXdxTracker.balanceOf(user1.address)).gt(toWei(1235, 18));
-    expect(await feeXdxTracker.balanceOf(user1.address)).lt(toWei(1236, 18));
+    expect(await feeXdxTracker.balanceOf(user1.address)).lt(toWei(1237, 18));
 
     expect(await xdx.balanceOf(user1.address)).gt(toWei(222, 18));
     expect(await xdx.balanceOf(user1.address)).lt(toWei(224, 18));
@@ -1106,7 +1108,7 @@ describe("RewardRouter", () => {
     expect(await xdxVester.getCombinedAverageStakedAmount(user2.address)).gt(toWei(3971, 18));
     expect(await xdxVester.getCombinedAverageStakedAmount(user2.address)).lt(toWei(3972, 18));
     expect(await xdxVester.getCombinedAverageStakedAmount(user3.address)).gt(toWei(7861, 18));
-    expect(await xdxVester.getCombinedAverageStakedAmount(user3.address)).lt(toWei(7862, 18));
+    expect(await xdxVester.getCombinedAverageStakedAmount(user3.address)).lt(toWei(7863, 18));
     expect(await xdxVester.getMaxVestableAmount(user2.address)).eq(toWei(100, 18));
     expect(await xdxVester.getMaxVestableAmount(user3.address)).gt(toWei(2065, 18));
     expect(await xdxVester.getMaxVestableAmount(user3.address)).lt(toWei(2066 + 200, 18));
@@ -1395,26 +1397,28 @@ describe("RewardRouter", () => {
       .connect(user1)
       .mintAndStakeXlx(avax.address, toWei(1, 18), toWei(280, 18), toWei(280, 18));
 
-    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq(toWei(28443, 16));
-    expect(await feeXlxTracker.depositBalances(user1.address, xlx.address)).eq(toWei(28443, 16));
+    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq(toWei(28428.75, 16));
+    expect(await feeXlxTracker.depositBalances(user1.address, xlx.address)).eq(toWei(28428.75, 16));
 
-    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq(toWei(28443, 16));
-    expect(await stakedXlxTracker.depositBalances(user1.address, feeXlxTracker.address)).eq(toWei(28443, 16));
+    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq(toWei(28428.75, 16));
+    expect(await stakedXlxTracker.depositBalances(user1.address, feeXlxTracker.address)).eq(
+      toWei(28428.75, 16),
+    );
 
     await expect(
-      stakedXlx.connect(user2).transferFrom(user1.address, user3.address, toWei(28443, 16)),
+      stakedXlx.connect(user2).transferFrom(user1.address, user3.address, toWei(28428.75, 16)),
     ).to.be.revertedWith("StakedXlx: transfer amount exceeds allowance");
 
-    await stakedXlx.connect(user1).approve(user2.address, toWei(28443, 16));
+    await stakedXlx.connect(user1).approve(user2.address, toWei(28428.75, 16));
 
     await expect(
-      stakedXlx.connect(user2).transferFrom(user1.address, user3.address, toWei(28443, 16)),
+      stakedXlx.connect(user2).transferFrom(user1.address, user3.address, toWei(28428.75, 16)),
     ).to.be.revertedWith("StakedXlx: cooldown duration not yet passed");
 
     await advanceTimeAndBlock(24 * 60 * 60 + 10);
 
     await expect(
-      stakedXlx.connect(user2).transferFrom(user1.address, user3.address, toWei(28443, 16)),
+      stakedXlx.connect(user2).transferFrom(user1.address, user3.address, toWei(28428.75, 16)),
     ).to.be.revertedWith("RewardTracker: forbidden");
 
     await timelock.signalSetHandler(stakedXlxTracker.address, stakedXlx.address, true);
@@ -1422,18 +1426,20 @@ describe("RewardRouter", () => {
     await timelock.setHandler(stakedXlxTracker.address, stakedXlx.address, true);
 
     await expect(
-      stakedXlx.connect(user2).transferFrom(user1.address, user3.address, toWei(28443, 16)),
+      stakedXlx.connect(user2).transferFrom(user1.address, user3.address, toWei(28428.75, 16)),
     ).to.be.revertedWith("RewardTracker: forbidden");
 
     await timelock.signalSetHandler(feeXlxTracker.address, stakedXlx.address, true);
     await advanceTimeAndBlock(24 * 60 * 60);
     await timelock.setHandler(feeXlxTracker.address, stakedXlx.address, true);
 
-    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq(toWei(28443, 16));
-    expect(await feeXlxTracker.depositBalances(user1.address, xlx.address)).eq(toWei(28443, 16));
+    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq(toWei(28428.75, 16));
+    expect(await feeXlxTracker.depositBalances(user1.address, xlx.address)).eq(toWei(28428.75, 16));
 
-    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq(toWei(28443, 16));
-    expect(await stakedXlxTracker.depositBalances(user1.address, feeXlxTracker.address)).eq(toWei(28443, 16));
+    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq(toWei(28428.75, 16));
+    expect(await stakedXlxTracker.depositBalances(user1.address, feeXlxTracker.address)).eq(
+      toWei(28428.75, 16),
+    );
 
     expect(await feeXlxTracker.stakedAmounts(user3.address)).eq(0);
     expect(await feeXlxTracker.depositBalances(user3.address, xlx.address)).eq(0);
@@ -1441,7 +1447,7 @@ describe("RewardRouter", () => {
     expect(await stakedXlxTracker.stakedAmounts(user3.address)).eq(0);
     expect(await stakedXlxTracker.depositBalances(user3.address, feeXlxTracker.address)).eq(0);
 
-    await stakedXlx.connect(user2).transferFrom(user1.address, user3.address, toWei(28443, 16));
+    await stakedXlx.connect(user2).transferFrom(user1.address, user3.address, toWei(28428.75, 16));
 
     expect(await feeXlxTracker.stakedAmounts(user1.address)).eq(0);
     expect(await feeXlxTracker.depositBalances(user1.address, xlx.address)).eq(0);
@@ -1449,11 +1455,13 @@ describe("RewardRouter", () => {
     expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq(0);
     expect(await stakedXlxTracker.depositBalances(user1.address, feeXlxTracker.address)).eq(0);
 
-    expect(await feeXlxTracker.stakedAmounts(user3.address)).eq(toWei(28443, 16));
-    expect(await feeXlxTracker.depositBalances(user3.address, xlx.address)).eq(toWei(28443, 16));
+    expect(await feeXlxTracker.stakedAmounts(user3.address)).eq(toWei(28428.75, 16));
+    expect(await feeXlxTracker.depositBalances(user3.address, xlx.address)).eq(toWei(28428.75, 16));
 
-    expect(await stakedXlxTracker.stakedAmounts(user3.address)).eq(toWei(28443, 16));
-    expect(await stakedXlxTracker.depositBalances(user3.address, feeXlxTracker.address)).eq(toWei(28443, 16));
+    expect(await stakedXlxTracker.stakedAmounts(user3.address)).eq(toWei(28428.75, 16));
+    expect(await stakedXlxTracker.depositBalances(user3.address, feeXlxTracker.address)).eq(
+      toWei(28428.75, 16),
+    );
 
     await expect(
       stakedXlx.connect(user2).transferFrom(user3.address, user1.address, toWei(3000, 17)),
@@ -1473,11 +1481,13 @@ describe("RewardRouter", () => {
     expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq(toWei(1000, 17));
     expect(await stakedXlxTracker.depositBalances(user1.address, feeXlxTracker.address)).eq(toWei(1000, 17));
 
-    expect(await feeXlxTracker.stakedAmounts(user3.address)).eq(toWei(18443, 16));
-    expect(await feeXlxTracker.depositBalances(user3.address, xlx.address)).eq(toWei(18443, 16));
+    expect(await feeXlxTracker.stakedAmounts(user3.address)).eq(toWei(18428.75, 16));
+    expect(await feeXlxTracker.depositBalances(user3.address, xlx.address)).eq(toWei(18428.75, 16));
 
-    expect(await stakedXlxTracker.stakedAmounts(user3.address)).eq(toWei(18443, 16));
-    expect(await stakedXlxTracker.depositBalances(user3.address, feeXlxTracker.address)).eq(toWei(18443, 16));
+    expect(await stakedXlxTracker.stakedAmounts(user3.address)).eq(toWei(18428.75, 16));
+    expect(await stakedXlxTracker.depositBalances(user3.address, feeXlxTracker.address)).eq(
+      toWei(18428.75, 16),
+    );
 
     await stakedXlx.connect(user3).transfer(user1.address, toWei(1500, 17));
 
@@ -1487,11 +1497,13 @@ describe("RewardRouter", () => {
     expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq(toWei(2500, 17));
     expect(await stakedXlxTracker.depositBalances(user1.address, feeXlxTracker.address)).eq(toWei(2500, 17));
 
-    expect(await feeXlxTracker.stakedAmounts(user3.address)).eq(toWei(3443, 16));
-    expect(await feeXlxTracker.depositBalances(user3.address, xlx.address)).eq(toWei(3443, 16));
+    expect(await feeXlxTracker.stakedAmounts(user3.address)).eq(toWei(3428.75, 16));
+    expect(await feeXlxTracker.depositBalances(user3.address, xlx.address)).eq(toWei(3428.75, 16));
 
-    expect(await stakedXlxTracker.stakedAmounts(user3.address)).eq(toWei(3443, 16));
-    expect(await stakedXlxTracker.depositBalances(user3.address, feeXlxTracker.address)).eq(toWei(3443, 16));
+    expect(await stakedXlxTracker.stakedAmounts(user3.address)).eq(toWei(3428.75, 16));
+    expect(await stakedXlxTracker.depositBalances(user3.address, feeXlxTracker.address)).eq(
+      toWei(3428.75, 16),
+    );
 
     await expect(stakedXlx.connect(user3).transfer(user1.address, toWei(492, 17))).to.be.revertedWith(
       "RewardTracker: _amount exceeds stakedAmount",
@@ -1514,12 +1526,12 @@ describe("RewardRouter", () => {
 
     await rewardRouter.connect(user3).unstakeAndRedeemXlx(
       avax.address,
-      toWei(3443, 16),
+      toWei(3428.75, 16),
       "160000000000000000", // 0.16
       user3.address,
     );
 
-    expect(await avax.balanceOf(user3.address)).eq("184517602418745276");
+    expect(await avax.balanceOf(user3.address)).eq("183973908730158730");
   });
 
   it("FeeXlx", async () => {
@@ -1532,38 +1544,42 @@ describe("RewardRouter", () => {
       .connect(user1)
       .mintAndStakeXlx(avax.address, toWei(1, 18), toWei(280, 18), toWei(280, 18));
 
-    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq(toWei(28443, 16));
-    expect(await feeXlxTracker.depositBalances(user1.address, xlx.address)).eq(toWei(28443, 16));
+    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq(toWei(28428.75, 16));
+    expect(await feeXlxTracker.depositBalances(user1.address, xlx.address)).eq(toWei(28428.75, 16));
 
-    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq(toWei(28443, 16));
-    expect(await stakedXlxTracker.depositBalances(user1.address, feeXlxTracker.address)).eq(toWei(28443, 16));
+    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq(toWei(28428.75, 16));
+    expect(await stakedXlxTracker.depositBalances(user1.address, feeXlxTracker.address)).eq(
+      toWei(28428.75, 16),
+    );
 
     await expect(
-      xlxBalance.connect(user2).transferFrom(user1.address, user3.address, toWei(28443, 16)),
+      xlxBalance.connect(user2).transferFrom(user1.address, user3.address, toWei(28428.75, 16)),
     ).to.be.revertedWith("XlxBalance: transfer amount exceeds allowance");
 
-    await xlxBalance.connect(user1).approve(user2.address, toWei(28443, 16));
+    await xlxBalance.connect(user1).approve(user2.address, toWei(28428.75, 16));
 
     await expect(
-      xlxBalance.connect(user2).transferFrom(user1.address, user3.address, toWei(28443, 16)),
+      xlxBalance.connect(user2).transferFrom(user1.address, user3.address, toWei(28428.75, 16)),
     ).to.be.revertedWith("XlxBalance: cooldown duration not yet passed");
 
     await advanceTimeAndBlock(24 * 60 * 60 + 10);
 
     await expect(
-      xlxBalance.connect(user2).transferFrom(user1.address, user3.address, toWei(28443, 16)),
+      xlxBalance.connect(user2).transferFrom(user1.address, user3.address, toWei(28428.75, 16)),
     ).to.be.revertedWith("RewardTracker: transfer amount exceeds allowance");
 
     await timelock.signalSetHandler(stakedXlxTracker.address, xlxBalance.address, true);
     await advanceTimeAndBlock(24 * 60 * 60);
     await timelock.setHandler(stakedXlxTracker.address, xlxBalance.address, true);
 
-    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq(toWei(28443, 16));
-    expect(await feeXlxTracker.depositBalances(user1.address, xlx.address)).eq(toWei(28443, 16));
+    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq(toWei(28428.75, 16));
+    expect(await feeXlxTracker.depositBalances(user1.address, xlx.address)).eq(toWei(28428.75, 16));
 
-    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq(toWei(28443, 16));
-    expect(await stakedXlxTracker.depositBalances(user1.address, feeXlxTracker.address)).eq(toWei(28443, 16));
-    expect(await stakedXlxTracker.balanceOf(user1.address)).eq(toWei(28443, 16));
+    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq(toWei(28428.75, 16));
+    expect(await stakedXlxTracker.depositBalances(user1.address, feeXlxTracker.address)).eq(
+      toWei(28428.75, 16),
+    );
+    expect(await stakedXlxTracker.balanceOf(user1.address)).eq(toWei(28428.75, 16));
 
     expect(await feeXlxTracker.stakedAmounts(user3.address)).eq(0);
     expect(await feeXlxTracker.depositBalances(user3.address, xlx.address)).eq(0);
@@ -1572,13 +1588,15 @@ describe("RewardRouter", () => {
     expect(await stakedXlxTracker.depositBalances(user3.address, feeXlxTracker.address)).eq(0);
     expect(await stakedXlxTracker.balanceOf(user3.address)).eq(0);
 
-    await xlxBalance.connect(user2).transferFrom(user1.address, user3.address, toWei(28443, 16));
+    await xlxBalance.connect(user2).transferFrom(user1.address, user3.address, toWei(28428.75, 16));
 
-    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq(toWei(28443, 16));
-    expect(await feeXlxTracker.depositBalances(user1.address, xlx.address)).eq(toWei(28443, 16));
+    expect(await feeXlxTracker.stakedAmounts(user1.address)).eq(toWei(28428.75, 16));
+    expect(await feeXlxTracker.depositBalances(user1.address, xlx.address)).eq(toWei(28428.75, 16));
 
-    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq(toWei(28443, 16));
-    expect(await stakedXlxTracker.depositBalances(user1.address, feeXlxTracker.address)).eq(toWei(28443, 16));
+    expect(await stakedXlxTracker.stakedAmounts(user1.address)).eq(toWei(28428.75, 16));
+    expect(await stakedXlxTracker.depositBalances(user1.address, feeXlxTracker.address)).eq(
+      toWei(28428.75, 16),
+    );
     expect(await stakedXlxTracker.balanceOf(user1.address)).eq(0);
 
     expect(await feeXlxTracker.stakedAmounts(user3.address)).eq(0);
@@ -1586,10 +1604,10 @@ describe("RewardRouter", () => {
 
     expect(await stakedXlxTracker.stakedAmounts(user3.address)).eq(0);
     expect(await stakedXlxTracker.depositBalances(user3.address, feeXlxTracker.address)).eq(0);
-    expect(await stakedXlxTracker.balanceOf(user3.address)).eq(toWei(28443, 16));
+    expect(await stakedXlxTracker.balanceOf(user3.address)).eq(toWei(28428.75, 16));
 
     await expect(
-      rewardRouter.connect(user1).unstakeAndRedeemXlx(avax.address, toWei(28443, 16), "0", user1.address),
+      rewardRouter.connect(user1).unstakeAndRedeemXlx(avax.address, toWei(28428.75, 16), "0", user1.address),
     ).to.be.revertedWith("RewardTracker: burn amount exceeds balance");
 
     await xlxBalance.connect(user3).approve(user2.address, toWei(3000, 17));
@@ -1598,12 +1616,14 @@ describe("RewardRouter", () => {
       xlxBalance.connect(user2).transferFrom(user3.address, user1.address, toWei(2992, 17)),
     ).to.be.revertedWith("RewardTracker: transfer amount exceeds balance");
 
-    await xlxBalance.connect(user2).transferFrom(user3.address, user1.address, toWei(28443, 16));
+    await xlxBalance.connect(user2).transferFrom(user3.address, user1.address, toWei(28428.75, 16));
 
     expect(await avax.balanceOf(user1.address)).eq(0);
 
-    await rewardRouter.connect(user1).unstakeAndRedeemXlx(avax.address, toWei(28443, 16), "0", user1.address);
+    await rewardRouter
+      .connect(user1)
+      .unstakeAndRedeemXlx(avax.address, toWei(28428.75, 16), "0", user1.address);
 
-    expect(await avax.balanceOf(user1.address)).eq("901146476190476190");
+    expect(await avax.balanceOf(user1.address)).eq("900243750000000000");
   });
 });

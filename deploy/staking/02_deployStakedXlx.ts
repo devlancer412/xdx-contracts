@@ -21,10 +21,13 @@ const func: DeployFunction = async (hre) => {
     args: [xlx.address, xlxManager.address, stakedXlxTracker.address, feeXlxTracker.address],
   });
 
-  // if (stakedXlx.newlyDeployed) {
-  //   await timelock.signalSetHandler(stakedXlxTracker.address, stakedXlx.address, true);
-  //   await timelock.signalSetHandler(feeXlxTracker.address, stakedXlx.address, true);
-  // }
+  if (stakedXlx.newlyDeployed) {
+    console.log("make set handler signals");
+    let tx = await timelock.signalSetHandler(stakedXlxTracker.address, stakedXlx.address, true);
+    await tx.wait();
+    tx = await timelock.signalSetHandler(feeXlxTracker.address, stakedXlx.address, true);
+    await tx.wait();
+  }
 
   await deploy(XlxBalance__factory, {
     args: [xlxManager.address, stakedXlxTracker.address],

@@ -210,8 +210,8 @@ describe("XdxTimelock", function () {
       true, // isShortable
     );
 
-    expect(await vault.whitelistedTokenCount()).eq(7);
-    expect(await vault.totalTokenWeights()).eq(100001);
+    expect(await vault.whitelistedTokenCount()).eq(6);
+    expect(await vault.totalTokenWeights()).eq(100000);
     expect(await vault.whitelistedTokens(avax.address)).eq(true);
     expect(await vault.tokenDecimals(avax.address)).eq(12);
     expect(await vault.tokenWeights(avax.address)).eq(7000);
@@ -230,8 +230,8 @@ describe("XdxTimelock", function () {
       500, // _usdgAmount
     );
 
-    expect(await vault.whitelistedTokenCount()).eq(7);
-    expect(await vault.totalTokenWeights()).eq(93101);
+    expect(await vault.whitelistedTokenCount()).eq(6);
+    expect(await vault.totalTokenWeights()).eq(93100);
     expect(await vault.whitelistedTokens(avax.address)).eq(true);
     expect(await vault.tokenDecimals(avax.address)).eq(12);
     expect(await vault.tokenWeights(avax.address)).eq(100);
@@ -905,7 +905,7 @@ describe("XdxTimelock", function () {
       ),
     ).to.be.revertedWith("XdxTimelock: action not signalled");
 
-    expect(await vault.totalTokenWeights()).eq(93001);
+    expect(await vault.totalTokenWeights()).eq(93000);
     expect(await vault.whitelistedTokens(usdc.address)).eq(true);
     expect(await vault.tokenDecimals(usdc.address)).eq(6);
     expect(await vault.tokenWeights(usdc.address)).eq(47000);
@@ -925,7 +925,7 @@ describe("XdxTimelock", function () {
       false, // isShortable
     );
 
-    expect(await vault.totalTokenWeights()).eq(53001);
+    expect(await vault.totalTokenWeights()).eq(53000);
     expect(await vault.whitelistedTokens(usdc.address)).eq(true);
     expect(await vault.tokenDecimals(usdc.address)).eq(12);
     expect(await vault.tokenWeights(usdc.address)).eq(7000);
@@ -1333,6 +1333,6 @@ describe("XdxTimelock", function () {
 
     expect(await avax.balanceOf(mintReceiver.address)).eq(0);
     await xdxTimelock.connect(deployer).redeemUsdg(vault.address, avax.address, toWei(1000, 18));
-    expect(await avax.balanceOf(mintReceiver.address)).eq("1899047619047619046"); // 1.994
+    expect(await avax.balanceOf(mintReceiver.address)).eq("1898095238095238094"); // 1.898
   });
 });

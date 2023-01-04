@@ -58,47 +58,47 @@ const func: DeployFunction = async (hre) => {
 
   if (timelock.newlyDeployed) {
     let tx = await timelock.contract.setShouldToggleIsLeverageEnabled(true);
-    console.log("Set should toggle is leverage enabled to timelock at ", tx.hash);
+    console.log("Set should toggle is leverage enabled to timelock at", tx.hash);
     await tx.wait();
 
     tx = await timelock.contract.setContractHandler(positionRouter.address, true);
-    console.log("Set PositionRouter as handler of timelock at ", tx.hash);
+    console.log("Set PositionRouter as handler of timelock at", tx.hash);
     await tx.wait();
 
     tx = await timelock.contract.setContractHandler(positionManager.address, true);
-    console.log("Set PositionManager as handler of timelock at ", tx.hash);
+    console.log("Set PositionManager as handler of timelock at", tx.hash);
     await tx.wait();
 
     if (hre.network.tags.live) {
       tx = await vault.setGov(timelock.address);
-      console.log("Set gov to timelock at ", tx.hash);
+      console.log("Set gov to timelock at", tx.hash);
       await tx.wait();
       tx = await timelock.contract.setVaultUtils(vault.address, vaultUtils.address);
-      console.log("Set vault utils to timelock at ", tx.hash);
+      console.log("Set vault utils to timelock at", tx.hash);
       await tx.wait();
 
       if (!(await vault.isLiquidator(positionManager.address))) {
         tx = await timelock.contract.setLiquidator(vault.address, positionManager.address, true);
-        console.log("Set positionManager as liquidator of vault at ", tx.hash);
+        console.log("Set positionManager as liquidator of vault at", tx.hash);
         await tx.wait();
       }
     }
 
     console.log("add signals");
     tx = await timelock.contract.signalSetHandler(referralStorage.address, positionRouter.address, true);
-    tx.wait();
+    await tx.wait();
     tx = await timelock.contract.signalApprove(xdx.address, deployer.address, "1000000000000000000");
-    tx.wait();
+    await tx.wait();
 
     for (const handler of handlers) {
       tx = await timelock.contract.setContractHandler(handler, true);
-      console.log("Set", handler, " as handler of timelock at ", tx.hash);
+      console.log("Set", handler, " as handler of timelock at", tx.hash);
       await tx.wait();
     }
 
     for (const keeper of keepers) {
       tx = await timelock.contract.setKeeper(keeper, true);
-      console.log("Set", keeper, " as keeper of timelock at ", tx.hash);
+      console.log("Set", keeper, " as keeper of timelock at", tx.hash);
       await tx.wait();
     }
   }
@@ -109,6 +109,7 @@ func.tags = ["timelock"];
 func.dependencies = [
   "vault",
   "vaultUtils",
+  "vaultPriceFeed",
   "tokenManager",
   "xlxManager",
   "rewardRouter",

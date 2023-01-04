@@ -87,7 +87,7 @@ describe("Vault.getFeeBasisPoints", function () {
     await vault.connect(alice).buyUSDG(avax.address, deployer.address);
 
     expect(await vault.usdgAmounts(avax.address)).eq(29700);
-    expect(await vault.getTargetUsdgAmount(avax.address)).eq(2078); // 2078 = 1970 * avaxWeight / totalWeight
+    expect(await vault.getTargetUsdgAmount(avax.address)).eq(2079); // 2079 = 1970 * avaxWeight / totalWeight
 
     // usdgAmount(avax) is 29700, targetAmount(avax) is 29700
     expect(await vault.getFeeBasisPoints(avax.address, 1000, 100, 50, true)).eq(150);
@@ -102,8 +102,8 @@ describe("Vault.getFeeBasisPoints", function () {
 
     await usdcPriceFeed.setLatestAnswer(toChainlinkPrice(1));
 
-    expect(await vault.getTargetUsdgAmount(avax.address)).eq(2078);
-    expect(await vault.getTargetUsdgAmount(usdc.address)).eq(13958);
+    expect(await vault.getTargetUsdgAmount(avax.address)).eq(2079);
+    expect(await vault.getTargetUsdgAmount(usdc.address)).eq(13959);
 
     // usdgAmount(avax) is 29700, targetAmount(avax) is 14850
     // incrementing avax has an increased fee, while reducing avax has a decreased fee
@@ -121,8 +121,8 @@ describe("Vault.getFeeBasisPoints", function () {
     await usdc.mint(vault.address, 20000);
     await vault.connect(alice).buyUSDG(usdc.address, deployer.address);
 
-    expect(await vault.getTargetUsdgAmount(avax.address)).eq("1390186098141097");
-    expect(await vault.getTargetUsdgAmount(usdc.address)).eq("9334106658947369");
+    expect(await vault.getTargetUsdgAmount(avax.address)).eq("1390200000002079");
+    expect(await vault.getTargetUsdgAmount(usdc.address)).eq("9334200000013959");
 
     const avaxConfig: [string, number, number, number, number, boolean, boolean] = [
       avax.address, // _token
@@ -135,8 +135,8 @@ describe("Vault.getFeeBasisPoints", function () {
     ];
     await vault.setTokenConfig(...avaxConfig);
 
-    expect(await vault.getTargetUsdgAmount(avax.address)).eq("4843863058031162"); // increased by token weight
-    expect(await vault.getTargetUsdgAmount(usdc.address)).eq("7588718790915487"); // decreased
+    expect(await vault.getTargetUsdgAmount(avax.address)).eq("4843902439031634"); // increased by token weight
+    expect(await vault.getTargetUsdgAmount(usdc.address)).eq("7588780487816226"); // decreased
 
     expect(await vault.usdgAmounts(avax.address)).eq(29700);
 
@@ -156,8 +156,8 @@ describe("Vault.getFeeBasisPoints", function () {
     await vault.connect(alice).buyUSDG(avax.address, deployer.address);
 
     expect(await vault.usdgAmounts(avax.address)).eq(89700);
-    expect(await vault.getTargetUsdgAmount(avax.address)).eq("1013254966790629"); // decreased
-    expect(await vault.getTargetUsdgAmount(usdc.address)).eq("9524596687831919"); // increased
+    expect(await vault.getTargetUsdgAmount(avax.address)).eq("1013265306127025"); // decreased
+    expect(await vault.getTargetUsdgAmount(usdc.address)).eq("9524693877594039"); // increased
 
     // usdgAmount(avax) is 88800, targetAmount(avax) is 36266
     // incrementing avax has an increased fee, while reducing avax has a decreased fee

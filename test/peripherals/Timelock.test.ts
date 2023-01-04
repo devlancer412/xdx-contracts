@@ -210,8 +210,8 @@ describe("Timelock", () => {
       true, // isShortable
     );
 
-    expect(await vault.whitelistedTokenCount()).eq(7);
-    expect(await vault.totalTokenWeights()).eq(100001);
+    expect(await vault.whitelistedTokenCount()).eq(6);
+    expect(await vault.totalTokenWeights()).eq(100000);
     expect(await vault.whitelistedTokens(avax.address)).eq(true);
     expect(await vault.tokenDecimals(avax.address)).eq(12);
     expect(await vault.tokenWeights(avax.address)).eq(7000);
@@ -230,8 +230,8 @@ describe("Timelock", () => {
       500, // _usdgAmount
     );
 
-    expect(await vault.whitelistedTokenCount()).eq(7);
-    expect(await vault.totalTokenWeights()).eq(93101);
+    expect(await vault.whitelistedTokenCount()).eq(6);
+    expect(await vault.totalTokenWeights()).eq(93100);
     expect(await vault.whitelistedTokens(avax.address)).eq(true);
     expect(await vault.tokenDecimals(avax.address)).eq(12);
     expect(await vault.tokenWeights(avax.address)).eq(100);
@@ -1034,7 +1034,7 @@ describe("Timelock", () => {
       ),
     ).to.be.revertedWith("Timelock: action not signalled");
 
-    expect(await vault.totalTokenWeights()).eq(93001);
+    expect(await vault.totalTokenWeights()).eq(93000);
     expect(await vault.whitelistedTokens(usdc.address)).eq(true);
     expect(await vault.tokenDecimals(usdc.address)).eq(6);
     expect(await vault.tokenWeights(usdc.address)).eq(47000);
@@ -1054,7 +1054,7 @@ describe("Timelock", () => {
       false, // isShortable
     );
 
-    expect(await vault.totalTokenWeights()).eq(53001);
+    expect(await vault.totalTokenWeights()).eq(53000);
     expect(await vault.whitelistedTokens(usdc.address)).eq(true);
     expect(await vault.tokenDecimals(usdc.address)).eq(12);
     expect(await vault.tokenWeights(usdc.address)).eq(7000);
@@ -1193,13 +1193,13 @@ describe("Timelock", () => {
 
     expect(await vault.taxBasisPoints()).eq(10);
     expect(await vault.stableTaxBasisPoints()).eq(5);
-    expect(await vault.mintBurnFeeBasisPoints()).eq(20);
+    expect(await vault.mintBurnFeeBasisPoints()).eq(25);
     expect(await vault.swapFeeBasisPoints()).eq(20);
     expect(await vault.stableSwapFeeBasisPoints()).eq(1);
     expect(await timelock.marginFeeBasisPoints()).eq(10);
     expect(await vault.marginFeeBasisPoints()).eq(10);
     expect(await vault.liquidationFeeUsd()).eq(toUsd(5));
-    expect(await vault.minProfitTime()).eq(86400);
+    expect(await vault.minProfitTime()).eq(10800);
     expect(await vault.hasDynamicFees()).eq(true);
 
     await timelock.connect(deployer).setFees(
@@ -1267,13 +1267,13 @@ describe("Timelock", () => {
 
     expect(await vault.taxBasisPoints()).eq(10);
     expect(await vault.stableTaxBasisPoints()).eq(5);
-    expect(await vault.mintBurnFeeBasisPoints()).eq(20);
+    expect(await vault.mintBurnFeeBasisPoints()).eq(25);
     expect(await vault.swapFeeBasisPoints()).eq(20);
     expect(await vault.stableSwapFeeBasisPoints()).eq(1);
     expect(await timelock.marginFeeBasisPoints()).eq(10);
     expect(await vault.marginFeeBasisPoints()).eq(10);
     expect(await vault.liquidationFeeUsd()).eq(toUsd(5));
-    expect(await vault.minProfitTime()).eq(86400);
+    expect(await vault.minProfitTime()).eq(10800);
     expect(await vault.hasDynamicFees()).eq(true);
 
     await timelock.connect(deployer).setSwapFees(
@@ -1293,7 +1293,7 @@ describe("Timelock", () => {
     expect(await timelock.marginFeeBasisPoints()).eq(10);
     expect(await vault.marginFeeBasisPoints()).eq(500);
     expect(await vault.liquidationFeeUsd()).eq(toUsd(5));
-    expect(await vault.minProfitTime()).eq(86400);
+    expect(await vault.minProfitTime()).eq(10800);
     expect(await vault.hasDynamicFees()).eq(true);
 
     await timelock.setContractHandler(user0.address, true);
@@ -1315,7 +1315,7 @@ describe("Timelock", () => {
     expect(await timelock.marginFeeBasisPoints()).eq(10);
     expect(await vault.marginFeeBasisPoints()).eq(500);
     expect(await vault.liquidationFeeUsd()).eq(toUsd(5));
-    expect(await vault.minProfitTime()).eq(86400);
+    expect(await vault.minProfitTime()).eq(10800);
     expect(await vault.hasDynamicFees()).eq(true);
   });
 
@@ -1474,7 +1474,7 @@ describe("Timelock", () => {
 
     expect(await avax.balanceOf(tokenManager.address)).eq(0);
     await timelock.connect(deployer).redeemUsdg(vault.address, avax.address, toWei(1000, 18));
-    expect(await avax.balanceOf(tokenManager.address)).eq("1994000000000000000"); // 1.994
+    expect(await avax.balanceOf(tokenManager.address)).eq("1993000000000000000"); // 1.993
   });
 
   it("setShortsTrackerAveragePriceWeight", async () => {

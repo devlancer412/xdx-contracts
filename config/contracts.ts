@@ -41,7 +41,7 @@ export const CONTRACTS: ContractInforListType = {
     deployName: "XDX",
     contractName: "XDX",
   },
-  ES_XDX: {
+  EsXDX: {
     deployName: "ES_XDX",
     contractName: "EsXDX",
   },

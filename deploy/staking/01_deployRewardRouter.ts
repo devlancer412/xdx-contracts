@@ -16,7 +16,11 @@ import { NativeToken, tokens } from "../../config";
 const func: DeployFunction = async (hre) => {
   const { deploy, connect, accounts } = await Ship.init(hre);
 
-  const nativeToken = tokens[hre.network.name as "avax" | "avax_test"].nativeToken as NativeToken;
+  let network = hre.network.name;
+  if (network != "avax" && network != "avax_test") {
+    network = "avax";
+  }
+  const nativeToken = tokens[network as "avax" | "avax_test"].nativeToken as NativeToken;
 
   if (!hre.network.tags.prod) {
     const nativeTokenContract = await connect(nativeToken.name);

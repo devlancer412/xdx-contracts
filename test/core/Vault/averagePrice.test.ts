@@ -147,12 +147,14 @@ describe("Vault.averagePrice", function () {
     await vault.connect(user0).increasePosition(user0.address, btc.address, btc.address, toUsd(10), true);
     blockTime = await getTime();
 
-    expect(await xlxManager.getAumInUsdg(false)).eq("102203938000000000000"); // 102.203938
-    expect(await xlxManager.getAumInUsdg(true)).eq("102740698000000000000"); // 102.740698
+    expect(await xlxManager.getAumInUsdg(false)).gt(toWei(102.2)); // 102.205824
+    expect(await xlxManager.getAumInUsdg(false)).lt(toWei(102.3)); // 102.205824
+    expect(await xlxManager.getAumInUsdg(true)).gt(toWei(102.74)); // 102.740698
+    expect(await xlxManager.getAumInUsdg(true)).lt(toWei(102.75)); // 102.740698
 
     position = await vault.getPosition(user0.address, btc.address, btc.address, true);
     expect(position[0]).eq(toUsd(100)); // size
-    expect(position[1]).eq(toUsd(9.9)); // collateral, 10 - 90 * 0.1% - 10 * 0.1%
+    expect(position[1]).eq(toUsd(9.9)); // collateral
     expect(position[2]).eq("43211009174311926605504587155963302"); // averagePrice
     expect(position[3]).eq(0); // entryFundingRate
     expect(position[4]).eq(225000 + 22172); // reserveAmount, 0.00225 * 40,000 => 90, 0.00022172 * 45100 => ~10

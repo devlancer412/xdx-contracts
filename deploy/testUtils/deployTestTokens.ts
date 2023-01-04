@@ -7,11 +7,16 @@ import { toChainlinkPrice } from "../../utils";
 const func: DeployFunction = async (hre) => {
   const { deploy } = await Ship.init(hre);
 
+  let network = hre.network.name;
+  if (network != "avax" && network != "avax_test") {
+    network = "avax";
+  }
+
   if (!hre.network.tags.prod) {
-    for (const index in tokens[hre.network.name as "avax" | "avax_test"]) {
+    for (const index in tokens[network as "avax" | "avax_test"]) {
       if (index == "nativeToken") continue;
 
-      const token = (tokens[hre.network.name as "avax" | "avax_test"] as never)[index] as TokenData;
+      const token = (tokens[network as "avax" | "avax_test"] as never)[index] as TokenData;
       await deploy(Token__factory, {
         aliasName: token.name,
         args: [token.name, token.name, token.decimals],

@@ -16,7 +16,12 @@ const func: DeployFunction = async (hre) => {
   const { deploy, connect, accounts } = await Ship.init(hre);
 
   const { deployer } = accounts;
-  const nativeToken = tokens[hre.network.name as "avax" | "avax_test"].nativeToken as NativeToken;
+
+  let network = hre.network.name;
+  if (network != "avax" && network != "avax_test") {
+    network = "avax";
+  }
+  const nativeToken = tokens[network as "avax" | "avax_test"].nativeToken as NativeToken;
 
   if (!hre.network.tags.prod) {
     const nativeTokenContract = await connect(nativeToken.name);
@@ -76,12 +81,12 @@ const func: DeployFunction = async (hre) => {
     tx = await vault.contract.setFees(
       10, // _taxBasisPoints
       5, // _stableTaxBasisPoints
-      20, // _mintBurnFeeBasisPoints
+      25, // _mintBurnFeeBasisPoints
       20, // _swapFeeBasisPoints
       1, // _stableSwapFeeBasisPoints
       10, // _marginFeeBasisPoints
-      toUsd(2), // _liquidationFeeUsd
-      24 * 60 * 60, // _minProfitTime
+      toUsd(5), // _liquidationFeeUsd
+      3 * 60 * 60, // _minProfitTime
       true, // _hasDynamicFees
     );
     console.log("Set fees to vault", tx.hash);

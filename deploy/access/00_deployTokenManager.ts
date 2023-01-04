@@ -20,7 +20,9 @@ const func: DeployFunction = async (hre) => {
   });
 
   if (tokenManager.newlyDeployed) {
-    await tokenManager.contract.initialize(signers);
+    const tx = await tokenManager.contract.initialize(signers);
+    console.log("Initialize TokenManager at", tx.hash);
+    await tx.wait();
   }
 };
 
