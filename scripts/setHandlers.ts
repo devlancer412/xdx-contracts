@@ -2,9 +2,11 @@ import { deployments } from "hardhat";
 import {
   EsXDX__factory,
   MintableBaseToken,
+  OrderBook__factory,
   RewardDistributor,
   RewardRouterV2__factory,
   RewardTracker,
+  Router__factory,
   TokenManager__factory,
   Vester,
   XlxManager__factory,
@@ -53,6 +55,8 @@ const main = async () => {
   const bnXdx = (await scaffold.ship.connect("BN_XDX")) as MintableBaseToken;
   const xdxVester = (await scaffold.ship.connect("XdxVester")) as Vester;
   const xlxVester = (await scaffold.ship.connect("XlxVester")) as Vester;
+  const router = await scaffold.ship.connect(Router__factory);
+  const orderbook = await scaffold.ship.connect(OrderBook__factory);
 
   if (!(await esXdx.isHandler(tokenManager.address))) {
     const tx = await esXdx.setHandler(tokenManager.address, true);
@@ -172,6 +176,12 @@ const main = async () => {
   if (!(await esXdx.isMinter(xlxVester.address))) {
     const tx = await esXdx.setMinter(xlxVester.address, true);
     console.log("Set XlxVester to minter of EsXdx at", tx.hash);
+    await tx.wait();
+  }
+
+  if (!(await router.plugins(orderbook.address))) {
+    const tx = await router.addPlugin(orderbook.address);
+    console.log("Set orderbook as plugin of router at", tx.hash);
     await tx.wait();
   }
 };

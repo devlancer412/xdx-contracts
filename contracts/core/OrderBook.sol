@@ -193,7 +193,7 @@ contract OrderBook is ReentrancyGuard, IOrderBook {
   );
   event UpdateSwapOrder(
     address indexed account,
-    uint256 ordexIndex,
+    uint256 orderIndex,
     address[] path,
     uint256 amountIn,
     uint256 minOut,
